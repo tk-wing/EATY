@@ -2,6 +2,8 @@
     //SESSIONの有効化
     session_start();
 
+    $validations="";
+
     // POST送信があった場合
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $first_name=htmlspecialchars($_POST['first_name']);
