@@ -141,7 +141,7 @@
 
       <!-- Text input-->
       <div class="form-group">
-        <input name="email" type="text" placeholder="メールアドレス" class="form-control" style="width:200px; display: inline-block;" value="<?=$email ?>">
+        <input name="email" type="email" placeholder="メールアドレス" class="form-control" style="width:200px; display: inline-block;" value="<?=$email ?>">
         <?php if(isset($validations['email'])): ?>
           <span style="color:red;"><?=$email_msg ?></span>
         <?php endif; ?>
