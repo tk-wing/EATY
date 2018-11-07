@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <title>ex chef</title>
+  <title>講師 TOP</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,7 +14,7 @@
   <!-- BootstrapのJS読み込み -->
   <script src="js/bootstrap.min.js"></script>
   <!-- FontAwesome読み込み -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
 
   <!-- Theme style  -->
   <link rel="stylesheet" href="css/style.css">
@@ -36,12 +36,41 @@
   <div class="top wrapper">
     <div class="text-center title">プロフィール</div>
     <div class="top-content">
-      <div class="blog-inner">
-        <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-        <p>hogehog</p>
+      <div class="blog-inner-prof">
+          <div class="row">
+            <div class="col-md-3 text-center">
+              <img class="img-responsive" src="http://placehold.jp/140x140.png" alt="Blog" style="width:140px;height:140px;border-radius: 50%;">
+              <p>ニックネーム</p>
+              <p>東京都渋谷区 最寄り駅</p>
+              <button type="button" class="btn btn-secondary"><i class="far fa-envelope"></i></button>
+              <button type="button" class="btn btn-secondary"><i class="far fa-heart"></i></button>
+            </div>
+            <div class="col-md-9">
+              <div>
+                ＜ジャンル＞
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                </p>
+              </div>
+              <div>
+                ＜経歴・資格＞
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                </p>
+              </div>
+              <div>
+                ＜自己紹介＆メッセージ＞
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                </p>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="text-center">
+      <a href="#"><button type="button" class="btn btn-secondary">プロフィール編集</button></a>
       </div>
     </div>
-
   </div>
 
   <!-- レッスン一覧 -->
@@ -106,7 +135,10 @@
         </div>
       </div>
     </div>
-    <div class="text-center"><button type="button" class="btn btn-secondary">more</button></div>
+    <div class="text-center">
+      <a href="#"><button type="button" class="btn btn-secondary">レッスン追加</button></a>
+      <a href="bkg_t.php"><button type="button" class="btn btn-secondary">レッスン管理一覧</button></a>
+    </div>
 
   </div>
 
@@ -121,14 +153,13 @@
           <div class="desc">
             <div class="row">
               <div class="col-md-3">
-                <img src="https://placehold.jp/80x80.png">
+                <img src="https://placehold.jp/80x80.png" style="width:80px;height:80px;border-radius: 50%;">
               </div>
               <div class="col-md-9">
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
               </div>
             </div>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">このレッスンの講師プロフィールへ<i class="icon-arrow-right"></i></a></p>
           </div>
         </div>
       </div>
@@ -139,14 +170,13 @@
           <div class="desc">
             <div class="row">
               <div class="col-md-3">
-                <img src="https://placehold.jp/80x80.png">
+                <img src="https://placehold.jp/80x80.png" style="width:80px;height:80px;border-radius: 50%;">
               </div>
               <div class="col-md-9">
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
               </div>
             </div>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">このレッスンの講師プロフィールへ<i class="icon-arrow-right"></i></a></p>
           </div>
         </div>
       </div>
@@ -157,14 +187,13 @@
           <div class="desc">
             <div class="row">
               <div class="col-md-3">
-                <img src="https://placehold.jp/80x80.png">
+                <img src="https://placehold.jp/80x80.png" style="width:80px;height:80px;border-radius: 50%;">
               </div>
               <div class="col-md-9">
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
               </div>
             </div>
-            <p><a href="#" class="btn btn-sm btn-primary btn-outline with-arrow">このレッスンの講師プロフィールへ<i class="icon-arrow-right"></i></a></p>
           </div>
         </div>
       </div>
@@ -175,19 +204,17 @@
           <div class="desc">
             <div class="row">
               <div class="col-md-3">
-                <img src="https://placehold.jp/80x80.png">
+                <img src="https://placehold.jp/80x80.png" style="width:80px;height:80px;border-radius: 50%;">
               </div>
               <div class="col-md-9">
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
               </div>
             </div>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">このレッスンの講師プロフィールへ<i class="icon-arrow-right"></i></a></p>
           </div>
         </div>
       </div>
     </div>
-    <div class="text-center"><button type="button" class="btn btn-secondary">会員登録してみる<br>(無料)</button></div>
 
   </div>
 
