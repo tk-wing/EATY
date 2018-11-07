@@ -76,14 +76,27 @@
         <div class="col-md-8">
           <!-- Text input-->
           <div class="form-group">
-            <div class="col-md-9">
-            <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+            <div class="row">
+              <div class="col-md-4">
+                <input id="last_name" name="last_name" type="text" placeholder="姓" class="form-control input-md">
+              </div>
+              <div class="col-md-4">
+                <input id="first_name" name="first_name" type="text" placeholder="名" class="form-control input-md">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row">
+              <div class="col-md-9">
+               <input id="nickname" name="nickname" type="text" placeholder="ニックネーム(任意)"" class="form-control input-md">
+              </div>
             </div>
           </div>
 
           <!-- Password input-->
-          <div>
-            <p class="check_content">メールアドレス</p>
+          <div class="row">
+            <p class="col-md-8 check_content">メールアドレス</p>
           </div>
 
           <!-- Select Basic -->
