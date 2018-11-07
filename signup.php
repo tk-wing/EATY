@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
     //SESSIONの有効化
@@ -5,23 +6,23 @@
 
     // POST送信があった場合
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $given_name=htmlspecialchars($_POST['given_name']);
-        $family_name=htmlspecialchars($_POST['family_name']);
+        $first_name=htmlspecialchars($_POST['first_name']);
+        $last_name=htmlspecialchars($_POST['last_name']);
         $email=htmlspecialchars($_POST['email']);
         $pw=htmlspecialchars($_POST['pw']);
         $pw_check=htmlspecialchars($_POST['pw_check']);
         $type=$_POST['type'];
 
         //性が未入力の場合
-        if ($given_name == '') {
-            $given_name_msg = '性を入力して下さい';
-            $validations['given_name'] = '未入力';
+        if ($first_name == '') {
+            $first_name_msg = '性を入力して下さい';
+            $validations['first_name'] = '未入力';
         }
 
         //名が未入力の場合
-        if ($family_name == '') {
-            $family_name_msg = '名を入力して下さい';
-            $validations['family_name'] = '未入力';
+        if ($last_name == '') {
+            $last_name_msg = '名を入力して下さい';
+            $validations['last_name'] = '未入力';
         }
 
         //メールアドレスが未入力の場合
@@ -64,8 +65,8 @@
 
         //新規登録情報が適切に入力された場合
         if (empty($validations)) {
-            $_SESSION['EATY']['given_name']  = $given_name;
-            $_SESSION['EATY']['family_name']  = $family_name;
+            $_SESSION['EATY']['first_name']  = $first_name;
+            $_SESSION['EATY']['last_name']  = $last_name;
             $_SESSION['EATY']['email']  = $email;
             $_SESSION['EATY']['pw']  = $pw;
             $_SESSION['EATY']['type']  = $type;
@@ -83,8 +84,8 @@
 
     //初期値の設定
     } else {
-        $given_name = '';
-        $family_name = '';
+        $first_name = '';
+        $last_name = '';
         $email = '';
         $pw = '';
         $pw_check = '';
@@ -94,6 +95,8 @@
 
 ?>
 
+=======
+>>>>>>> parent of 22f8135... PHPの機能を付加
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -124,56 +127,35 @@
     <p class="title font-weight-bold">新規登録</p>
     <form class="signup_form" method="POST" action="">
 
+    <!-- Text input-->
+    <div class="form-group" >
+      <input name="first_name" type="text" placeholder="姓" class="form-control" style="width:200px; display: inline-block; ">
+    </div>
+
       <!-- Text input-->
-      <div class="form-group" >
-        <input name="given_name" type="text" placeholder="姓" class="form-control" style="width:200px; display: inline-block;" value="<?=$given_name ?>">
-        <?php if(isset($validations['given_name'])): ?>
-          <span style="color:red;"><?=$given_name_msg ?></span>
-        <?php endif; ?>
+      <div class="form-group">
+        <input name="last_name" type="text" placeholder="名" class="form-control" style="width:200px; display: inline-block;">
       </div>
 
       <!-- Text input-->
       <div class="form-group">
-        <input name="family_name" type="text" placeholder="名" class="form-control" style="width:200px; display: inline-block;" value="<?=$family_name ?>" >
-        <?php if(isset($validations['family_name'])): ?>
-          <span style="color:red;"><?=$family_name_msg ?></span>
-        <?php endif; ?>
-      </div>
-
-      <!-- Text input-->
-      <div class="form-group">
-        <input name="email" type="text" placeholder="メールアドレス" class="form-control" style="width:200px; display: inline-block;" value="<?=$email ?>">
-        <?php if(isset($validations['email'])): ?>
-          <span style="color:red;"><?=$email_msg ?></span>
-        <?php endif; ?>
+        <input name="email" type="text" placeholder="メールアドレス" class="form-control" style="width:200px; display: inline-block;">
       </div>
 
       <!-- Password input-->
       <div class="form-group">
         <input name="pw" type="password" placeholder="パスワード" class="form-control" style="width:200px; display: inline-block;">
-        <?php if(isset($validations['pw'])): ?>
-          <span style="color:red;"><?=$pw_msg ?></span>
-        <?php endif; ?>
-        <?php if(isset($validations['unmatch'])): ?>
-          <span style="color:red;"><?=$unmatch_msg ?></span>
-        <?php endif; ?>
-        <?php if(isset($validations['unqualified'])): ?>
-          <span style="color:red;"><?=$unqualified_msg ?></span>
-        <?php endif; ?>
       </div>
 
       <!-- Password input-->
       <div class="form-group">
         <input name="pw_check" type="password" placeholder="パスワード再入力" class="form-control" style="width:200px; display: inline-block;">
-        <?php if(isset($validations['pw_check'])): ?>
-          <span style="color:red;"><?=$pw_check_msg ?></span>
-        <?php endif; ?>
       </div>
 
       <div class="form-group">
-        <input type="radio" name="type" id="type-0" value="講師" <?=$radio_t   ?>>
+        <input type="radio" name="type" id="type-0" value="講師" checked="checked">
         講師
-        <input type="radio" name="type" id="type-1" value="生徒" <?=$radio_s ?>>
+        <input type="radio" name="type" id="type-1" value="生徒">
         生徒
       </div>
 
