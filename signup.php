@@ -1,8 +1,7 @@
 <?php
+
     //SESSIONの有効化
     session_start();
-
-    $validations="";
 
     // POST送信があった場合
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -49,7 +48,6 @@
         $password_alpha = preg_match('/[a-zA-Z]/', $password);
         $password_int_alpha = preg_match('/[^0-9a-zA-Z]/', $password);
         if ($password != '' && $password_check != '') {
-
 
             //パスワードと確認用パスワードが一致しない場合
             if ($password !== $password_check) {
