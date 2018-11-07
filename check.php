@@ -29,6 +29,13 @@
         //パスワードの暗号化
         $hash_password = password_hash($password, PASSWORD_DEFAULT);
 
+        //user_typeの変換
+        if ($user_type == '講師') {
+          $user_type = 1;
+        } else {
+          $user_type = 2;
+        }
+
         //データベースへのデータ登録
         $sql = 'INSERT INTO `users` SET `user_type` = ?, `first_name` = ?, `last_name` = ?, `email` = ?, `password` = ?, `created` = NOW()';
         $stmt = $dbh->prepare($sql);
