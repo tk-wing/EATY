@@ -10,6 +10,13 @@
     $password = htmlspecialchars($_SESSION['EATY']['password']);
     $user_type = $_SESSION['EATY']['user_type'];
 
+    //user_typeの変換(表示用)
+    if ($user_type == 1) {
+      $type = '講師';
+    } else {
+      $type = '生徒';
+    }
+
     //直接URLを参照した場合は、Signupに遷移
     if(!isset($_SESSION['EATY'])) {
         header('Location: signup.php');
@@ -19,8 +26,8 @@
     //データベースとの接続
     $dsn = 'mysql:dbname=eaty;host=localhost';
     $user = 'root';
-    $password = '';
-    $dbh = new PDO($dsn, $user, $password);
+    $password_db = '';
+    $dbh = new PDO($dsn, $user, $password_db);
     $dbh->query('SET NAMES utf8');
 
     //確認が完了した場合
@@ -28,13 +35,6 @@
 
         //パスワードの暗号化
         $hash_password = password_hash($password, PASSWORD_DEFAULT);
-
-        //user_typeの変換
-        if ($user_type == '講師') {
-          $user_type = 1;
-        } else {
-          $user_type = 2;
-        }
 
         //データベースへのデータ登録
         $sql = 'INSERT INTO `users` SET `user_type` = ?, `first_name` = ?, `last_name` = ?, `email` = ?, `password` = ?, `created` = NOW()';
@@ -82,7 +82,7 @@
 
 
     <div class="check">
-      <h3 class="text-success"><?=$user_type ?></h3>
+      <h3 class="text-success"><?=$type ?></h3>
       <p class="check_content"><?=$last_name . ' ' . $first_name ?></p>
       <p class="check_content"><?=$email ?></p>
       <p class="check_content">●●●●●●●●</p>
