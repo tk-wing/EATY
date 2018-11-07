@@ -44,9 +44,11 @@
 
         // パスワードと確認用パスワードが一致しない場合またはパスワードが4~8文字の英数字でない場合
         $pw_length = strlen($pw);
-        $pw_int = is_int($pw);
-        $pw_alpha = ctype_alpha($pw);
+        $pw_int = preg_match('/[0-9]/', $pw);
+        $pw_alpha = preg_match('/[a-zA-Z]/', $pw);
+        $pw_int_alpha = preg_match('/[^0-9a-zA-Z]/', $pw);
         if ($pw != '' && $pw_check != '') {
+
 
             //パスワードと確認用パスワードが一致しない場合
             if ($pw !== $pw_check) {
@@ -54,7 +56,7 @@
                 $validations['unmatch'] = '不一致';
 
             //パスワードが4~8文字の英数字でない場合
-            } elseif ($pw_length < 4 || $pw_length > 8 || $pw_int == FALSE || $pw_alpha == FALSE) {
+            } elseif ($pw_length < 4 || $pw_length > 8 || $pw_int == FALSE || $pw_alpha == FALSE || $pw_int_alpha == TRUE) {
                 $unqualified_msg = 'パスワードは4~8文字の英数字で入力して下さい';
                 $validations['unqualified'] = '文字数';
             }
