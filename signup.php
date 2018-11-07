@@ -1,5 +1,4 @@
 <?php
-
     //SESSIONの有効化
     session_start();
 
