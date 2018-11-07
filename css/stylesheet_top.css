@@ -1,0 +1,83 @@
+header{
+  width: 100%;
+  height:60px;
+  padding:0px 15px;
+  background-color: rgba(34, 49, 52, 0.9);
+  position: fixed;
+  top: 0;
+  z-index:10;
+}
+
+footer{
+  height:100px;
+  padding:0px 15px;
+  background-color: rgba(34, 49, 52, 0.9);
+}
+
+.my-btn{
+  margin:12px 0;
+}
+
+.my-btn-signup{
+  margin-top:20px;
+}
+
+.sns{
+  float: right;
+  margin:15px 0;
+}
+
+.sns-btn{
+  padding-right: 10px;
+  color: white;
+}
+
+
+.wrapper{
+  margin: 100px 15px;
+}
+
+.container{
+  border: solid 2px black;
+  height: 500px;
+}
+
+.top-content{
+  margin-top: 15px;
+}
+
+.area{
+  border: solid 2px black;
+  margin: 0 15px;
+  padding: 10px 0;
+}
+
+.title{
+  border: solid 2px black;
+  padding: 20px;
+  margin: 15px 0;
+}
+
+.middle-content{
+  margin:20px 15px;
+  padding: 0 15px;
+}
+
+.title2{
+  border: solid 2px black;
+  padding: 10px;
+  margin: 10px auto;
+}
+
+
+.report{
+  margin-bottom: 100px;
+}
+
+
+
+
+
+
+
+
