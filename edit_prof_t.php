@@ -69,7 +69,7 @@
               <i class="fas fa-camera-retro"></i>
               選択
             </span>
-            <input type="file" id="filesend"z name="img_name">
+            <input type="file" class="filesend" id="filesend" name="img_name">
           </label>
         </div>
 
