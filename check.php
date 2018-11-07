@@ -1,3 +1,48 @@
+<?php
+
+    //SESSIONの有効化
+    session_start();
+
+    //SESSIONデータの受け取り
+    $first_name = htmlspecialchars($_SESSION['EATY']['first_name']);
+    $last_name = htmlspecialchars($_SESSION['EATY']['last_name']);
+    $email = htmlspecialchars($_SESSION['EATY']['email']);
+    $password = htmlspecialchars($_SESSION['EATY']['password']);
+    $user_type = $_SESSION['EATY']['user_type'];
+
+    //直接URLを参照した場合は、Signupに遷移
+    if(!isset($_SESSION['EATY'])) {
+        header('Location: signup.php');
+        exit();
+    }
+
+    //データベースの呼び出し
+    $dsn = 'mysql:dbname=eaty;host=localhost';
+    $user = 'root';
+    $password='';
+    $dbh = new PDO($dsn, $user, $password);
+    $dbh->query('SET NAMES utf8');
+
+    //確認が完了した場合
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        //パスワードの暗号化
+        $hash_password = password_hash($password, PASSWORD_DEFAULT);
+
+        //データベースへのデータ登録
+        $sql = 'INSERT INTO `users` SET `user_type` = ?, `first_name` = ?, `last_name` = ?, `email` = ?, `password` = ?, `created` = NOW()';
+        $stmt = $dbh->prepare($sql);
+        $data = array($user_type, $first_name, $last_name, $email, $hash_password);
+        $stmt->execute($data);
+
+        //保持データの消去
+        unset($_SESSION['EATY']);
+        exit();
+    }
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -30,17 +75,22 @@
 
 
     <div class="check">
-      <h3 class="text-success">登録タイプ</h3>
-      <p class="check_content">名前</p>
-      <p class="check_content">メールアドレス</p>
-      <p class="check_content">パスワード</p>
+      <h3 class="text-success"><?=$user_type ?></h3>
+      <p class="check_content"><?=$last_name . ' ' . $first_name ?></p>
+      <p class="check_content"><?=$email ?></p>
+      <p class="check_content">●●●●●●●●</p>
     </div>
 
     <form class="signup_form" method="POST" action="">
 
       <!-- Button -->
       <div class="form-group">
-        <input type="button" value="戻る" class="check_btn btn btn-primary" style="width:100px;">
+        <input type="hidden" name="first_name" value="$first_name">
+        <input type="hidden" name="last_name" value="$last_name">
+        <input type="hidden" name="email" value="$email">
+        <input type="hidden" name="password" value="$password">
+        <input type="hidden" name="user_type" value="user_type">
+        <input type="button" value="戻る" class="check_btn btn btn-primary" style="width:100px;" onClick="history.back()">
         <input type="submit" value="登録" class="check_btn btn btn-primary" style="width:100px;">
       </div>
 
