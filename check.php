@@ -16,10 +16,10 @@
         exit();
     }
 
-    //データベースの呼び出し
+    //データベースとの接続
     $dsn = 'mysql:dbname=eaty;host=localhost';
     $user = 'root';
-    $password='';
+    $password = '';
     $dbh = new PDO($dsn, $user, $password);
     $dbh->query('SET NAMES utf8');
 
