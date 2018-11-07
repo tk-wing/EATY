@@ -1,3 +1,76 @@
+<?php
+
+    //SESSIONの有効化
+    session_start();
+
+    //データベースとの接続
+    $dsn = 'mysql:dbname=eaty;host=localhost';
+    $user = 'root';
+    $password = '';
+    $dbh = new PDO($dsn, $user, $password);
+    $dbh->query('SET NAMES utf8');
+
+    //ログイン情報を受け取った場合
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $email = htmlspecialchars($_POST['email']);
+        $password = htmlspecialchars($_POST['password']);
+        $user_type = $_POST['user_type'];
+
+        //メールアドレスまたはパスワードが入力されていない場合
+        if ($email == '' || $password == '') {
+            $failed_msg = '入力または選択した情報が正しくありません';
+            $validations['signin'] = '失敗';
+
+        //メールアドレスとパスワードが入力されている場合
+        } elseif($email != '' && $password != '') {
+
+            //データベースのデータの読み込み
+            $sql = 'SELECT * FROM `users` WHERE `email` = ?';
+            $data = array($email);
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute($data);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            //データベースのメールアドレスと一致しない場合
+            if ($user==false) {
+                $failed_msg = '入力または選択した情報が正しくありません';
+                $validations['signin'] = '失敗';
+
+            //データベースのメールアドレスと一致する場合
+            } else {
+
+                //データベースのuser_typeとパスワードと一致する場合
+                $verify = password_verify($password, $user['password']);
+
+                if ($verify==true && $user_type == $user['user_type']) {
+                    $_SESSION["id"] = $user['id'];
+
+                    //講師と生徒のリンク先の条件分岐
+                    if ($user_type == 1) {
+                        header('Location: top_t.php');
+                        exit();
+                    } elseif($user_type == 2) {
+                        header('Location: top_s.php');
+                        exit();
+                    }
+
+                //データベースのパスワードと一致しない場合
+                } else {
+                    $failed_msg = '入力または選択した情報が正しくありません';
+                    $validations['signin'] = '失敗';
+                }
+            }
+        }
+
+    //初期値の設定
+    } else {
+        $email = '';
+        $password = '';
+    }
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -26,7 +99,14 @@
 
   <div class="text-center container">
     <p class="title font-weight-bold">ログイン</p>
+
+
     <form class="signup_form" method="POST" action="">
+
+    <!-- エラーメッセージの表示 -->
+    <?php if(isset($validations['signin'])): ?>
+      <p style="color:red;"><?=$failed_msg ?></p>
+    <?php endif; ?>
 
       <!-- Text input-->
       <div class="form-group">
@@ -35,13 +115,13 @@
 
       <!-- Password input-->
       <div class="form-group">
-        <input name="pw" type="password" placeholder="パスワード" class="form-control" style="width:200px; display: inline-block;">
+        <input name="password" type="password" placeholder="パスワード" class="form-control" style="width:200px; display: inline-block;">
       </div>
 
       <div class="form-group">
-        <input type="radio" name="type" id="type-0" value="講師" checked="checked">
+        <input type="radio" name="user_type" id="type-0" value=1 checked="checked">
         講師
-        <input type="radio" name="type" id="type-1" value="生徒">
+        <input type="radio" name="user_type" id="type-1" value=2>
         生徒
       </div>
 
@@ -51,7 +131,6 @@
         <a href="#"><button type="button" class="signin_btn btn btn-primary" style="width: 180px;">パスワードお忘れの方</button></a><br>
         <a href="signup.php"><button type="button" class="signin_btn btn btn-primary">アカウントをお持ちでない方は新規登録</button></a>
       </div>
-
 
     </form>
 
