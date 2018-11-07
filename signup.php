@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 <?php
-
     //SESSIONの有効化
     session_start();
 
@@ -95,8 +93,6 @@
 
 ?>
 
-=======
->>>>>>> parent of 22f8135... PHPの機能を付加
 <!DOCTYPE html>
 <html lang="ja">
 <head>
