@@ -9,9 +9,9 @@
         $first_name=htmlspecialchars($_POST['first_name']);
         $last_name=htmlspecialchars($_POST['last_name']);
         $email=htmlspecialchars($_POST['email']);
-        $pw=htmlspecialchars($_POST['pw']);
-        $pw_check=htmlspecialchars($_POST['pw_check']);
-        $type=$_POST['type'];
+        $passward=htmlspecialchars($_POST['passward']);
+        $passward_check=htmlspecialchars($_POST['passward_check']);
+        $user_type=$_POST['user_type'];
 
         //性が未入力の場合
         if ($first_name == '') {
@@ -32,32 +32,32 @@
         }
 
         //パスワードが未入力の場合
-        if ($pw == '') {
-            $pw_msg = 'パスワードを入力して下さい';
-            $validations['pw'] = '未入力';
+        if ($passward == '') {
+            $passward_msg = 'パスワードを入力して下さい';
+            $validations['passward'] = '未入力';
         }
 
         //確認用パスワードが未入力の場合
-        if ($pw_check == '') {
-            $pw_check_msg = 'パスワードを入力して下さい';
-            $validations['pw_check'] = '未入力';
+        if ($passward_check == '') {
+            $passward_check_msg = 'パスワードを入力して下さい';
+            $validations['passward_check'] = '未入力';
         }
 
         // パスワードと確認用パスワードが一致しない場合またはパスワードが4~8文字の英数字でない場合
-        $pw_length = strlen($pw);
-        $pw_int = preg_match('/[0-9]/', $pw);
-        $pw_alpha = preg_match('/[a-zA-Z]/', $pw);
-        $pw_int_alpha = preg_match('/[^0-9a-zA-Z]/', $pw);
-        if ($pw != '' && $pw_check != '') {
+        $passward_length = strlen($passward);
+        $passward_int = preg_match('/[0-9]/', $passward);
+        $passward_alpha = preg_match('/[a-zA-Z]/', $passward);
+        $passward_int_alpha = preg_match('/[^0-9a-zA-Z]/', $passward);
+        if ($passward != '' && $passward_check != '') {
 
 
             //パスワードと確認用パスワードが一致しない場合
-            if ($pw !== $pw_check) {
+            if ($passward !== $passward_check) {
                 $unmatch_msg = 'パスワードが一致しません';
                 $validations['unmatch'] = '不一致';
 
             //パスワードが4~8文字の英数字でない場合
-            } elseif ($pw_length < 4 || $pw_length > 8 || $pw_int == FALSE || $pw_alpha == FALSE || $pw_int_alpha == TRUE) {
+            } elseif ($passward_length < 4 || $passward_length > 8 || $passward_int == FALSE || $passward_alpha == FALSE || $passward_int_alpha == TRUE) {
                 $unqualified_msg = 'パスワードは4~8文字の英数字で入力して下さい';
                 $validations['unqualified'] = '文字数';
             }
@@ -68,13 +68,13 @@
             $_SESSION['EATY']['first_name']  = $first_name;
             $_SESSION['EATY']['last_name']  = $last_name;
             $_SESSION['EATY']['email']  = $email;
-            $_SESSION['EATY']['pw']  = $pw;
-            $_SESSION['EATY']['type']  = $type;
+            $_SESSION['EATY']['passward']  = $passward;
+            $_SESSION['EATY']['user_type']  = $user_type;
             header('Location: check.php');
             exit();
         }
 
-        if ($type == '生徒') {
+        if ($user_type == '生徒') {
             $radio_t = '';
             $radio_s = 'checked';
         } else {
@@ -87,8 +87,8 @@
         $first_name = '';
         $last_name = '';
         $email = '';
-        $pw = '';
-        $pw_check = '';
+        $passward = '';
+        $passward_check = '';
         $radio_t = 'checked';
         $radio_s = '';
     }
@@ -144,18 +144,18 @@
 
       <!-- Password input-->
       <div class="form-group">
-        <input name="pw" type="password" placeholder="パスワード" class="form-control" style="width:200px; display: inline-block;">
+        <input name="passward" type="password" placeholder="パスワード" class="form-control" style="width:200px; display: inline-block;">
       </div>
 
       <!-- Password input-->
       <div class="form-group">
-        <input name="pw_check" type="password" placeholder="パスワード再入力" class="form-control" style="width:200px; display: inline-block;">
+        <input name="passward_check" type="password" placeholder="パスワード再入力" class="form-control" style="width:200px; display: inline-block;">
       </div>
 
       <div class="form-group">
-        <input type="radio" name="type" id="type-0" value="講師" checked="checked">
+        <input type="radio" name="user_type" id="type-0" value="講師" checked="checked">
         講師
-        <input type="radio" name="type" id="type-1" value="生徒">
+        <input type="radio" name="user_type" id="type-1" value="生徒">
         生徒
       </div>
 
