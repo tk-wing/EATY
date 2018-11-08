@@ -19,7 +19,7 @@
         $password_check = htmlspecialchars($_POST['password_check']);
         $user_type = $_POST['user_type'];
 
-        //性が未入力の場合
+        //姓が未入力の場合
         if ($first_name == '') {
             $first_name_msg = '姓を入力して下さい';
             $validations['first_name'] = '未入力';
@@ -79,6 +79,8 @@
             $resistered_msg = 'このメールアドレスは既に登録されています';
             $validations['resistered'] = '登録済み';
         }
+
+
 
 
         //新規登録情報が適切に入力された場合
