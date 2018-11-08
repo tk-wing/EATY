@@ -134,7 +134,7 @@
 
   <div class="wrapper">
 
-    <div class="blog-inner-prof">
+    <div class="blog-inner-prof text-center">
         <div class="row">
           <div class="col-md-4 text-center">
             <div class="row">
@@ -170,46 +170,158 @@
             </div>
           </div>
 
-          <div class="col-md-1 text-center">
-            <p class="md">開催日時</p>
-            <p>開催場所</p>
-            <p>料金</p>
-            <p>所要時間</p>
-          </div>
-
-          <div class="col-md-3 text-center">
-            <div class="form-group">
-              <div class="col-md-9">
-              <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+          <div class="col-md-4 text-center">
+            <div class="row">
+              <div class="col-md-3">
+                <span style="line-height: 40px;">開催日時</span>
+              </div>
+              <div class=col-md-9>
+                <div class="form-group">
+                  <div class="col-md-9">
+                  <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="form-group">
-              <div class="col-md-9">
-              <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+
+            <div class="row">
+              <div class="col-md-3">
+                <span style="line-height: 40px;">開催場所</span>
+              </div>
+              <div class=col-md-9>
+                <div class="form-group">
+                  <div class="col-md-9">
+                  <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="form-group">
-              <div class="col-md-9">
-              <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+
+            <div class="row">
+              <div class="col-md-3">
+                <span style="line-height: 40px;">料金</span>
+              </div>
+              <div class=col-md-9>
+                <div class="form-group">
+                  <div class="col-md-9">
+                  <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="form-group">
-              <div class="col-md-9">
-              <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+
+            <div class="row">
+              <div class="col-md-3">
+                <span style="line-height: 40px;">所要時間</span>
+              </div>
+              <div class=col-md-9>
+                <div class="form-group">
+                  <div class="col-md-9">
+                  <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-md-4 text-center">
+            <div class="row">
+              <div class="col-md-3">
+                <span style="line-height: 40px;">カテゴリ</span>
+              </div>
+              <div class=col-md-9>
+                <div class="form-group">
+                  <div class="col-md-9">
+                  <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3" style="font-size: 15px;">
+                <span style="line-height: 40px;">メニュー数</span>
+              </div>
+              <div class=col-md-9>
+                <div class="form-group">
+                  <div class="col-md-9">
+                  <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3">
+                <span style="line-height: 40px;">定員</span>
+              </div>
+              <div class=col-md-9>
+                <div class="form-group">
+                  <div class="col-md-9">
+                  <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3" style="font-size: 12px;">
+                <span style="line-height: 40px;">最小催行人数</span>
+              </div>
+              <div class=col-md-9>
+                <div class="form-group">
+                  <div class="col-md-9">
+                  <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-
-          <div class="col-md-1 text-center">
-            <p>予約数/定員</p>
-          </div>
-
-          <div class="col-md-3 text-center">
-            <p>予約数/定員</p>
-          </div>
-
         </div>
+
+        <div class="row">
+          <div class="col-md-4 text-center">
+            <div class="form-group">
+              <label class="col-md-4 control-label" for="career"></label>
+              <div class="col-md-14">
+                <textarea class="form-control" name="lesson_name" style="height: 100px;">レッスン名</textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8 text-center">
+            <div class="form-group">
+              <label class="col-md-4 control-label" for="career"></label>
+              <div class="col-md-14">
+                <textarea class="form-control" name="menu" style="height: 100px;">メニュー概要</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 text-center">
+            <div class="form-group">
+              <label class="col-md-4 control-label" for="career"></label>
+              <div class="col-md-14">
+                <textarea class="form-control" name="require_item" style="height: 100px;">持ち物</textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 text-center">
+            <div class="form-group">
+              <label class="col-md-4 control-label" for="career"></label>
+              <div class="col-md-14">
+                <textarea class="form-control" name="attention" style="height: 100px;">注意事項</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="レッスン登録">
+
     </div>
+
   </div>
 
   <footer>
@@ -222,3 +334,5 @@
   </footer>
 
   </body>
+
+</html>

@@ -15,7 +15,7 @@
 
         //性が未入力の場合
         if ($first_name == '') {
-            $first_name_msg = '性を入力して下さい';
+            $first_name_msg = '姓を入力して下さい';
             $validations['first_name'] = '未入力';
         }
 
@@ -116,7 +116,7 @@
 <body>
 
   <header>
-    <div class="text-center">
+    <div class="text-center" >
       <a href="#"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
@@ -126,7 +126,7 @@
     <form class="signup_form" method="POST" action="">
 
       <!-- Text input-->
-      <div class="form-group" >
+      <div class="form-group">
         <input name="first_name" type="text" placeholder="姓" class="form-control" style="width:200px; display: inline-block;" value="<?=$first_name ?>">
         <?php if(isset($validations['first_name'])): ?>
           <span style="color:red;"><?=$first_name_msg ?></span>
