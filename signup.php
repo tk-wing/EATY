@@ -1,8 +1,14 @@
 <?php
+
     //SESSIONの有効化
     session_start();
 
-    $validations="";
+    //データベースとの接続
+    $dsn = 'mysql:dbname=eaty;host=localhost';
+    $user = 'root';
+    $password = '';
+    $dbh = new PDO($dsn, $user, $password);
+    $dbh->query('SET NAMES utf8');
 
     // POST送信があった場合
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -50,7 +56,6 @@
         $password_int_alpha = preg_match('/[^0-9a-zA-Z]/', $password);
         if ($password != '' && $password_check != '') {
 
-
             //パスワードと確認用パスワードが一致しない場合
             if ($password !== $password_check) {
                 $unmatch_msg = 'パスワードが一致しません';
@@ -63,6 +68,19 @@
             }
         }
 
+        //メールアドレスが登録済みの場合
+        //データベースのデータの読み込み
+        $sql = 'SELECT * FROM `users` WHERE `email` = ?';
+        $data = array($email);
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute($data);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($email == $user['email'] && $user_type == $user['user_type']) {
+            $resistered_msg = 'このメールアドレスは既に登録されています';
+            $validations['resistered'] = '登録済み';
+        }
+
+
         //新規登録情報が適切に入力された場合
         if (empty($validations)) {
             $_SESSION['EATY']['first_name']  = $first_name;
@@ -74,7 +92,8 @@
             exit();
         }
 
-        if ($user_type == '生徒') {
+        //ラジオボタンの値保持
+        if ($user_type == '2') {
             $radio_t = '';
             $radio_s = 'checked';
         } else {
@@ -143,9 +162,12 @@
 
       <!-- Text input-->
       <div class="form-group">
-        <input name="email" type="text" placeholder="メールアドレス" class="form-control" style="width:200px; display: inline-block;" value="<?=$email ?>">
+        <input name="email" type="email" placeholder="メールアドレス" class="form-control" style="width:200px; display: inline-block;" value="<?=$email ?>">
         <?php if(isset($validations['email'])): ?>
           <span style="color:red;"><?=$email_msg ?></span>
+        <?php endif; ?>
+        <?php if(isset($validations['resistered'])): ?>
+          <span style="color:red;"><?=$resistered_msg ?></span>
         <?php endif; ?>
       </div>
 
@@ -172,9 +194,9 @@
       </div>
 
       <div class="form-group">
-        <input type="radio" name="user_type" id="type-0" value="講師" <?=$radio_t ?>>
+        <input type="radio" name="user_type" id="type-0" value=1 <?=$radio_t ?>>
         講師
-        <input type="radio" name="user_type" id="type-1" value="生徒" <?=$radio_s ?>>
+        <input type="radio" name="user_type" id="type-1" value=2 <?=$radio_s ?>>
         生徒
       </div>
 
