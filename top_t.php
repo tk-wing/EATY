@@ -1,3 +1,70 @@
+<?php
+
+
+    //SESSIONの有効化
+    session_start();
+
+    //SESSIONデータの受け取り
+    $user_id = $_SESSION['EATY']['id'];
+
+    //データベースとの接続
+    $dsn = 'mysql:dbname=eaty;host=localhost';
+    $user = 'root';
+    $password = '';
+    $dbh = new PDO($dsn, $user, $password);
+    $dbh->query('SET NAMES utf8');
+
+    //データベースのデータの読み込み
+    $sql = 'SELECT * FROM `profiles_t` INNER JOIN `users` ON `users`.`id` = `profiles_t`.`id` WHERE `users`.`id` = ?';
+    $data = array($user_id);
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+    $profile_t = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    //ニックネームが登録されていない場合
+    if (empty($profile_t['nickname'])) {
+      $nickname = $profile_t['first_name'] . '　' . $profile_t['last_name'];
+    } else {
+      $nickname = $profile_t['nickname'];
+    }
+
+   //画像が登録されていない場合
+    if (empty($profile_t['img_name'])) {
+      $validation[''] = "未設定";
+    }
+
+   //エリアが登録されていない場合
+    if (empty($profile_t['area_id'])) {
+      ;
+    }
+
+   //市町村が登録されていない場合
+    if (empty($profile_t['city'])) {
+      ;
+    }
+
+   //駅が登録されていない場合
+    if (empty($profile_t['station'])) {
+      ;
+    }
+
+   //経歴/資格が登録されていない場合
+    if (empty($profile_t['past'])) {
+      ;
+    }
+
+   //カテゴリーが登録されていない場合
+    if (empty($profile_t['category_id'])) {
+      ;
+    }
+
+   //自己紹介＆コメントが登録されていない場合
+    if (empty($profile_t['profile'])) {
+      ;
+    }
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -40,7 +107,7 @@
           <div class="row">
             <div class="col-md-3 text-center">
               <img class="img-responsive" src="http://placehold.jp/140x140.png" alt="Blog" style="width:140px;height:140px;border-radius: 50%;">
-              <p>ニックネーム</p>
+              <p><?=$nickname ?></p>
               <p>東京都渋谷区 最寄り駅</p>
               <button type="button" class="btn btn-secondary"><i class="far fa-envelope"></i></button>
               <button type="button" class="btn btn-secondary"><i class="far fa-heart"></i></button>
