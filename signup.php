@@ -80,9 +80,6 @@
             $validations['resistered'] = '登録済み';
         }
 
-
-
-
         //新規登録情報が適切に入力された場合
         if (empty($validations)) {
             $_SESSION['EATY']['first_name']  = $first_name;
