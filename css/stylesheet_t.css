@@ -63,6 +63,22 @@ footer{
   border: solid 1px black;
 }
 
+.create_check_content{
+
+}
+
+.lesson_img{
+  margin:10px;
+}
+
+.icon{
+  padding: 5px;
+  margin: 5px;
+  color: white;
+  background-color: #2A8B9A;
+  border-radius: 80%;
+}
+
 .filelabel {
    background-color: #20B47C;  /* 背景色 */
    color: white;              /* 文字色 */

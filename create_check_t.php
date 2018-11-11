@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <title>レッスン管理一覧</title>
+  <title>レッスン作成内容確認</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,8 +32,20 @@
     </div>
   </header>
 
-  <div class="container">
-    
+  <div class="create_check_content text-center">
+    <div class="blog-inner-prof text-center">
+      <h3>レッスン名</h3>
+      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
+      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;"><br>
+      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
+      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
+
+      <div>
+        <span><i class="far fa-calendar-alt fa-2x icon"></i>日時</span>
+        <span><i class="fas fa-train fa-2x icon"></i>最寄り駅</span>
+        <span><i class="fas fa-yen-sign fa-2x icon"></i>料金</span>
+      </div>
+    </div>
   </div>
 
   <footer>

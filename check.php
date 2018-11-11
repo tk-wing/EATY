@@ -10,6 +10,9 @@
     $password = htmlspecialchars($_SESSION['EATY']['password']);
     $user_type = $_SESSION['EATY']['user_type'];
 
+    $modal_display_style = 'display:none;';
+    $modal_display_class = 'fade';
+
     //user_typeの変換(表示用)
     if ($user_type == 1) {
       $type = '講師';
@@ -42,9 +45,17 @@
         $data = array($user_type, $first_name, $last_name, $email, $hash_password);
         $stmt->execute($data);
 
-        //保持データの消去
+        if ($user_type==1) {
+          $modal_display_style_t = 'display:block;';
+          $modal_display_class_t = 'show';
+        } elseif ($user_type ==2) {
+          $modal_display_style_s = 'display:block;';
+          $modal_display_class_s = 'show';
+        }
+
+        // 保持データの消去
         unset($_SESSION['EATY']);
-        exit();
+        // exit();
     }
 
 ?>
@@ -67,6 +78,7 @@
   <script src="js/bootstrap.min.js"></script>
   <!-- FontAwesome読み込み -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css">
+
 </head>
 <body>
 
@@ -75,6 +87,8 @@
       <a href="#"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
+
+
 
   <div class="text-center container">
 
@@ -98,7 +112,37 @@
         <input type="hidden" name="password" value="$password">
         <input type="hidden" name="user_type" value="user_type">
         <input type="button" value="戻る" class="check_btn btn btn-primary" style="width:100px;" onClick="history.back()">
-        <input type="submit" value="登録" class="check_btn btn btn-primary" style="width:100px;">
+        <input type="submit" value="登録" class="check_btn btn btn-primary" id="js-post" style="width:100px;">
+      </div>
+
+      <!-- 講師モーダル -->
+      <div class="modal <?php echo $modal_display_class_t; ?>" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true" style="<?php echo $modal_display_style_t?>">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-body">
+                      <p>ご登録ありがとうございました！</p>
+                      <p>次はプロフィール作成です。</p>
+                  </div>
+                  <div class="modal-footer" style="display: inline-block;">
+                      <a href="edit_prof_t.php"><button type="button" class="btn btn-primary">講師プロフィール作成へ</button></a>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- 生徒モーダル -->
+      <div class="modal <?php echo $modal_display_class_s; ?>" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true" style="<?php echo $modal_display_style_s?>">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-body">
+                      <p>ご登録ありがとうございました！</p>
+                  </div>
+                  <div class="modal-footer" style="display: inline-block;">
+                      <a href="card.html"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                      <a href="card.html"><button type="button" class="btn btn-primary">レッスン検索</button></a>
+                  </div>
+              </div>
+          </div>
       </div>
 
     </form>
@@ -115,30 +159,12 @@
     </div>
   </footer>
 
-  <div class="modal fade" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="demoModalTitle">タイトル</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <div class="modal-body">
-                  内容・・・
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
-                  <a href="card.html"><button type="button" class="btn btn-primary">ボタン</button></a>
-              </div>
-          </div>
-      </div>
-  </div>
-  
+
   <!-- jQuery、Popper.js、Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <!-- <script src="assets/js/app.js"></script> -->
 
 
 </body>
