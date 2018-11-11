@@ -43,7 +43,7 @@
                 $verify = password_verify($password, $user['password']);
 
                 if ($verify==true && $user_type == $user['user_type']) {
-                    $_SESSION["id"] = $user['id'];
+                    $_SESSION['EATY']['id'] = $user['id'];
 
                     //講師と生徒のリンク先の条件分岐
                     if ($user_type == 1) {
