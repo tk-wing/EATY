@@ -61,11 +61,11 @@
       </select>
     </div>
 
+    <input type="submit" class="btn btn-primary" value="レッスン検索">
 
   </div>
 
 
-  <input type="submit" class="btn btn-primary" value="レッスン検索">
 
 
 
