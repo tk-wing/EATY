@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <title>講師 プロフィール編集</title>
+  <title>生徒 プロフィール編集</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -94,27 +94,8 @@
             </div>
           </div>
 
-          <!-- Password input-->
           <div class="row">
             <p class="col-md-8 check_content">メールアドレス</p>
-          </div>
-
-          <!-- Select Basic -->
-          <div class="form-group">
-            <div class="row">
-              <div class="col-md-4">
-                <select id="pref" name="pref" class="form-control">
-                  <option value="1">Option one</option>
-                  <option value="2">Option two</option>
-                </select>
-              </div>
-              <div class="col-md-4">
-                <input id="city" name="city" type="text" placeholder="市区町村" class="form-control input-md">
-              </div>
-              <div class="col-md-4">
-                <input id="textinput" name="textinput" type="text" placeholder="最寄り駅" class="form-control input-md">
-              </div>
-            </div>
           </div>
 
           <div class="form-group">
@@ -128,14 +109,6 @@
               <div class="col-md-6">
                 <input id="genre_other" name="genre_other" type="text" placeholder="その他ジャンル" class="form-control input-md">
               </div>
-            </div>
-          </div>
-
-          <!-- Textarea -->
-          <div class="form-group">
-            <label class="col-md-4 control-label" for="career"></label>
-            <div class="col-md-14">
-              <textarea class="form-control" id="career" name="career" style="height: 100px;">※経歴／資格</textarea>
             </div>
           </div>
 
