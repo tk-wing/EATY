@@ -1,0 +1,59 @@
+tml, body {
+  height: 100%;
+  width: 100%;
+  }
+
+header{
+  height:15%;
+  padding: 15px 0;
+  margin:0px 30px;
+  border-bottom: solid 2px black;
+}
+
+footer{
+  height:10%;
+  margin:0px 30px;
+  border-top: solid 2px black;
+}
+
+.my-btn{
+  margin:12px 0;
+}
+
+.my-btn-signup{
+  margin-top:20px;
+}
+
+.sns{
+  margin:15px 0;
+}
+
+.sns-btn{
+  padding-right: 10px;
+  color: black;
+}
+
+.top_s{
+  padding-right:15px;
+  padding-left: 15px;
+}
+
+.wrapper{
+  margin-top: 50px;
+  margin-bottom: 100px;
+  margin-right: 85px;
+  margin-left: 85px;
+}
+
+.wrapper_col{
+  margin-top: 50px;
+  margin-bottom: 100px;
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
+.title{
+  border-bottom: solid 2px black;
+  padding: 20px;
+  margin: 15px 0;
+}

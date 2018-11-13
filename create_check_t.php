@@ -40,11 +40,64 @@
       <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
       <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
 
-      <div>
-        <span><i class="far fa-calendar-alt fa-2x icon"></i>日時</span>
-        <span><i class="fas fa-train fa-2x icon"></i>最寄り駅</span>
-        <span><i class="fas fa-yen-sign fa-2x icon"></i>料金</span>
+      <div class="row contents">
+          <div class="col-md-4">
+            <span><i class="far fa-calendar-alt fa-2x icon"></i>日時</span>
+          </div>
+          <div class="col-md-4">
+            <span><i class="fas fa-train fa-2x icon"></i>最寄り駅</span>
+          </div>
+          <div class="col-md-4">
+            <span><i class="fas fa-yen-sign fa-2x icon"></i>料金</span>
+          </div>
       </div>
+
+      <div class="row content_border">
+        <div class="col-md-6" style="border-right: 1px solid #ccc;">
+          <span>メニュー数</span>
+        </div>
+        <div class="col-md-6">
+          <span>所要時間</span>
+        </div>
+      </div>
+
+      <div>
+        <ul>
+          <li>メニュー内容</li>
+          <li>メニュー内容</li>
+          <li>メニュー内容</li>
+          <li>メニュー内容</li>
+          <li>メニュー内容</li>
+          <li>メニュー内容</li>
+        </ul>
+      </div>
+
+      <div class="contents">
+        <h4>レッスン詳細</h4>
+      </div>
+
+      <ul class="contents" id="lesson-list">
+          <li class="lesson-list-item">
+            <h3>持ち物</h3>
+            <span>+</span>
+            <div class="inner">
+              <p>持ち物を表示</p>
+            </div>
+          </li>
+          <li class="lesson-list-item">
+            <h3>注意事項</h3>
+            <span>+</span>
+            <div class="inner">
+              <p>注意事項を表示</p>
+            </div>
+          </li>
+        </ul>
+
+        <form method="POST" action="">
+          <input type="submit" class="btn btn-primary" value="完了">
+          <a href="#"><button type="button" class="btn btn-secondary">編集</button></a>
+        </form>
+
     </div>
   </div>
 
@@ -57,6 +110,7 @@
     </div>
   </footer>
 
-    </body>
+  <script src="js/app.js"></script>
+</body>
 
   </html>
