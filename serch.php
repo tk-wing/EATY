@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="css/stylesheet_t.css">
+  <link rel="stylesheet" href="css/stylesheet_serch.css">
     <!-- BootstrapのCSS読み込み -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <!-- jQuery読み込み -->
@@ -19,9 +19,9 @@
   <link rel="stylesheet" href="css/style.css">
 
   <!-- Modernizr JS -->
-  <!-- <script src="js/modernizr-2.6.2.min.js"></script> -->
+  <script src="js/modernizr-2.6.2.min.js"></script>
   <!-- viewport meta -->
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
    
@@ -37,28 +37,40 @@
 
    
     <div class="title font-weight-bold">
-      日付<select id="genre" name="genre" class="form-control">
-        <option value="1">Option one</option>
-        <option value="2">Option two</option>
-      </select>
+      日付
+      <div style="float: right">
+        <select id="genre" name="genre" class="form-control">
+          <option value="1">Option one</option>
+          <option value="2">Option two</option>
+        </select>
+      </div>
     </div>
     <div class="title font-weight-bold">
-      開催場所<select id="genre" name="genre" class="form-control">
-        <option value="1">Option one</option>
-        <option value="2">Option two</option>
-      </select>
+      開催場所
+      <div style="float: right">
+        <select id="genre" name="genre" class="form-control">
+          <option value="1">Option one</option>
+          <option value="2">Option two</option>
+        </select>
+      </div>
     </div>
     <div class="title font-weight-bold">
-      ジャンル<select id="genre" name="genre" class="form-control">
-        <option value="1">Option one</option>
-        <option value="2">Option two</option>
-      </select>
+      ジャンル
+      <div style="float: right">
+        <select id="genre" name="genre" class="form-control">
+          <option value="1">Option one</option>
+          <option value="2">Option two</option>
+        </select>
+      </div>
     </div>
     <div class="title font-weight-bold">
-      キーワード<select id="genre" name="genre" class="form-control">
-        <option value="1">Option one</option>
-        <option value="2">Option two</option>
-      </select>
+      キーワード
+      <div style="float: right">
+        <select id="genre" name="genre" class="form-control">
+          <option value="1">Option one</option>
+          <option value="2">Option two</option>
+        </select>
+      </div>
     </div>
 
     <input type="submit" class="btn btn-primary" value="レッスン検索">
