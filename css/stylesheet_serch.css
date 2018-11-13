@@ -1,0 +1,91 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  }
+
+header{
+  height:15%;
+  padding-top: 15px;
+  margin:0px 30px;
+  border-bottom: solid 2px black;
+}
+
+footer{
+  height:10%;
+  margin:0px 30px;
+  border-top: solid 2px black;
+}
+
+.my-btn{
+  margin:12px 0;
+}
+
+.my-btn-signup{
+  margin-top:20px;
+}
+
+.sns{
+  margin:15px 0;
+}
+
+.sns-btn{
+  padding-right: 10px;
+  color: black;
+}
+
+.wrapper{
+  margin-top: 50px;
+  margin-bottom: 100px;
+  margin-right: 85px;
+  margin-left: 85px;
+}
+
+.top-content{
+  margin:50px;
+}
+
+.title{
+  border-bottom: solid 2px black;
+  padding: 20px 450px;
+  margin: 15px 0;
+}
+
+.edit_content{
+  height: 75%;
+  margin: 100px 350px;
+}
+
+.check_content{
+  padding:5px 0;
+  margin-bottom: 30px;
+  margin-left: 15px;
+  margin-right: 135px;
+  border: solid 1px black;
+}
+
+.filelabel {
+   background-color: #20B47C;  /* 背景色 */
+   color: white;              /* 文字色 */
+   border: 2px solid #20B47C;  /* 枠線 */
+   border-radius: 1em;        /* 角丸 */
+   padding: 5px 10px;         /* 内側の余白 */
+   display: inline-block;     /* インラインブロック化 */
+   margin-top: 10px;
+}
+.filelabel img {
+   vertical-align: bottom;    /* 画像の垂直方向の配置 */
+}
+.filelabel:hover {
+   opacity: 0.5;              /* 半透明 */
+   border: 2px solid red;     /* 枠線(赤色) */
+   cursor: pointer;           /* マウス形状(ポインタ) */
+}
+
+.filelabel_create:hover {
+   opacity: 0.5;              /* 半透明 */
+   border: 2px solid red;     /* 枠線(赤色) */
+   cursor: pointer;           /* マウス形状(ポインタ) */
+}
+.filesend {
+   display: none;  /* 本来のファイル選択フォームは非表示に */
+}
