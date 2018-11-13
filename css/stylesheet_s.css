@@ -52,8 +52,26 @@ footer{
   margin-left: 15px;
 }
 
+.bkg_content{
+  margin-top: 60px;
+  margin-right: 300px;
+  margin-left: 300px;
+}
+
 .title{
   border-bottom: solid 2px black;
   padding: 20px;
   margin: 15px 0;
+}
+
+.title_1{
+  border-bottom: 1px solid #ccc;
+  padding: 20px;
+  margin: 15px 100px;
+}
+
+.title_2{
+  border-bottom: 1px solid #ccc;
+  padding: 0 20px;
+  margin: 15px 100px;
 }
