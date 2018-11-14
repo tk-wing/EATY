@@ -59,20 +59,15 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-4 text-right">
+              <div class="col text-right">
                 <a href="#"><button type="button" class="btn btn-secondary">つくれぽ一覧を見る</button></a><br>
                 <a href="#"><button type="button" class="btn btn-secondary">お気に入りレッスン</button></a>
               </div>
-              <div class="col-4 text-left">
+              <div class="col text-left">
                 <a href="#"><button type="button" class="btn btn-secondary">つくれぽを投稿する</button></a><br>
-                <a href="#"><button type="button" class="btn btn-secondary" style="width:170px;">お気に入り講師</button></a>
-              </div>
-              <div class="col-4">
-                <a href="#"><button type="button" class="btn btn-secondary">プロフィール編集</button></a>
+                <a href="#"><button type="button" class="btn btn-secondary" style="width: 170px;">プロフィール編集</button></a>
               </div>
             </div>
-        </div>
-        <div class="text-center">
         </div>
       </div>
     </div>
