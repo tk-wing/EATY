@@ -34,8 +34,7 @@
       <a href="#"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
-  確認用
-
+  理解しました
 
  <a href="">検査条件をクリア</a>
 
