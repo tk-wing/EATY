@@ -34,6 +34,7 @@
       <a href="#"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
+  確認用
 
 
  <a href="">検査条件をクリア</a>
@@ -123,6 +124,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="item col-xs-4 col-lg-4">
                     <div class="thumbnail card">
                         <div class="img-event">
