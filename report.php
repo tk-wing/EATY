@@ -148,9 +148,27 @@
 
   </div>
 
+<<<<<<< HEAD
 
 
 
+=======
+  <div id="report_modal">
+    <div class="report_modal">
+      <div class="blog-inner">
+        <div class="close-modal">
+          <i class="fa fa-2x fa-times"></i>
+        </div>
+        <span>2018/12/31</span><br>
+        <img class="img-responsive" src="http://placehold.jp/250x150.png" alt="Blog">
+        <div class="desc">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+        </div>
+      </div>
+    </div>
+  </div>
+>>>>>>> master
 
   <footer>
     <div class="sns text-center">
