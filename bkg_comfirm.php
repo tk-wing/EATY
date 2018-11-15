@@ -20,7 +20,7 @@
 <body>
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/logo/logo.jpg" width="90"></a>
+      <a href="#"><img src="img/logo.jpg" width="90"></a>
     </div>
   </header>
 
@@ -33,7 +33,8 @@
       <p class="title front-weight-bold">お名前</p>
       <p class="title front-weight-bold">メールアドレス</p>
       <p class="title front-weight-bold">メッセージ</p>
-      <input type="submit" value="この内容で予約" class="btn btn-primary" style="width:200px;"><input type="submit" value="予約内容を変更" class="btn btn-primary" style="width:200px;">
+      <br>
+      <div class="text-center"><input type="submit" value="この内容で予約" class="btn btn-primary" style="width:200px;"><input type="submit" value="予約内容を変更" class="btn btn-primary" style="width:200px;"></div>
     </form>
   </div>
 
