@@ -34,7 +34,7 @@
       <p class="title front-weight-bold">メールアドレス</p>
       <p class="title front-weight-bold">メッセージ</p>
       <br>
-      <div class="text-center"><input type="submit" value="この内容で予約" class="btn btn-primary" style="width:200px;"><input type="submit" value="予約内容を変更" class="btn btn-primary" style="width:200px;"></div>
+      <div class="text-center"><input type="submit" value="この内容で予約" class="btn btn-primary mr-2" style="width:200px;"><input type="submit" value="予約内容を変更" class="btn btn-primary" style="width:200px;"></div>
     </form>
   </div>
 
