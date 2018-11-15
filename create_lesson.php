@@ -1,3 +1,32 @@
+<?php
+       //SESSIONの有効化
+    session_start();
+
+    //データベースとの接続
+
+
+
+
+
+    //POST送信
+    if (!empty($_POST)) {
+      $day = $_POST['day'];
+      $daytime = $_POST['daytime'];
+      $place = $_POST['place'];
+      $hourtime = $_POST['hourtime'];
+      $category = $_POST['category'];
+      $basic = $_POST['basic'];
+      $lesson_name = $_POST['lesson_name'];
+      $menudetail = $_POST['menudetail'];
+      $precaution = $_POST['precaution'];
+
+    
+    
+    
+    
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
