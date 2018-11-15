@@ -173,12 +173,25 @@
           <div class="col-md-4 text-center">
             <div class="row">
               <div class="col-md-3">
-                <span style="line-height: 40px;">開催日時</span>
+                <span style="line-height: 40px;">開催日</span>
               </div>
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="name" type="text" placeholder="" class="form-control input-md">
+                  <input id="name" name="name" type="date" placeholder="" class="form-control input-md">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3">
+                <span style="line-height: 40px;">開催時間</span>
+              </div>
+              <div class=col-md-9>
+                <div class="form-group">
+                  <div class="col-md-9">
+                  <input id="name" name="name" type="time" placeholder="" class="form-control input-md">
                   </div>
                 </div>
               </div>
