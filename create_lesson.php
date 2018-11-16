@@ -28,8 +28,13 @@
       if ($menudetail == '') {
           $validations['menudetail']='blank';
       }
-      if ($precaution == '') {
+
+      if ($bring == '') {
           $validations['bring']='blank';
+      }
+
+      if ($precaution == '') {
+          $validations['precaution']='blank';
       }
 
 
@@ -350,7 +355,7 @@
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="lesson_name" placeholder="レッスン名" value="<?=$lesson_name ?>" style="height: 100px;"></textarea>
+                <textarea class="form-control" name="lesson_name" placeholder="レッスン名" style="height: 100px;"></textarea>
                 <?php if(isset($validations['lesson_name'])&& $validations['lesson_name']=='blank'): ?>
                   <span class="error_msg">レッスン名を入力してください</span>
                 <?php endif; ?>
@@ -361,10 +366,11 @@
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="menudetail" placeholder="メニュー概要" value="<?=$menudetail ?>" style="height: 100px;"></textarea>
+                <textarea class="form-control" name="menudetail" placeholder="メニュー概要" style="height: 100px;"></textarea>
                 <?php if(isset($validations['menudetail'])&& $validations['menudetail']=='blank'): ?>
                   <span class="error_msg">メニュー概要を入力してください</span>
                 <?php endif; ?>
+
               </div>
             </div>
           </div>
@@ -375,7 +381,10 @@
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="require_item" style="height: 100px;">持ち物</textarea>
+                <textarea class="form-control" name="bring" placeholder="持ち物" style="height: 100px;"></textarea>
+                <?php if(isset($validations['bring'])&& $validations['bring']=='blank'): ?>
+                  <span class="error_msg">持ち物を記入してください</span>
+                <?php endif; ?>
               </div>
             </div>
           </div>
@@ -383,7 +392,10 @@
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="attention" style="height: 100px;">注意事項</textarea>
+                <textarea class="form-control" name="precaution" placeholder="注意事項" style="height: 100px;"></textarea>
+                <?php if(isset($validations['precaution'])&& $validations['precaution']=='blank'): ?>
+                  <span class="error_msg">注意事項を入力してください</span>
+                <?php endif; ?>
               </div>
             </div>
           </div>
