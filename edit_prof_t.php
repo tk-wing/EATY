@@ -17,6 +17,7 @@
 
     v($signin_user, '$signin_user');
 
+    // 必須項目
     $last_name = $signin_user['last_name'];
     $first_name = $signin_user['first_name'];
     $area_id = '';
@@ -30,24 +31,25 @@
     $profile = '';
     $file_name = '';
 
-    // V($_FILES, '$_FILES');
+    V($_FILES, '$_FILES');
     // V($_POST, '$_POST');
 
     // 都道府県情報の取得
     $areas_sql='SELECT * FROM `areas`';
     $areas_stmt = $dbh->prepare($areas_sql);
-    $data = [];
-    $areas_stmt->execute($data);
+    $areas_sql_data = [];
+    $areas_stmt->execute($areas_sql_data);
 
     // カテゴリー情報を取得
     $categories_sql='SELECT * FROM `categories`';
     $categories_stmt = $dbh->prepare($categories_sql);
-    $data = [];
-    $categories_stmt->execute($data);
+    $categories_sql_data = [];
+    $categories_stmt->execute($categories_sql_data);
 
 
 
     if(!empty($_POST)){
+        //必須項目
         $last_name = $_POST['last_name'];
         $first_name = $_POST['first_name'];
         $area_id = $_POST['area'];
@@ -69,21 +71,32 @@
             }
         }
 
+        // 画像ネーム取得
         $file_name = $_FILES['img_name']['name'];
 
-
-
+        // 必須項目入力済みの場合の処理
         if(empty($validations)) {
 
-            $file_name = date('YmdHis') .$_FILES['img_name']['name'];
-            $tmp_file = $_FILES['img_name']['tmp_name'];
-            $destination = 'user_profile_img/'.$file_name;
-            move_uploaded_file($tmp_file, $destination);
+            if ($_FILES['img_name']['name'] != '') {
+                $file_name = date('YmdHis') .$_FILES['img_name']['name'];
+                $tmp_file = $_FILES['img_name']['tmp_name'];
+                $destination = 'user_profile_img/'.$file_name;
+                move_uploaded_file($tmp_file, $destination);
+            }else{
+                $file_name = '';
+            }
 
+            // profile_tへデータ登録
             $sql='INSERT INTO `profiles_t` SET `user_id`=?, `nickname`=?, `img_name`=?, `area_id`=?, `city`=?, `station`=?, `past`=?, `profile`=?, `created`=NOW()';
             $stmt = $dbh->prepare($sql);
             $data = array($signin_user['id'],$nickname, $file_name, $area_id, $city, $station, $past, $profile);
             $stmt->execute($data);
+
+            // user_categoriesへデータ登録
+            $user_categories_sql='INSERT INTO `user_categories` SET `user_id`=?, `category_id`=?, `created`=NOW()';
+            $user_categories_stmt = $dbh->prepare($user_categories_sql);
+            $user_categories_data = array($signin_user['id'], $category_id);
+            $user_categories_stmt->execute($user_categories_data);
 
 
             header('Location: top_t.php');
