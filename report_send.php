@@ -20,7 +20,7 @@
 <body>
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/logo/logo.jpg" width="90"></a>
+      <a href="#"><img src="img/logo.jpg" width="90"></a>
     </div>
   </header>
 
