@@ -27,7 +27,7 @@
 
   <!-- ヘッダー -->
   <header>
-    <button type="button" class="btn btn-secondary my-btn">TOP</button>
+    <button type="button" class="btn btn-light my-btn">TOP</button>
     <div class="sns">
       <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>
       <a href="" class="btn-twitter sns-btn"><i class="fab fa-twitter fa-2x"></i></a>
@@ -38,22 +38,24 @@
   <!-- TOP上部・３つのボタン・コンセプト -->
   <div class="top wrapper">
     <!-- TOP上部 -->
-    <div class="container text-center">
-      <img src="img/exchef.png" width="400"><br>
-      <a href="signup.php"><button type="button" class="btn btn-secondary my-btn-signup">新規登録</button></a>
-    </div>
+    <div class="container-flued" style="background-image: url(img/top2.jpg); height: 800px; background-size:cover;">
+      <img class="mx-auto d-block"src="img/logo2.png" width="300">
+
+      <a href="signup.php"><button type="button" class="mx-auto d-block btn btn-outline-dark my-btn-signup">新規登録</button></a>
+    
 
     <!-- 3つのボタン -->
     <div class="row top-content">
       <div class="col text-center area aboutus">
-        <a href="#aboutus"><button type="button" class="btn btn-secondary">about us</button></a>
+        <a href="#aboutus"><button type="button" class="btn btn-outline-dark">about us</button></a>
       </div>
       <div class="col text-center area signin">
-        <a href="signin.php"><button type="button" class="btn btn-secondary">ログイン</button></a>
+        <a href="signin.php"><button type="button" class="btn btn-outline-dark">ログイン</button></a>
       </div>
       <div class="col text-center area serch">
-      <button type="button" class="btn btn-secondary">レッスン検索</button>
+      <button type="button" class="btn btn-outline-dark">レッスン検索</button>
       </div>
+    </div>
     </div>
     <!-- コンセプト -->
     <div class="concept" id="aboutus">
