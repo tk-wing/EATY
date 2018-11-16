@@ -1,3 +1,12 @@
+<?php 
+
+    require('dbconnect.php');
+    require('functions.php');
+
+    v($_POST,'$POST');
+    
+ ?>
+
 <!DOCTYPE html>
 <html>
 <head>
