@@ -1,8 +1,57 @@
+<?php
+       //SESSIONの有効化
+    session_start();
+
+    //データベースとの接続
+    require('dbconnect.php');
+    require('functions.php');
+
+    v($_POST,'$POST');
+
+
+    $validations = array();
+
+    $lesson_name = '';
+    $menudetail = '';
+    $bring = '';
+    $precaution = '';
+
+    if (!empty($_POST)) {
+      $lesson_name = $_POST['lesson_name'];
+      $menudetail = $_POST['menudetail'];
+      $bring = $_POST['bring'];
+      $precaution = $_POST['precaution'];
+
+      if ($lesson_name=='') {
+          $validations['lesson_name'] = 'blank';
+      }
+      if ($menudetail == '') {
+          $validations['menudetail']='blank';
+      }
+      if ($precaution == '') {
+          $validations['bring']='blank';
+      }
+
+
+    }
+
+
+    
+    
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <title>レッスン作成</title>
   <meta charset="utf-8">
+   <style>
+    .error_msg{
+      color: red;
+      font-size: 12px;
+    }
+  </style>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -131,6 +180,9 @@
       <a href="#"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
+
+  <form class="signup_form" method="POST" action="">
+
 
   <div class="wrapper">
 
@@ -298,7 +350,10 @@
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="lesson_name" style="height: 100px;">レッスン名</textarea>
+                <textarea class="form-control" name="lesson_name" placeholder="レッスン名" value="<?=$lesson_name ?>" style="height: 100px;"></textarea>
+                <?php if(isset($validations['lesson_name'])&& $validations['lesson_name']=='blank'): ?>
+                  <span class="error_msg">レッスン名を入力してください</span>
+                <?php endif; ?>
               </div>
             </div>
           </div>
@@ -306,7 +361,10 @@
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="menu" style="height: 100px;">メニュー概要</textarea>
+                <textarea class="form-control" name="menudetail" placeholder="メニュー概要" value="<?=$menudetail ?>" style="height: 100px;"></textarea>
+                <?php if(isset($validations['menudetail'])&& $validations['menudetail']=='blank'): ?>
+                  <span class="error_msg">メニュー概要を入力してください</span>
+                <?php endif; ?>
               </div>
             </div>
           </div>
@@ -335,9 +393,9 @@
 
     </div>
 
-  </div>
-
-  <footer>
+   </div>
+</form>
+ <footer>
     <div class="sns text-center">
       <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>
       <a href="" class="btn-twitter sns-btn"><i class="fab fa-twitter fa-2x"></i></a>
