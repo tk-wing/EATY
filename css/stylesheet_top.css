@@ -34,14 +34,12 @@ footer{
   color: white;
 }
 
-
 .wrapper{
   margin: 60px 0px;
 
 
 }
 .container{
-  border: solid 2px black;
   height: 500px;
 }
 .container img{
@@ -51,8 +49,8 @@ footer{
 
 .top-content{
   margin-top: 230px;
+  background-color: #94929259;
 }
-
 
 
 .area{
@@ -63,6 +61,8 @@ footer{
 .title{
   padding: 20px;
   margin: 15px 0;
+  font-size: 30px;
+  font-family: fantasy;
 }
 
 .middle-content{
@@ -79,4 +79,25 @@ footer{
 
 .report{
   margin-bottom: 100px;
+}
+
+.concept{
+  font-size: 30px
+}
+
+.circle{
+  display: inline-block;
+  width:200px;
+  height: 200px;
+  border-radius: 50%;
+  background: skyblue;
+  text-align:center;
+  line-height: 200px;
+  vertical-align: middle;
+  margin: 30px;
+  font-size: 23px
+}
+
+.maltiply{
+  font-size: 50px
 }
