@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php 
 
     require('dbconnect.php');
@@ -7,6 +8,8 @@
     
  ?>
 
+=======
+>>>>>>> master
 <!DOCTYPE html>
 <html>
 <head>

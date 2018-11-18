@@ -1,4 +1,4 @@
-tml, body {
+html, body {
   height: 100%;
   width: 100%;
   }
@@ -14,6 +14,11 @@ footer{
   height:10%;
   margin:0px 30px;
   border-top: solid 2px black;
+}
+
+ul{
+  list-style: none;
+  padding: 0;"
 }
 
 .my-btn{
@@ -74,6 +79,67 @@ footer{
   border-bottom: 1px solid #ccc;
   padding: 0 20px;
   margin: 15px 100px;
+
+}
+
+.lesson_content{
+  margin-top: 60px;
+  margin-right: 300px;
+  margin-left: 300px;
+}
+
+.lesson_img{
+  margin:10px;
+}
+
+.contents{
+  padding-right: 120px;
+  padding-left: 120px;
+}
+
+.content_border{
+  margin: 15px 0;
+  border: 1px solid #ccc;
+}
+
+.icon{
+  padding: 5px;
+  margin: 5px;
+  color: white;
+  background-color: #2A8B9A;
+  border-radius: 80%;
+}
+
+.contents h4{
+  border-top: 1px solid #ccc;
+  padding-top: 15px;
+}
+
+.lesson-list-item {
+  margin:10px;
+  border-bottom:1px solid #ccc;
+  position:relative;
+  cursor:pointer;
+  text-align: left;
+}
+
+.lesson-list-item h3 {
+  font-size: 20px;
+}
+
+.lesson-list-item span {
+  position:absolute;
+  top:0;
+  right:5px;
+  color:#ccc;
+  font-size:13px;
+}
+
+.inner {
+  font-size: 15px;
+  padding: 5px 0px;
+  margin-bottom: 15px;
+  display: none;
 
 }
 
