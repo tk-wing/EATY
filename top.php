@@ -41,7 +41,7 @@
     <div class="container-flued" style="background-image: url(img/top2.jpg); height: 800px; background-size:cover;">
       <img class="mx-auto d-block"src="img/logo2.png" width="300">
 
-      <a href="signup.php"><button type="button" class="mx-auto d-block btn btn-outline-dark my-btn-signup">新規登録</button></a>
+      <a href="signup.php"><button type="button" class="mx-auto d-block btn btn-default my-btn-signup">新規登録</button></a>
     
 
     <!-- 3つのボタン -->
