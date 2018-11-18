@@ -47,13 +47,13 @@
     <!-- 3つのボタン -->
     <div class="row top-content">
       <div class="col text-center area aboutus">
-        <a href="#aboutus"><button type="button" class="btn btn-outline-dark">about us</button></a>
+        <a href="#aboutus"><button type="button" class="btn btn-default">about us</button></a>
       </div>
       <div class="col text-center area signin">
-        <a href="signin.php"><button type="button" class="btn btn-outline-dark">ログイン</button></a>
+        <a href="signin.php"><button type="button" class="btn  btn-default">ログイン</button></a>
       </div>
       <div class="col text-center area serch">
-      <button type="button" class="btn btn-outline-dark">レッスン検索</button>
+      <button type="button" class="btn btn-default">レッスン検索</button>
       </div>
     </div>
     </div>
@@ -63,8 +63,9 @@
       <div class="container">
         <div class="text-center">
           <a class="circle">教えたいexchef</a>
-          <a class="text-center maltiply">×</a>
+          <a class="maltiply">×</a>
           <a class="circle">習いたいYOU</a>
+          <div class="text-center description">Our web service is “ex chef” for connecting those who would like to work with professional skill of cooking and baking with those who would like to learn how to cook and bake.“ex chef”とは、料理とベーキングの専門的なスキルを身につけたい人と、料理とベーキングの方法を学びたい人とをつなぐためのサービスです。</div>
         </div>
       </div>
     </div>
