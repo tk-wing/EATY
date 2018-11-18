@@ -41,7 +41,6 @@ footer{
 
 }
 .container{
-  border: solid 2px black;
   height: 500px;
 }
 .container img{
@@ -63,8 +62,24 @@ footer{
 .title{
   padding: 20px;
   margin: 15px 0;
+  font-size: 30px;
 }
 
+.circle{
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: skyblue;
+  text-align:center;
+  line-height: 200px;
+  vertical-align: middle;
+  font-size: 23px;
+}
+
+.maltiply{
+  font-size: 50px;
+}
 .middle-content{
   margin:20px 15px;
   padding: 0 15px;

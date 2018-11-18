@@ -61,7 +61,11 @@
     <div class="concept" id="aboutus">
       <div class="text-center title">about us</div>
       <div class="container">
-        <div class="text-center"><img src="img/concept.png" width="1000"></div>
+        <div class="text-center">
+          <a class="circle">教えたいexchef</a>
+          <a class="text-center maltiply">×</a>
+          <a class="circle">習いたいYOU</a>
+        </div>
       </div>
     </div>
 
