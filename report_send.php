@@ -1,7 +1,7 @@
 <?php 
 
-    //require('dbconnect.php');
-    //require('functions.php');
+    require('dbconnect.php');
+    require('functions.php');
 
     var_dump($_POST,'$POST');
 
