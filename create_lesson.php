@@ -122,21 +122,27 @@
 
         }
         if(empty($validations)){
+            
 
+            $str_1 = 'users_lesson_img/'.$_FILES['img_1']['name'];
 
+            $str_1 = mb_convert_encoding($str_1, "SJIS", "AUTO");//mb_convert_encoding(エンコードしたい部分, "変換したいコード", "変更前のコード")
+            //AUTOにしておけば特に前のコードを気にすることが無い。
+            //Windowsベースで日本語ファイルを保存する場合には
+            //SJISでないと文字化けする。
+            move_uploaded_file($_FILES['img_1']['tmp_name'], $str_1);
 
-            $tmp_file = $_FILES['img_1']['img_2']['img_3']['img_4']['tmp_name'];
+            $str_2 = 'users_lesson_img/'.$_FILES['img_2']['name'];
+            $str_2 = mb_convert_encoding($str_2, "SJIS", "AUTO");
+            move_uploaded_file($_FILES['img_2']['tmp_name'], $str_2);
 
+            $str_3 = 'users_lesson_img/'.$_FILES['img_3']['name'];
+            $str_3 = mb_convert_encoding($str_3, "SJIS", "AUTO");
+            move_uploaded_file($_FILES['img_3']['tmp_name'], $str_3);
 
-            //tmp仮置き
-            $file_name = date('YmdHis') . $_FILES['img_1']['img_2']['img_3']['img_4']['name'];
-            //被らないようにするための↑
-            //YmdHis時間
-            $destination = 'users_profile_img/' . $file_name;
-            //ディレクトリがないよというエラーが出る
-            //パーミッション
-            //このままだとかぶるので
-            move_uploaded_file($tmp_file, $destination);
+            $str_4 = 'users_lesson_img/'.$_FILES['img_4']['name'];
+            $str_4 = mb_convert_encoding($str_4, "SJIS", "AUTO");
+            move_uploaded_file($_FILES['img_4']['tmp_name'], $str_4);
             //レッスン作成が適切に入力されていた場合
             //格項目
             $_SESSION['EATY']['day']  = $day;
