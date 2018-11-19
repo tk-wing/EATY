@@ -3,7 +3,7 @@
     session_start();
     require('dbconnect.php');
     require('functions.php');
-    $sql = 'SELECT * FROM `profiles_s` WHERE `user_id`=?';
+    $sql = 'SELECT * FROM `profiles_s` WHERE `id`=?';
     $data = array($_SESSION['id']);
 
     $stmt = $dbh->prepare($sql);
@@ -100,7 +100,7 @@
         <form method="POST" action="">
           <div class="row">
             <div class="col-md-12">
-              <img src="user_profile_img/<?php echo $signin_user['img_name']; ?>"style="width:100px;height:100px;border-radius: 50%;">
+              <img src="user_profile_img/<?php echo $signin_user['img_name']; ?>" style="width:100px;height:100px;border-radius: 50%;">
               <p><?php echo $signin_user['nickname']; ?></p>
               <div class="form-group">
                 <input id="textinput" name="post_time" type="text" placeholder="投稿日" class="form-control input-md col-md-5" style="display: inline-block;">
