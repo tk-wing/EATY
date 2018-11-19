@@ -8,6 +8,7 @@
 
 
     v($_FILES,'$_FILES');
+    v($_POST,'$_POST');
 
 
     //どのユーザーがレッスン作成をするのかのDB読み込み
@@ -15,7 +16,7 @@
     $data = array($_SESSION['id']);
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
-    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);//$
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
     $validations = [];
