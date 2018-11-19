@@ -1,3 +1,55 @@
+<?php
+    session_start();//SESSIONスタートしてないと、エラーが出る
+
+    //データベースとの接続
+    require('dbconnect.php');
+    require('functions.php');
+    
+
+    v($_POST,'$_POST');
+    v($_SESSION,'$_SESSION');
+
+    //$_SESSIONの中にEATYが定義されてなければcreate_lesson.phpへ
+    if (!isset($_SESSION['EATY'])) {
+      header('Location: create_lesson.php');
+    }
+
+        $day = $_SESSION['EATY']['day'];
+        $daytime = $_SESSION['EATY']['daytime'];
+        $place = $_SESSION['EATY']['place'];
+        $fee = $_SESSION['EATY']['fee'];
+        $requiretime = $_SESSION['EATY']['requiretime'];
+        $category_id = $_SESSION['EATY']['category_id'];
+        $menu = $_SESSION['EATY']['menu'];
+        $capacity = $_SESSION['EATY']['capacity'];
+        $basic = $_SESSION['EATY']['basic'];
+        $lesson_name = $_SESSION['EATY']['lesson_name'];
+        $menudetail = $_SESSION['EATY']['menudetail'];
+        $bring = $_SESSION['EATY']['bring'];
+        $precaution = $_SESSION['EATY']['precaution'];
+        //画像
+        $img_1 = $_SESSION['EATY']['img_1'];
+        $img_2 = $_SESSION['EATY']['img_2'];
+        $img_3 = $_SESSION['EATY']['img_3'];
+        $img_4 = $_SESSION['EATY']['img_4'];
+
+        if (!empty($_POST)) {
+        $sql = 'INSERT INTO `lessons_t` SET `img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`place`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`user_id`=?,`created`= NOW()';
+        $data =array($img_1,$img_2,$img_3,$img_4,$day,$daytime,$place,$fee,$requiretime,$category_id,$menu,$capacity,$basic,$lesson_name,$menudetail,$bring,$precaution,$_SESSION['id']);
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute($data);
+
+        unset($_SESSION['eaty']);
+
+        header('Location: bkg_t.php');
+        exit();
+        // }
+        }
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -34,41 +86,40 @@
 
   <div class="create_check_content text-center">
     <div class="blog-inner-prof text-center">
-      <h3>レッスン名</h3>
-      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
-      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;"><br>
-      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
-      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
+      <h3>レッスン名:<?=h($lesson_name);?></h3>
+      <img class="lesson_img" src="users_lesson_img/<?= h($img_1); ?>" style="width:300px;height:200px;">
+      <img class="lesson_img" src="users_lesson_img/<?= h($img_2); ?>" style="width:300px;height:200px;"><br>
+      <img class="lesson_img" src="users_lesson_img/<?= h($img_3); ?>" style="width:300px;height:200px;">
+      <img class="lesson_img" src="users_lesson_img/<?= h($img_4); ?>" style="width:300px;height:200px;">
 
       <div class="row contents">
           <div class="col-md-4">
-            <span><i class="far fa-calendar-alt fa-2x icon"></i>日時</span>
+            <span><i class="far fa-calendar-alt fa-2x icon"></i>日付:<?=h($day);?>日時:<?=h($daytime);?></span>
           </div>
           <div class="col-md-4">
-            <span><i class="fas fa-train fa-2x icon"></i>最寄り駅</span>
+            <span><i class="fas fa-train fa-2x icon"></i>開催場所:<?=h($place);?></span>
           </div>
           <div class="col-md-4">
-            <span><i class="fas fa-yen-sign fa-2x icon"></i>料金</span>
+            <span><i class="fas fa-yen-sign fa-2x icon"></i>料金:<?=h($fee);?></span>
           </div>
       </div>
 
       <div class="row content_border">
         <div class="col-md-6" style="border-right: 1px solid #ccc;">
-          <span>メニュー数</span>
+          <span>メニュー数:<?=h($menu);?></span>
         </div>
         <div class="col-md-6">
-          <span>所要時間</span>
+          <span>所要時間:<?=h($requiretime);?></span>
         </div>
       </div>
 
       <div>
         <ul>
           <li>メニュー内容</li>
-          <li>メニュー内容</li>
-          <li>メニュー内容</li>
-          <li>メニュー内容</li>
-          <li>メニュー内容</li>
-          <li>メニュー内容</li>
+          <li>カテゴリー:<?=h($category_id);?></li>
+          <li>定員:<?=h($capacity);?></li>
+          <li>最小遂行人数:<?=h($basic);?></li>
+          <li>メニュー概要:<?=h($menudetail);?></li>
         </ul>
       </div>
 
@@ -81,14 +132,14 @@
             <h3>持ち物</h3>
             <span>+</span>
             <div class="inner">
-              <p>持ち物を表示</p>
+              <p><?=h($bring);?></p>
             </div>
           </li>
           <li class="lesson-list-item">
             <h3>注意事項</h3>
             <span>+</span>
             <div class="inner">
-              <p>注意事項を表示</p>
+              <p><?=h($precaution);?></p>
             </div>
           </li>
         </ul>
