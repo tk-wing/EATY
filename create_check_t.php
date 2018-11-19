@@ -13,7 +13,7 @@
     if (!isset($_SESSION['EATY'])) {
       header('Location: create_lesson.php');
     }
-
+        
         $day = $_SESSION['EATY']['day'];
         $daytime = $_SESSION['EATY']['daytime'];
         $place = $_SESSION['EATY']['place'];
@@ -35,14 +35,14 @@
 
         if (!empty($_POST)) {
         $sql = 'INSERT INTO `lessons_t` SET `img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`place`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`user_id`=?,`created`= NOW()';
-        $data =array($img_1,$img_2,$img_3,$img_4,$day,$daytime,$place,$fee,$requiretime,$category_id,$menu,$capacity,$basic,$lesson_name,$menudetail,$bring,$precaution,$_SESSION['id']);
+        $data =array($img_1,$img_2,$img_3,$img_4,$day,$daytime,$place,$fee,$requiretime,$category_id,$menu,$capacity,$basic,$lesson_name,$menudetail,$bring,$precaution);
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
 
         unset($_SESSION['eaty']);
 
         header('Location: bkg_t.php');
-        exit();
+        // exit();
         // }
         }
 ?>
@@ -75,6 +75,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 </head>
+  <form class="signup_form" method="POST" action="" enctype="multipart/form-data">
+    <!-- enctype=multipart/form-dataを加えた。何からのファイルを表示、また＄_FILEを使う為 -->
 
 <body>
 
@@ -151,7 +153,7 @@
 
     </div>
   </div>
-
+</form>
   <footer>
     <div class="sns text-center">
       <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>
