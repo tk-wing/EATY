@@ -10,31 +10,31 @@
     v($_SESSION,'$_SESSION');
 
     //$_SESSIONの中にEATYが定義されてなければcreate_lesson.phpへ
-    if (!isset($_SESSION['EATY'])) {
+    if (!isset($_SESSION['eaty'])) {
       header('Location: create_lesson.php');
     }
-        
-        $day = $_SESSION['EATY']['day'];
-        $daytime = $_SESSION['EATY']['daytime'];
-        $place = $_SESSION['EATY']['place'];
-        $fee = $_SESSION['EATY']['fee'];
-        $requiretime = $_SESSION['EATY']['requiretime'];
-        $category_id = $_SESSION['EATY']['category_id'];
-        $menu = $_SESSION['EATY']['menu'];
-        $capacity = $_SESSION['EATY']['capacity'];
-        $basic = $_SESSION['EATY']['basic'];
-        $lesson_name = $_SESSION['EATY']['lesson_name'];
-        $menudetail = $_SESSION['EATY']['menudetail'];
-        $bring = $_SESSION['EATY']['bring'];
-        $precaution = $_SESSION['EATY']['precaution'];
+        //全てh関数を使う事
+        $day = $_SESSION['eaty']['day'];
+        $daytime = $_SESSION['eaty']['daytime'];
+        $place = $_SESSION['eaty']['place'];
+        $fee = $_SESSION['eaty']['fee'];
+        $requiretime = $_SESSION['eaty']['requiretime'];
+        $category_id = $_SESSION['eaty']['category_id'];
+        $menu = $_SESSION['eaty']['menu'];
+        $capacity = $_SESSION['eaty']['capacity'];
+        $basic = $_SESSION['eaty']['basic'];
+        $lesson_name = $_SESSION['eaty']['lesson_name'];
+        $menudetail = $_SESSION['eaty']['menudetail'];
+        $bring = $_SESSION['eaty']['bring'];
+        $precaution = $_SESSION['eaty']['precaution'];
         //画像
         $img_1 = $_SESSION['EATY']['img_1'];
         $img_2 = $_SESSION['EATY']['img_2'];
         $img_3 = $_SESSION['EATY']['img_3'];
         $img_4 = $_SESSION['EATY']['img_4'];
 
-        if (!empty($_POST)) {
-        $sql = 'INSERT INTO `lessons_t` SET `img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`place`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`user_id`=?,`created`= NOW()';
+        if (!empty($_SESSION)) {
+        $sql = 'INSERT INTO `lessons_t` SET `img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`place`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`created`= NOW()';
         $data =array($img_1,$img_2,$img_3,$img_4,$day,$daytime,$place,$fee,$requiretime,$category_id,$menu,$capacity,$basic,$lesson_name,$menudetail,$bring,$precaution);
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
@@ -42,7 +42,7 @@
         unset($_SESSION['eaty']);
 
         header('Location: bkg_t.php');
-        // exit();
+        exit();
         // }
         }
 ?>
