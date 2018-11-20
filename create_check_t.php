@@ -27,7 +27,7 @@
         $menudetail = $_SESSION['eaty']['menudetail'];
         $bring = $_SESSION['eaty']['bring'];
         $precaution = $_SESSION['eaty']['precaution'];
-        $user_id =$_SESSION['eaty']['user_id'];
+        // $user_id =$_SESSION['eaty']['user_id'];
         //画像
         $img_1 = $_SESSION['EATY']['img_1'];
         $img_2 = $_SESSION['EATY']['img_2'];
@@ -35,7 +35,7 @@
         $img_4 = $_SESSION['EATY']['img_4'];
 
         if (!empty($_SESSION)) {
-        $sql = 'INSERT INTO `lessons_t` SET `img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`place`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`user_id`=?,`created`= NOW()';
+        $sql = 'INSERT INTO `lessons_t` SET `img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`place`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`created`= NOW()';
         $data =array($img_1,$img_2,$img_3,$img_4,$day,$daytime,$place,$fee,$requiretime,$category_id,$menu,$capacity,$basic,$lesson_name,$menudetail,$bring,$precaution);
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
