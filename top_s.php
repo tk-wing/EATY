@@ -1,3 +1,16 @@
+<?php
+    //SESSIONの有効化
+    session_start();
+    require('dbconnect.php');
+    require('functions.php');
+
+    if (!isset($_SESSION['EATY'])) {
+        header('Location: signin.php');
+        exit();
+    }
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -60,12 +73,12 @@
             </div>
             <div class="row">
               <div class="col text-right">
-                <a href="#"><button type="button" class="btn btn-secondary">つくれぽ一覧を見る</button></a><br>
+                <a href="report.php"><button type="button" class="btn btn-secondary">つくれぽ一覧を見る</button></a><br>
                 <a href="#"><button type="button" class="btn btn-secondary">お気に入りレッスン</button></a>
               </div>
               <div class="col text-left">
-                <a href="#"><button type="button" class="btn btn-secondary">つくれぽを投稿する</button></a><br>
-                <a href="#"><button type="button" class="btn btn-secondary" style="width: 170px;">プロフィール編集</button></a>
+                <a href="report_send.php"><button type="button" class="btn btn-secondary">つくれぽを投稿する</button></a><br>
+                <a href="edit_prof_s.php"><button type="button" class="btn btn-secondary" style="width: 170px;">プロフィール編集</button></a>
               </div>
             </div>
         </div>

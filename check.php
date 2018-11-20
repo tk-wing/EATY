@@ -144,8 +144,8 @@
                       <p>ご登録ありがとうございました！</p>
                   </div>
                   <div class="modal-footer" style="display: inline-block;">
-                      <a href="card.html"><button type="button" class="btn btn-primary">マイページへ</button></a>
-                      <a href="card.html"><button type="button" class="btn btn-primary">レッスン検索</button></a>
+                      <a href="top_s.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                      <a href="serch_s.php"><button type="button" class="btn btn-primary">レッスン検索</button></a>
                   </div>
               </div>
           </div>
