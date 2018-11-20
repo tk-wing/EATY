@@ -1,74 +1,12 @@
-<?php
-
-    //SESSIONの有効化
-    session_start();
-
-    //SESSIONデータの受け取り
-    $first_name = htmlspecialchars($_SESSION['EATY']['first_name']);
-    $last_name = htmlspecialchars($_SESSION['EATY']['last_name']);
-    $email = htmlspecialchars($_SESSION['EATY']['email']);
-    $password = htmlspecialchars($_SESSION['EATY']['password']);
-    $user_type = $_SESSION['EATY']['user_type'];
-
-    $modal_display_style = 'display:none;';
-    $modal_display_class = 'fade';
-
-    //user_typeの変換(表示用)
-    if ($user_type == 1) {
-      $type = '講師';
-    } else {
-      $type = '生徒';
-    }
-
-    //直接URLを参照した場合は、Signupに遷移
-    if(!isset($_SESSION['EATY'])) {
-        header('Location: signup.php');
-        exit();
-    }
-
-    //データベースとの接続
-    $dsn = 'mysql:dbname=eaty;host=localhost';
-    $user = 'root';
-    $password_db = '';
-    $dbh = new PDO($dsn, $user, $password_db);
-    $dbh->query('SET NAMES utf8');
-
-    //確認が完了した場合
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-        //パスワードの暗号化
-        $hash_password = password_hash($password, PASSWORD_DEFAULT);
-
-        //データベースへのデータ登録
-        $sql = 'INSERT INTO `users` SET `user_type` = ?, `first_name` = ?, `last_name` = ?, `email` = ?, `password` = ?, `created` = NOW()';
-        $stmt = $dbh->prepare($sql);
-        $data = array($user_type, $first_name, $last_name, $email, $hash_password);
-        $stmt->execute($data);
-
-        if ($user_type==1) {
-          $modal_display_style_t = 'display:block;';
-          $modal_display_class_t = 'show';
-        } elseif ($user_type ==2) {
-          $modal_display_style_s = 'display:block;';
-          $modal_display_class_s = 'show';
-        }
-
-        // 保持データの消去
-        unset($_SESSION['EATY']);
-        // exit();
-    }
-
-?>
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <title>登録内容確認</title>
+  <title>レッスン作成内容確認</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="css/stylesheet.css">
+  <link rel="stylesheet" href="css/stylesheet_t.css">
   <!-- BootstrapのCSS読み込み -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <!-- jQuery読み込み -->
@@ -76,9 +14,16 @@
   <!-- BootstrapのJS読み込み -->
   <script src="js/bootstrap.min.js"></script>
   <!-- FontAwesome読み込み -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+  <!-- Theme style  -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Modernizr JS -->
+  <script src="js/modernizr-2.6.2.min.js"></script>
+  <!-- viewport meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 </head>
+
 <body>
 
   <header>
@@ -87,66 +32,73 @@
     </div>
   </header>
 
+  <div class="create_check_content text-center">
+    <div class="blog-inner-prof text-center">
+      <h3>レッスン名</h3>
+      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
+      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;"><br>
+      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
+      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
 
+      <div class="row contents">
+          <div class="col-md-4">
+            <span><i class="far fa-calendar-alt fa-2x icon"></i>日時</span>
+          </div>
+          <div class="col-md-4">
+            <span><i class="fas fa-train fa-2x icon"></i>最寄り駅</span>
+          </div>
+          <div class="col-md-4">
+            <span><i class="fas fa-yen-sign fa-2x icon"></i>料金</span>
+          </div>
+      </div>
 
-  <div class="text-center container">
+      <div class="row content_border">
+        <div class="col-md-6" style="border-right: 1px solid #ccc;">
+          <span>メニュー数</span>
+        </div>
+        <div class="col-md-6">
+          <span>所要時間</span>
+        </div>
+      </div>
 
-    <p class="title font-weight-bold">新規登録内容確認</p>
+      <div>
+        <ul>
+          <li>メニュー内容</li>
+          <li>メニュー内容</li>
+          <li>メニュー内容</li>
+          <li>メニュー内容</li>
+          <li>メニュー内容</li>
+          <li>メニュー内容</li>
+        </ul>
+      </div>
 
+      <div class="contents">
+        <h4>レッスン詳細</h4>
+      </div>
 
-    <div class="check">
-      <h3 class="text-success"><?=$type ?></h3>
-      <p class="check_content"><?=$first_name . ' ' . $last_name ?></p>
-      <p class="check_content"><?=$email ?></p>
-      <p class="check_content">●●●●●●●●</p>
+      <ul class="contents" id="lesson-list">
+          <li class="lesson-list-item">
+            <h3>持ち物</h3>
+            <span>+</span>
+            <div class="inner">
+              <p>持ち物を表示</p>
+            </div>
+          </li>
+          <li class="lesson-list-item">
+            <h3>注意事項</h3>
+            <span>+</span>
+            <div class="inner">
+              <p>注意事項を表示</p>
+            </div>
+          </li>
+        </ul>
+
+        <form method="POST" action="">
+          <input type="submit" class="btn btn-primary" value="完了">
+          <a href="#"><button type="button" class="btn btn-secondary">編集</button></a>
+        </form>
+
     </div>
-
-    <form class="signup_form" method="POST" action="">
-
-      <!-- Button -->
-      <div class="form-group">
-        <input type="hidden" name="first_name" value="$first_name">
-        <input type="hidden" name="last_name" value="$last_name">
-        <input type="hidden" name="email" value="$email">
-        <input type="hidden" name="password" value="$password">
-        <input type="hidden" name="user_type" value="user_type">
-        <input type="button" value="戻る" class="check_btn btn btn-primary" style="width:100px;" onClick="history.back()">
-        <input type="submit" value="登録" class="check_btn btn btn-primary" id="js-post" style="width:100px;">
-      </div>
-
-      <!-- 講師モーダル -->
-      <div class="modal <?php echo $modal_display_class_t; ?>" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true" style="<?php echo $modal_display_style_t?>">
-          <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                  <div class="modal-body">
-                      <p>ご登録ありがとうございました！</p>
-                      <p>次はプロフィール作成です。</p>
-                  </div>
-                  <div class="modal-footer" style="display: inline-block;">
-                      <a href="edit_prof_t.php"><button type="button" class="btn btn-primary">講師プロフィール作成へ</button></a>
-                  </div>
-              </div>
-          </div>
-      </div>
-
-      <!-- 生徒モーダル -->
-      <div class="modal <?php echo $modal_display_class_s; ?>" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true" style="<?php echo $modal_display_style_s?>">
-          <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                  <div class="modal-body">
-                      <p>ご登録ありがとうございました！</p>
-                  </div>
-                  <div class="modal-footer" style="display: inline-block;">
-                      <a href="card.html"><button type="button" class="btn btn-primary">マイページへ</button></a>
-                      <a href="card.html"><button type="button" class="btn btn-primary">レッスン検索</button></a>
-                  </div>
-              </div>
-          </div>
-      </div>
-
-    </form>
-
-
   </div>
 
   <footer>
@@ -158,13 +110,7 @@
     </div>
   </footer>
 
-
-  <!-- jQuery、Popper.js、Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  <!-- <script src="assets/js/app.js"></script> -->
-
-
+  <script src="js/app.js"></script>
 </body>
-</html>
+
+  </html>
