@@ -1,3 +1,110 @@
+<?php
+    session_start();
+    require('dbconnect.php');
+    require('functions.php');
+
+    v($_SESSION, '$_SESSION');
+
+    $validations = [];
+
+    // ユーザー情報を取得
+    $sql='SELECT * FROM `users` WHERE `id`=?';
+    $stmt = $dbh->prepare($sql);
+    $data = array($_SESSION['EATY']['id']);
+    $stmt->execute($data);
+
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    v($signin_user, '$signin_user');
+
+    // 必須項目
+    $last_name = $signin_user['last_name'];
+    $first_name = $signin_user['first_name'];
+    $area_id = '';
+    $city = '';
+    $station = '';
+    $category_id = '';
+    $past = '';
+    // 任意項目
+    $nickname = '';
+    $category_other = '';
+    $profile = '';
+    $file_name = '';
+
+    V($_FILES, '$_FILES');
+    // V($_POST, '$_POST');
+
+    // 都道府県情報の取得
+    $areas_sql='SELECT * FROM `areas`';
+    $areas_stmt = $dbh->prepare($areas_sql);
+    $areas_sql_data = [];
+    $areas_stmt->execute($areas_sql_data);
+
+    // カテゴリー情報を取得
+    $categories_sql='SELECT * FROM `categories`';
+    $categories_stmt = $dbh->prepare($categories_sql);
+    $categories_sql_data = [];
+    $categories_stmt->execute($categories_sql_data);
+
+
+
+    if(!empty($_POST)){
+        //必須項目
+        $last_name = $_POST['last_name'];
+        $first_name = $_POST['first_name'];
+        $area_id = $_POST['area'];
+        $city = $_POST['city'];
+        $station = $_POST['station'];
+        $category_id = $_POST['category'];
+        $past = $_POST['past'];
+        // 任意項目
+        $nickname = $_POST['nickname'];
+        $category_other = $_POST['category_other'];
+        $profile = $_POST['profile'];
+
+        // 必須項目のバリデーション
+        $user_prof_infos = ['last_name'=>$last_name, 'first_name'=>$first_name, 'area_id'=>$area_id, 'city'=>$city, 'station'=>$station, 'category_id'=>$category_id, 'past'=>$past];
+
+        foreach ($user_prof_infos as $index => $user_prof_info) {
+            if ($user_prof_info == '') {
+                $validations[$index] = 'blank';
+            }
+        }
+
+        if ($_FILES['img_name']['name'] != '') {
+            $file_name = date('YmdHis') .$_FILES['img_name']['name'];
+            $tmp_file = $_FILES['img_name']['tmp_name'];
+            $destination = 'user_profile_img/'.$file_name;
+            move_uploaded_file($tmp_file, $destination);
+        }else{
+            $file_name = '';
+        }
+
+
+        // 必須項目入力済みの場合の処理
+        if(empty($validations)) {
+
+            // profile_tへデータ登録
+            $sql='INSERT INTO `profiles_t` SET `user_id`=?, `nickname`=?, `img_name`=?, `area_id`=?, `city`=?, `station`=?, `past`=?, `profile`=?, `created`=NOW()';
+            $stmt = $dbh->prepare($sql);
+            $data = array($signin_user['id'],$nickname, $file_name, $area_id, $city, $station, $past, $profile);
+            $stmt->execute($data);
+
+            // user_categoriesへデータ登録
+            $user_categories_sql='INSERT INTO `user_categories` SET `user_id`=?, `category_id`=?, `created`=NOW()';
+            $user_categories_stmt = $dbh->prepare($user_categories_sql);
+            $user_categories_data = array($signin_user['id'], $category_id);
+            $user_categories_stmt->execute($user_categories_data);
+
+
+            header('Location: top_t.php');
+            exit();
+        }
+
+
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -49,6 +156,7 @@
     });
   });
   </script>
+
 </head>
 
 <body>
@@ -58,92 +166,135 @@
     </div>
   </header>
 
+  <div class="text-center">
+      <span class="error_msg"><?php echo result($validations,'first_name','姓') ?></span><br>
+      <span class="error_msg"><?php echo result($validations,'last_name','名') ?></span><br>
+      <span class="error_msg"><?php echo result($validations,'city','市区町村') ?></span><br>
+      <span class="error_msg"><?php echo result($validations,'station','最寄り駅') ?></span><br>
+      <span class="error_msg"><?php echo result($validations,'past','※経歴／資格') ?></span><br>
+      <span class="error_msg"><?php echo select_result($validations,'area_id','都道府県') ?></span><br>
+      <span class="error_msg"><?php echo select_result($validations,'category_id','料理ジャンル') ?></span>
+  </div>
+
   <div class="edit_content text-center">
-    <form method="POST" action="">
+    <form method="POST" action="" enctype="multipart/form-data">
       <div class="row">
+        <!-- プロフィール画像（任意） -->
         <div class="col-md-4">
-          <img id="img1" src="https://placehold.jp/160x160.png" style="width:160px;height:160px;border-radius: 50%;">
+          <?php if ($file_name == ''): ?>
+            <img id="img1" src="img/profile_img_defult.png" style="width:160px;height:160px;border-radius: 50%;">
+          <?php else: ?>
+            <img id="img1" src="user_profile_img/<?php echo $file_name ?>" style="width:160px;height:160px;border-radius: 50%;">
+          <?php endif ?>
 
           <label>
             <span class="filelabel" title="ファイルを選択">
               <i class="fas fa-camera-retro"></i>
               選択
             </span>
-            <input type="file" class="filesend" id="filesend" name="img_name">
+            <input type="file" class="filesend" id="filesend" name="img_name" accept="image/*">
           </label>
         </div>
 
         <div class="col-md-8">
-          <!-- Text input-->
+          <!-- 名前-->
           <div class="form-group">
             <div class="row">
               <div class="col-md-4">
-                <input id="last_name" name="last_name" type="text" placeholder="姓" class="form-control input-md">
+                <input id="last_name" name="last_name" type="text" placeholder="姓" class="form-control input-md" value="<?php echo $first_name ?>">
               </div>
               <div class="col-md-4">
-                <input id="first_name" name="first_name" type="text" placeholder="名" class="form-control input-md">
+                <input id="first_name" name="first_name" type="text" placeholder="名" class="form-control input-md" value="<?php echo $last_name ?>">
               </div>
             </div>
           </div>
 
+          <!-- ニックネーム -->
           <div class="form-group">
             <div class="row">
               <div class="col-md-9">
-               <input id="nickname" name="nickname" type="text" placeholder="ニックネーム(任意)"" class="form-control input-md">
+               <input id="nickname" name="nickname" type="text" placeholder="ニックネーム(任意)"" class="form-control input-md" value="<?php echo $nickname ?>">
               </div>
             </div>
           </div>
 
-          <!-- Password input-->
+          <!-- メールアドレスを表示（ここでは変更不可） -->
           <div class="row">
-            <p class="col-md-8 check_content">メールアドレス</p>
+            <p class="col-md-8 check_content"><?php echo $signin_user['email'] ?></p>
           </div>
 
-          <!-- Select Basic -->
+          <!-- 都道府県選択 -->
           <div class="form-group">
             <div class="row">
               <div class="col-md-4">
-                <select id="pref" name="pref" class="form-control">
-                  <option value="1">Option one</option>
-                  <option value="2">Option two</option>
+                <select id="area" name="area" class="form-control">
+                  <option value="">選択してください。</option>
+                  <?php while(1): ?>
+                    <?php  $areas = $areas_stmt->fetch(PDO::FETCH_ASSOC); ?>
+                    <?php if ($areas == false): ?>
+                      <?php break; ?>
+                      <?php else: ?>
+                        <option value="<?php echo $areas['id']?>"><?php echo $areas['name'] ?></option>
+                    <?php endif ?>
+                  <?php endwhile ?>
                 </select>
               </div>
+              <!-- 市町村入力 -->
               <div class="col-md-4">
-                <input id="city" name="city" type="text" placeholder="市区町村" class="form-control input-md">
+                <input id="city" name="city" type="text" placeholder="市区町村" class="form-control input-md" value="<?php echo $city ?>">
               </div>
+              <!-- 最寄り駅 -->
               <div class="col-md-4">
-                <input id="textinput" name="textinput" type="text" placeholder="最寄り駅" class="form-control input-md">
+                <input id="station" name="station" type="text" placeholder="最寄り駅" class="form-control input-md" value="<?php echo $station ?>">
               </div>
             </div>
           </div>
-
+          <!-- ジャンル -->
           <div class="form-group">
             <div class="row">
               <div class="col-md-4">
-                <select id="genre" name="genre" class="form-control">
-                  <option value="1">Option one</option>
-                  <option value="2">Option two</option>
-                </select>
+                <ul id="category">
+                  <li class="category-item">
+                    <p class="ml-1">ジャンル</p><br>
+                    <span class="category-button">+</span>
+                    <div class="inner">
+                      <p>持ち物を表示</p>
+                    </div>
+                  </li>
+                </ul>
+
+<!--                 <select id="category" name="category" class="form-control">
+                  <option value="">選択してください。</option>
+                  <?php while(1): ?>
+                    <?php  $categories = $categories_stmt->fetch(PDO::FETCH_ASSOC); ?>
+                    <?php if ($categories == false): ?>
+                      <?php break; ?>
+                      <?php else: ?>
+                      <option value="<?php echo $categories['id'];?>"><?php echo $categories['category_name'] ?></option>
+                    <?php endif ?>
+                  <?php endwhile; ?>
+                </select> -->
               </div>
+              <!-- その他ジャンル -->
               <div class="col-md-6">
-                <input id="genre_other" name="genre_other" type="text" placeholder="その他ジャンル" class="form-control input-md">
+                <input id="category_other" name="category_other" type="text" placeholder="その他ジャンル" class="form-control input-md" value="<?php echo $category_other ?>">
               </div>
             </div>
           </div>
 
-          <!-- Textarea -->
+          <!-- 経歴・資格入力 -->
           <div class="form-group">
             <label class="col-md-4 control-label" for="career"></label>
             <div class="col-md-14">
-              <textarea class="form-control" id="career" name="career" style="height: 100px;">※経歴／資格</textarea>
+              <textarea class="form-control" id="past" name="past" placeholder="※経歴／資格" style="height: 100px;"><?php echo $past;?></textarea>
             </div>
           </div>
 
-          <!-- Textarea -->
+          <!-- 自己紹介・コメント（任意項目） -->
           <div class="form-group">
             <label class="col-md-4 control-label" for="comment"></label>
             <div class="col-md-14">
-              <textarea class="form-control" id="comment" name="comment" style="height: 100px;">自己紹介＆コメント</textarea>
+              <textarea class="form-control" id="profile" name="profile" placeholder="自己紹介＆コメント" style="height: 100px;"><?php echo $profile ?></textarea>
             </div>
           </div>
 
@@ -162,5 +313,5 @@
       <p>©ex chef</p>
     </div>
   </footer>
-
+<script src="js/app.js"></script>
 </body>

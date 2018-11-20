@@ -61,9 +61,8 @@
   <div class="edit_content text-center">
     <form method="POST" action="">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 text-center">
           <img id="img1" src="https://placehold.jp/160x160.png" style="width:160px;height:160px;border-radius: 50%;">
-
           <label>
             <span class="filelabel" title="ファイルを選択">
               <i class="fas fa-camera-retro"></i>

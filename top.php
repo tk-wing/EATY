@@ -27,7 +27,7 @@
 
   <!-- ヘッダー -->
   <header>
-    <button type="button" class="btn btn-secondary my-btn">TOP</button>
+    <button type="button" class="btn btn-light my-btn">TOP</button>
     <div class="sns">
       <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>
       <a href="" class="btn-twitter sns-btn"><i class="fab fa-twitter fa-2x"></i></a>
@@ -38,28 +38,35 @@
   <!-- TOP上部・３つのボタン・コンセプト -->
   <div class="top wrapper">
     <!-- TOP上部 -->
-    <div class="container text-center">
-      <img src="img/exchef.png" width="400"><br>
-      <a href="signup.php"><button type="button" class="btn btn-secondary my-btn-signup">新規登録</button></a>
-    </div>
+    <div class="container-flued" style="background-image: url(img/top2.jpg); height: 800px; background-size:cover;">
+      <img class="mx-auto d-block"src="img/logo2.png" width="300">
+
+      <a href="signup.php"><button type="button" class="mx-auto d-block btn btn-default my-btn-signup">新規登録</button></a>
+    
 
     <!-- 3つのボタン -->
     <div class="row top-content">
       <div class="col text-center area aboutus">
-        <a href="#aboutus"><button type="button" class="btn btn-secondary">about us</button></a>
+        <a href="#aboutus"><button type="button" class="btn btn-default">about us</button></a>
       </div>
       <div class="col text-center area signin">
-        <a href="signin.php"><button type="button" class="btn btn-secondary">ログイン</button></a>
+        <a href="signin.php"><button type="button" class="btn  btn-default">ログイン</button></a>
       </div>
       <div class="col text-center area serch">
-      <button type="button" class="btn btn-secondary">レッスン検索</button>
+      <button type="button" class="btn btn-default">レッスン検索</button>
       </div>
+    </div>
     </div>
     <!-- コンセプト -->
     <div class="concept" id="aboutus">
       <div class="text-center title">about us</div>
       <div class="container">
-        <div class="text-center"><img src="img/concept.png" width="1000"></div>
+        <div class="text-center">
+          <a class="circle">教えたいexchef</a>
+          <a class="maltiply">×</a>
+          <a class="circle">習いたいYOU</a>
+          <div class="text-center description">Our web service is “ex chef” for connecting those who would like to work with professional skill of cooking and baking with those who would like to learn how to cook and bake.“ex chef”とは、料理とベーキングの専門的なスキルを身につけたい人と、料理とベーキングの方法を学びたい人とをつなぐためのサービスです。</div>
+        </div>
       </div>
     </div>
 
