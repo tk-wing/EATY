@@ -1,3 +1,4 @@
+
 <?php
        //SESSIONの有効化
     session_start();
@@ -22,27 +23,6 @@
     $validations = [];
 
  
-
-    // 画像の初期設定
-    // $img_1 = '';
-    // $img_2 = '';
-    // $img_3 = '';
-    // $img_4 = '';
-
-    // //初期値の設定
-    // $day = ''; //開催日
-    // $daytime = '';//開催時間
-    // $place = '';//開催場所
-    // $fee = '';//料金
-    // $reqiretime = '';//所要時間
-    // $category_id = '';//カテゴリージャンル
-    // $menu = '';//メニュー数
-    // $capacity = '';//定員
-    // $basic = '';//遂行時間
-    // $lesson_name = '';//レッスン名
-    // $menudetail = '';//メニュー概要
-    // $bring = '';//持ち物
-    // $precaution = '';//注意事項
 
 
 
@@ -119,12 +99,10 @@
             $validations['img_2']='blank';
             $validations['img_3']='blank';
             $validations['img_4']='blank';
-        }else{
-
         }
         if(empty($validations)){
             
-
+            $file_name = date('YmdHis') . $_FILES['img_name']['name'];
             $str_1 = 'users_lesson_img/'.$_FILES['img_1']['name'];
 
             $str_1 = mb_convert_encoding($str_1, "SJIS", "AUTO");//mb_convert_encoding(エンコードしたい部分, "変換したいコード", "変更前のコード")
@@ -146,47 +124,28 @@
             move_uploaded_file($_FILES['img_4']['tmp_name'], $str_4);
             //レッスン作成が適切に入力されていた場合
             //格項目
-            $_SESSION['EATY']['day']  = $day;
-            $_SESSION['EATY']['daytime']  = $daytime;
-            $_SESSION['EATY']['place']  = $place;
-            $_SESSION['EATY']['fee']  = $fee;
-            $_SESSION['EATY']['requiretime']  = $requiretime;
-            $_SESSION['EATY']['category_id']  = $capacity;
-            $_SESSION['EATY']['menu']  = $menu;
-            $_SESSION['EATY']['capacity']  = $capacity;
-            $_SESSION['EATY']['basic']  = $basic;
-            $_SESSION['EATY']['lesson_name']  = $lesson_name;
-            $_SESSION['EATY']['menudetail']  = $menudetail;
-            $_SESSION['EATY']['bring']  = $bring;
-            $_SESSION['EATY']['precaution']  = $precaution;
+            $_SESSION['eaty']['day']  = $day;
+            $_SESSION['eaty']['daytime']  = $daytime;
+            $_SESSION['eaty']['place']  = $place;
+            $_SESSION['eaty']['fee']  = $fee;
+            $_SESSION['eaty']['requiretime']  = $requiretime;
+            $_SESSION['eaty']['category_id']  = $capacity;
+            $_SESSION['eaty']['menu']  = $menu;
+            $_SESSION['eaty']['capacity']  = $capacity;
+            $_SESSION['eaty']['basic']  = $basic;
+            $_SESSION['eaty']['lesson_name']  = $lesson_name;
+            $_SESSION['eaty']['menudetail']  = $menudetail;
+            $_SESSION['eaty']['bring']  = $bring;
+            $_SESSION['eaty']['precaution']  = $precaution;
             //画像
-            $_SESSION['EATY']['img_1']  = $img_1;
-            $_SESSION['EATY']['img_2']  = $img_2;
-            $_SESSION['EATY']['img_3']  = $img_3;
-            $_SESSION['EATY']['img_4']  = $img_4;
-
-
-
-
-
+            $_SESSION['eaty']['img_1']  = $img_1;
+            $_SESSION['eaty']['img_2']  = $img_2;
+            $_SESSION['eaty']['img_3']  = $img_3;
+            $_SESSION['eaty']['img_4']  = $img_4;
 
             header('Location: create_check_t.php');
             exit();
         }
-          //else(($img_1) || empty($img_2) || empty($img_3) || empty($img_4)){
-            //いずれかが入っているときはtrue
-          //   }else{
-          //   //DBへの入力
-          //   $sql = 'INSERT INTO `lessons_t` SET `img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`place`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`user_id`=?,`created`= NOW()';
-          //   $data =array($img_1,$img_2,$img_3,$img_4,$day,$daytime,$place,$fee,$requiretime,$category_id,$menu,$capacity,$basic,$lesson_name,$menudetail,$bring,$precaution,$_SESSION['id']);
-          //   $stmt = $dbh->prepare($sql);
-          //   $stmt->execute($data);
-
-          //   unset($_SESSION['eaty']);
-
-          //   header('Location: create_check_t.php');
-          //   exit();
-          // }
     }
     
     
