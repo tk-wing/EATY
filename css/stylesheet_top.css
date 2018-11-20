@@ -41,7 +41,6 @@ footer{
 
 }
 .container{
-  border: solid 2px black;
   height: 500px;
 }
 .container img{
@@ -52,8 +51,10 @@ footer{
 .top-content{
   margin-top: 230px;
 }
-
-
+.btn-default{
+  background-color: #212529eb;
+  color: gray;
+}
 
 .area{
   margin: 0 15px;
@@ -63,8 +64,29 @@ footer{
 .title{
   padding: 20px;
   margin: 15px 0;
+  font-size: 30px;
 }
 
+.circle{
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: #212529eb;
+  text-align:center;
+  line-height: 200px;
+  vertical-align: middle;
+  font-size: 23px;
+  margin: 20px;
+}
+
+.maltiply{
+  font-size: 50px;
+}
+
+.description{
+  font-size: 25px;
+}
 .middle-content{
   margin:20px 15px;
   padding: 0 15px;
