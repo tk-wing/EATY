@@ -22,7 +22,7 @@
 
     $validations = [];
 
- 
+      
 
 
 
@@ -123,6 +123,8 @@
             $str_4 = mb_convert_encoding($str_4, "SJIS", "AUTO");
             move_uploaded_file($_FILES['img_4']['tmp_name'], $str_4);
             //レッスン作成が適切に入力されていた場合
+
+
             //格項目
             $_SESSION['eaty']['day']  = $day;
             $_SESSION['eaty']['daytime']  = $daytime;
