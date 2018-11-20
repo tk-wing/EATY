@@ -20,4 +20,17 @@
         return htmlspecialchars($val);
     }
 
+
+    function result($validations,$valid_name,$item){
+      if (isset($validations[$valid_name]) && $validations[$valid_name] == 'blank') {
+        return $item.'を入力してください。';
+      }
+    }
+
+    function select_result($validations,$valid_name,$item){
+      if (isset($validations[$valid_name]) && $validations[$valid_name] == 'blank') {
+        return $item.'を選択してください。';
+      }
+    }
+
 ?>

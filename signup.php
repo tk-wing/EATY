@@ -2,13 +2,7 @@
 
     //SESSIONの有効化
     session_start();
-
-    //データベースとの接続
-    $dsn = 'mysql:dbname=eaty;host=localhost';
-    $user = 'root';
-    $password = '';
-    $dbh = new PDO($dsn, $user, $password);
-    $dbh->query('SET NAMES utf8');
+    require('dbconnect.php');
 
     // POST送信があった場合
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {

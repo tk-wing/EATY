@@ -2,6 +2,8 @@
 
     //SESSIONの有効化
     session_start();
+    require('dbconnect.php');
+    require('functions.php');
 
     //SESSIONデータの受け取り
     $first_name = htmlspecialchars($_SESSION['EATY']['first_name']);
@@ -26,13 +28,6 @@
         exit();
     }
 
-    //データベースとの接続
-    $dsn = 'mysql:dbname=eaty;host=localhost';
-    $user = 'root';
-    $password_db = '';
-    $dbh = new PDO($dsn, $user, $password_db);
-    $dbh->query('SET NAMES utf8');
-
     //確認が完了した場合
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -53,8 +48,22 @@
           $modal_display_class_s = 'show';
         }
 
+        $sql='SELECT * FROM `users` WHERE `email`=?';
+        $stmt = $dbh->prepare($sql);
+        $data = array($email);
+        $stmt->execute($data);
+
+        $record = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        v($record,'$record');
+
+        $_SESSION['EATY']['id'] = $record['id'];
+
+        // v($session, '$session');
+
+
         // 保持データの消去
-        unset($_SESSION['EATY']);
+        // unset($_SESSION['EATY']);
         // exit();
     }
 
