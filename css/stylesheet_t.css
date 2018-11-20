@@ -18,7 +18,7 @@ footer{
 
 ul{
   list-style: none;
-  padding: 0;"
+  padding: 0;
 }
 
 .my-btn{
@@ -126,7 +126,24 @@ ul{
   padding: 5px 0px;
   margin-bottom: 15px;
   display: none;
+}
 
+.category-item {
+  border:2px solid rgba(0, 0, 0, 0.1);;
+  position:relative;
+  cursor:pointer;
+  text-align: left;
+  padding: 3px;
+  border-radius: .25rem;
+}
+
+
+.category-button {
+  position:absolute;
+  top:8px;
+  right:5px;
+  color:#ccc;
+  font-size:13px;
 }
 
 .filelabel {
