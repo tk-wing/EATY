@@ -13,7 +13,7 @@
 
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    var_dump($signin_user);
+    v($signin_user,'signin_user');
 
     $validations = [];
 
@@ -33,13 +33,16 @@
       }
     }
 
-    // if (!empty($_POST)) {
-    //   $sql = 'INSERT INTO `reports` SET `user_id`=?, `img_name`=?, `feed`=?,
-    //   `created`=NOW(), `update`=NOW()';
-    //   $data = array($user_id, $img_name,$img_name,$feed,$created,$update);
-    //   $stmt = $dbh->prepare($sql);
-    //   $stmt->execute($data);
-    // }
+    $report_img_name = $_POST['report_img_name'];
+    $feed = $_POST['feed'];
+
+    if (!empty($_POST)) {
+      $sql = 'INSERT INTO `reports` SET `user_id`=?, `img_name`=?, `feed`=?,
+      `created`=NOW(), `updated`=NOW()';
+      $data = array($signin_user['id'],$report_img_name,$feed,);
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute($data);
+    }
  ?>
 
 <!DOCTYPE html>
@@ -122,7 +125,7 @@
               </div>
                <label class="filelabel_create">
                 <img id="img2" src="https://placehold.jp/130x100.png" style="width:130px;height:100px;">
-                <input type="file" class="filesend" id="filesend_1" name="img_name" accept="image/*">
+                <input type="file" class="filesend" id="filesend_1" name="report_img_name" accept="image/*">
               </label>
               <div class="text-center">
                 <textarea class="form-control col-md-5" id="textarea" name="feed" placeholder="一言コメント" style="height: 90px; display: inline-block;"></textarea>
