@@ -21,12 +21,6 @@
 
 
     $validations = [];
-
-      
-
-
-
-
       //バリデーションの設定と変数定義
     if (!empty($_POST)) {
         $day = $_POST['day'];
