@@ -1,3 +1,51 @@
+<?php
+           //SESSIONの有効化
+    session_start();
+
+    //データベースとの接続
+    require('dbconnect.php');
+    require('functions.php');
+
+    //$_SESSIONの中にeatyが定義されてなければsing
+    if (!isset($_SESSION['eaty'])) {
+      header('Location: create_lesson.php');
+    }
+
+    $day = $_SESSION['EATY']['day'];
+    $daytime = $_SESSION['EATY']['daytime'];
+    $place = $_SESSION['EATY']['place'];
+    $fee = $_SESSION['EATY']['fee'];
+    $requiretime = $_SESSION['EATY']['requiretime'];
+    $category_id = $_SESSION['EATY']['category_id'];
+    $menu = $_SESSION['EATY']['menu'];
+    $capacity = $_SESSION['EATY']['capacity'];
+    $basic = $_SESSION['EATY']['basic'];
+    $lesson_name = $_SESSION['EATY']['lesson_name'];
+    $menudetail =  $_SESSION['EATY']['menudetail'];
+    $bring = $_SESSION['EATY']['bring'];
+    $precaution = $_SESSION['EATY']['precaution'];
+    //画像
+    $img_1 = $_SESSION['EATY']['img_1'];
+    $img_2 = $_SESSION['EATY']['img_2'];
+    $img_3 = $_SESSION['EATY']['img_3'];
+    $img_4 = $_SESSION['EATY']['img_4'];
+
+      if (!empty($_POST)) {
+        //DBへの入力
+        $sql = 'INSERT INTO `lessons_t` SET `img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`place`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`user_id`=?,`created`= NOW()';
+        $data =array($img_1,$img_2,$img_3,$img_4,$day,$daytime,$place,$fee,$requiretime,$category_id,$menu,$capacity,$basic,$lesson_name,$menudetail,$bring,$precaution,$_SESSION['id']);
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute($data);
+
+        unset($_SESSION['eaty']);
+
+        header('Location: create_check_t.php');
+        exit();
+      }
+      
+    
+    
+?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
