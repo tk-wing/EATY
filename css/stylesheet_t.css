@@ -21,6 +21,10 @@ ul{
   padding: 0;
 }
 
+.error_msg{
+  color: red;
+}
+
 .my-btn{
   margin:12px 0;
 }
