@@ -1,67 +1,63 @@
 <?php
-
-
     //SESSIONの有効化
     session_start();
+    require('dbconnect.php');
+    require('functions.php');
 
-    //SESSIONデータの受け取り
-    $user_id = $_SESSION['EATY']['id'];
+    v($_SESSION, '$_SESSION');
 
-    //データベースとの接続
-    $dsn = 'mysql:dbname=eaty;host=localhost';
-    $user = 'root';
-    $password = '';
-    $dbh = new PDO($dsn, $user, $password);
-    $dbh->query('SET NAMES utf8');
-
-    //データベースのデータの読み込み
-    $sql = 'SELECT * FROM `profiles_t` INNER JOIN `users` ON `users`.`id` = `profiles_t`.`id` WHERE `users`.`id` = ?';
-    $data = array($user_id);
+    // ユーザー情報を取得
+    $sql='SELECT * FROM `users` WHERE `id`=?';
     $stmt = $dbh->prepare($sql);
+    $data = array($_SESSION['EATY']['id']);
     $stmt->execute($data);
-    $profile_t = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    //usersテーブルとprofiles_tテーブルの結合
+    $profile_t_sql = 'SELECT `profiles_t`.*, `users`.`first_name`, `users`.`last_name` FROM `profiles_t` INNER JOIN `users` ON `users`.`id` = `profiles_t`.`user_id` WHERE `users`.`id` = ?';
+    $profile_t_data = array($signin_user['id']);
+    $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    $profile_t_stmt->execute($profile_t_data);
+    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // 都道府県情報を取得
+    $area_sql = 'SELECT * FROM `areas` WHERE `id` = ?';
+    $area_data = array($profile_t['area_id']);
+    $area_stmt = $dbh->prepare($area_sql);
+    $area_stmt->execute($area_data);
+    $area = $area_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // $user_categories_sql = 'SELECT * FROM `user_categories` WHERE `user_id` = ?';
+    // $user_categories_data = array($signin_user['id']);
+    // $user_categories_stmt = $dbh->prepare($user_categories_sql);
+    // $user_categories_stmt->execute($user_categories_data);
+    // $user_categories = $user_categories_stmt->fetch(PDO::FETCH_ASSOC);
+
+
+
+    v($profile_t, '$profile_t');
+    v($area, '$area');
+    // v($user_categories, '$user_categories');
+
+    // 登録必須項目(名前・ニックネーム以外)
+    $city = $profile_t['city'];
+    $station = $profile_t['station'];
+    $past = $profile_t['past'];
+
+    // $category_id = $profile_t['category'];
+    $area = $area['name'];
 
     //ニックネームが登録されていない場合
     if (empty($profile_t['nickname'])) {
-      $nickname = $profile_t['first_name'] . '　' . $profile_t['last_name'];
+        $name = $profile_t['first_name'] . '　' . $profile_t['last_name'];
     } else {
-      $nickname = $profile_t['nickname'];
+        $name = $profile_t['nickname'];
     }
 
-   //画像が登録されていない場合
-    if (empty($profile_t['img_name'])) {
-      $validation[''] = "未設定";
-    }
-
-   //エリアが登録されていない場合
-    if (empty($profile_t['area_id'])) {
-      ;
-    }
-
-   //市町村が登録されていない場合
-    if (empty($profile_t['city'])) {
-      ;
-    }
-
-   //駅が登録されていない場合
-    if (empty($profile_t['station'])) {
-      ;
-    }
-
-   //経歴/資格が登録されていない場合
-    if (empty($profile_t['past'])) {
-      ;
-    }
-
-   //カテゴリーが登録されていない場合
-    if (empty($profile_t['category_id'])) {
-      ;
-    }
-
-   //自己紹介＆コメントが登録されていない場合
-    if (empty($profile_t['profile'])) {
-      ;
-    }
+    // 以下登録任意項目
+    $img_name = $profile_t['img_name'];
+    $profile = $profile_t['profile'];
 
 ?>
 
@@ -106,9 +102,14 @@
       <div class="blog-inner-prof">
           <div class="row">
             <div class="col-md-3 text-center">
-              <img class="img-responsive" src="http://placehold.jp/140x140.png" alt="Blog" style="width:140px;height:140px;border-radius: 50%;">
-              <p><?=$nickname ?></p>
-              <p>東京都渋谷区 最寄り駅</p>
+              <?php if($img_name==''): ?>
+                <img class="img-responsive" src="img/profile_img_defult.png" alt="Blog" style="width:140px;height:140px;border-radius: 50%;">
+              <?php else: ?>
+                <img class="img-responsive" src="user_profile_img/<?php echo $img_name ?>" alt="Blog" style="width:140px;height:140px;border-radius: 50%;">
+              <?php endif; ?>
+              <p><?=$name ?></p>
+              <p><?php echo $area.$city ?><br>
+              <?php echo $station ?></p>
               <button type="button" class="btn btn-secondary"><i class="far fa-envelope"></i></button>
               <button type="button" class="btn btn-secondary"><i class="far fa-heart"></i></button>
             </div>
@@ -121,21 +122,17 @@
               </div>
               <div>
                 ＜経歴・資格＞
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                </p>
+                <p><?php echo $past ?></p>
               </div>
               <div>
                 ＜自己紹介＆メッセージ＞
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                </p>
+                <p><?php echo $profile ?></p>
               </div>
             </div>
           </div>
       </div>
       <div class="text-center">
-      <a href="#"><button type="button" class="btn btn-secondary">プロフィール編集</button></a>
+      <a href="edit_prof_t.php"><button type="button" class="btn btn-secondary">プロフィール編集</button></a>
       </div>
     </div>
   </div>
