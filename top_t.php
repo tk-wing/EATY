@@ -4,8 +4,6 @@
     require('dbconnect.php');
     require('functions.php');
 
-    v($_SESSION, '$_SESSION');
-
     // ユーザー情報を取得
     $sql='SELECT * FROM `users` WHERE `id`=?';
     $stmt = $dbh->prepare($sql);
@@ -14,12 +12,17 @@
 
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    //usersテーブルとprofiles_tテーブルの結合
-    $profile_t_sql = 'SELECT `profiles_t`.*, `users`.`first_name`, `users`.`last_name` FROM `profiles_t` INNER JOIN `users` ON `users`.`id` = `profiles_t`.`user_id` WHERE `users`.`id` = ?';
-    $profile_t_data = array($signin_user['id']);
+    // pロフィール情報をを取得
+    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
     $profile_t_stmt = $dbh->prepare($profile_t_sql);
-    $profile_t_stmt->execute($profile_t_data);
+    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_stmt->execute($profile_t_sql_data);
     $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+    if($profile_t == FALSE){
+        header('Location: edit_prof_t.php');
+        exit();
+    }
 
     // 都道府県情報を取得
     $area_sql = 'SELECT * FROM `areas` WHERE `id` = ?';
@@ -28,17 +31,38 @@
     $area_stmt->execute($area_data);
     $area = $area_stmt->fetch(PDO::FETCH_ASSOC);
 
-    // $user_categories_sql = 'SELECT * FROM `user_categories` WHERE `user_id` = ?';
-    // $user_categories_data = array($signin_user['id']);
-    // $user_categories_stmt = $dbh->prepare($user_categories_sql);
-    // $user_categories_stmt->execute($user_categories_data);
-    // $user_categories = $user_categories_stmt->fetch(PDO::FETCH_ASSOC);
+    // カテゴリー情報を取得
+    $categories_sql='SELECT * FROM `categories`';
+    $categories_stmt = $dbh->prepare($categories_sql);
+    $categories_sql_data = [];
+    $categories_stmt->execute($categories_sql_data);
 
+    // ユーザーカテゴリー情報を取得
+    $user_categories_sql='SELECT * FROM `user_categories` WHERE `user_id`';
+    $user_categories_stmt = $dbh->prepare($user_categories_sql);
+    $user_categories_sql_data = [$signin_user['id']];
+    $user_categories_stmt->execute($user_categories_sql_data);
 
+    while (1) {
+        $user_categories = $user_categories_stmt->fetch(PDO::FETCH_ASSOC);
+        if ($user_categories == FALSE) {
+            break;
+        }
+        $user_categories_id[] = $user_categories['category_id'];
+    }
 
-    v($profile_t, '$profile_t');
-    v($area, '$area');
-    // v($user_categories, '$user_categories');
+    while (1) {
+        $categories = $categories_stmt->fetch(PDO::FETCH_ASSOC);
+        // v($categories, '$categories');
+        if ($categories == FALSE) {
+            break;
+        }
+        foreach ($user_categories_id as $user_category_id) {
+            if ($user_category_id == $categories['id']) {
+                $user_categories[] = $categories['category_name'];
+            }
+        }
+    }
 
     // 登録必須項目(名前・ニックネーム以外)
     $city = $profile_t['city'];
@@ -50,7 +74,7 @@
 
     //ニックネームが登録されていない場合
     if (empty($profile_t['nickname'])) {
-        $name = $profile_t['first_name'] . '　' . $profile_t['last_name'];
+        $name = $signin_user['last_name'] . '　' . $signin_user['first_name'];
     } else {
         $name = $profile_t['nickname'];
     }
@@ -115,11 +139,11 @@
             </div>
             <div class="col-md-9">
               <div>
-                ＜ジャンル＞
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                </p>
-              </div>
+                ＜ジャンル＞<br>
+                <?php for($i=0; $i<count($user_categories); $i++): ?>
+                  <span><?php echo $user_categories[$i]; ?></span><span>&emsp;</span>
+                <?php endfor ?>
+              </div><br>
               <div>
                 ＜経歴・資格＞
                 <p><?php echo $past ?></p>

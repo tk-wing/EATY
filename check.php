@@ -103,7 +103,7 @@
 
     <div class="check">
       <h3 class="text-success"><?=$type ?></h3>
-      <p class="check_content"><?=$first_name . ' ' . $last_name ?></p>
+      <p class="check_content"><?=$last_name . ' ' . $first_name ?></p>
       <p class="check_content"><?=$email ?></p>
       <p class="check_content">●●●●●●●●</p>
     </div>
