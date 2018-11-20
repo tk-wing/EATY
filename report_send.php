@@ -3,15 +3,17 @@
     session_start();
     require('dbconnect.php');
     require('functions.php');
-    $sql = 'SELECT * FROM `profiles_s` WHERE `id`=?';
-    $data = array($_SESSION['id']);
+    $sql = 'SELECT * FROM `profiles_s` WHERE `user_id`=?';
+    $data = array($_SESSION['EATY']['id']);
+
+    var_dump($_SESSION['EATY']['id']);
 
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
 
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    var_dump($_POST,'$POST');
+    var_dump($signin_user);
 
     $validations = [];
 
@@ -30,6 +32,14 @@
         $validations['feed'] = 'etsuko';
       }
     }
+
+    // if (!empty($_POST)) {
+    //   $sql = 'INSERT INTO `reports` SET `user_id`=?, `img_name`=?, `feed`=?,
+    //   `created`=NOW(), `update`=NOW()';
+    //   $data = array($user_id, $img_name,$img_name,$feed,$created,$update);
+    //   $stmt = $dbh->prepare($sql);
+    //   $stmt->execute($data);
+    // }
  ?>
 
 <!DOCTYPE html>
