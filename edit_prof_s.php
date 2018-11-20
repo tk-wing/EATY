@@ -1,3 +1,28 @@
+<?php
+    //SESSIONの有効化
+    session_start();
+    require('dbconnect.php');
+    require('functions.php');
+
+    if (!isset($_SESSION['EATY'])) {
+        header('Location: signin.php');
+        exit();
+    }
+
+    $validations = [];
+
+    // ユーザー情報を取得
+    $sql='SELECT * FROM `users` WHERE `id`=?';
+    $stmt = $dbh->prepare($sql);
+    $data = array($_SESSION['EATY']['id']);
+    $stmt->execute($data);
+
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -77,10 +102,10 @@
           <div class="form-group">
             <div class="row">
               <div class="col-md-4">
-                <input id="last_name" name="last_name" type="text" placeholder="姓" class="form-control input-md">
+                <input id="last_name" name="last_name" type="text" placeholder="姓" value="<?php echo $signin_user['last_name'] ?>" class="form-control input-md">
               </div>
               <div class="col-md-4">
-                <input id="first_name" name="first_name" type="text" placeholder="名" class="form-control input-md">
+                <input id="first_name" name="first_name" type="text" placeholder="名" value="<?php echo $signin_user['first_name'] ?>" class="form-control input-md">
               </div>
             </div>
           </div>
@@ -94,7 +119,7 @@
           </div>
 
           <div class="row">
-            <p class="col-md-8 check_content">メールアドレス</p>
+            <p class="col-md-8 check_content"><?php echo $signin_user['email'] ?></p>
           </div>
 
           <div class="form-group">
