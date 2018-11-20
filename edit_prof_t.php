@@ -16,23 +16,41 @@
     // 必須項目
     $last_name = $signin_user['last_name'];
     $first_name = $signin_user['first_name'];
-    $area_id = '';
-    $city = '';
-    $station = '';
-    $category_id = '';
-    $past = '';
-    // 任意項目
-    $nickname = '';
-    $category_other = '';
-    $profile = '';
-    $file_name = '';
+
 
     // pロフィール情報をを取得
-    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `id`=?';
+    $profile_t_sql='SELECT `p`.*, `uc`.`category_id` FROM `profiles_t` AS `p` LEFT JOIN `user_categories` AS `uc` ON `p`.`user_id` = `uc`.`user_id` WHERE `p`.`user_id`=?';
     $profile_t_stmt = $dbh->prepare($profile_t_sql);
     $profile_t_sql_data = [$signin_user['id']];
     $profile_t_stmt->execute($profile_t_sql_data);
     $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+
+
+    if($profile_t != FALSE){
+        $area_id = h($profile_t['area_id']);
+        $city = h($profile_t['city']);
+        $station = h($profile_t['station']);
+        $category_id = h($profile_t['category_id']);
+        $past = h($profile_t['past']);
+        // 任意項目
+        $nickname = h($profile_t['nickname']);
+        $category_other = '';
+        $profile = h($profile_t['profile']);
+        $file_name = $profile_t['img_name'];
+    }else{
+        $area_id = '';
+        $city = '';
+        $station = '';
+        $category_id = '';
+        $past = '';
+        // 任意項目
+        $nickname = '';
+        $category_other = '';
+        $profile = '';
+        $file_name = '';
+    }
+
 
     // 都道府県情報の取得
     $areas_sql='SELECT * FROM `areas`';
@@ -50,17 +68,17 @@
     if($profile_t == FALSE){
         if(!empty($_POST)){
             //必須項目
-            $last_name = $_POST['last_name'];
-            $first_name = $_POST['first_name'];
-            $area_id = $_POST['area'];
-            $city = $_POST['city'];
-            $station = $_POST['station'];
-            $category_id = $_POST['categories'];
-            $past = $_POST['past'];
+            $last_name = h($_POST['last_name']);
+            $first_name = h($_POST['first_name']);
+            $area_id = h($_POST['area']);
+            $city = h($_POST['city']);
+            $station = h($_POST['station']);
+            $category_id = h($_POST['categories']);
+            $past = h($_POST['past']);
             // 任意項目
-            $nickname = $_POST['nickname'];
-            $category_other = $_POST['category_other'];
-            $profile = $_POST['profile'];
+            $nickname = h($_POST['nickname']);
+            $category_other = h($_POST['category_other']);
+            $profile = h($_POST['profile']);
 
             // 必須項目のバリデーション
             $user_prof_infos = ['last_name'=>$last_name, 'first_name'=>$first_name, 'area_id'=>$area_id, 'city'=>$city, 'station'=>$station, 'category_id'=>$category_id, 'past'=>$past];
@@ -71,14 +89,8 @@
                 }
             }
 
-            if ($_FILES['img_name']['name'] != '') {
-                $file_name = date('YmdHis') .$_FILES['img_name']['name'];
-                $tmp_file = $_FILES['img_name']['tmp_name'];
-                $destination = 'user_profile_img/'.$file_name;
-                move_uploaded_file($tmp_file, $destination);
-            }else{
-                $file_name = '';
-            }
+
+            $file_name = $_FILES['img_name']['name'];
 
             // 必須項目入力済みの場合の処理
             if(empty($validations)) {
@@ -90,16 +102,24 @@
                     move_uploaded_file($tmp_file, $destination);
                 }
 
+                // もし名字・名前に変更があったら
+                if($last_name != $signin_user['last_name'] || $first_name != $signin_user['first_name']){
+                    $user_sql='UPDATE `users` SET `first_name`=?, `last_name`=? `updated`=NOW() WHERE `id`=?';
+                    $user_stmt = $dbh->prepare($user_sql);
+                    $user_data = [$first_name, $last_name, $signin_user['id']];
+                    $user_stmt->execute($user_data);
+                }
+
                 // profile_tへデータ登録
                 $sql='INSERT INTO `profiles_t` SET `user_id`=?, `nickname`=?, `img_name`=?, `area_id`=?, `city`=?, `station`=?, `past`=?, `profile`=?, `created`=NOW()';
                 $stmt = $dbh->prepare($sql);
-                $data = array($signin_user['id'],$nickname, $file_name, $area_id, $city, $station, $past, $profile);
+                $data = [$signin_user['id'],$nickname, $file_name, $area_id, $city, $station, $past, $profile];
                 $stmt->execute($data);
 
                 // user_categoriesへデータ登録
                 $user_categories_sql='INSERT INTO `user_categories` SET `user_id`=?, `category_id`=?, `created`=NOW()';
                 $user_categories_stmt = $dbh->prepare($user_categories_sql);
-                $user_categories_data = array($signin_user['id'], $category_id);
+                $user_categories_data = array($signin_user[id], $category_id);
                 $user_categories_stmt->execute($user_categories_data);
 
 
@@ -111,17 +131,17 @@
     }else{
         if(!empty($_POST)){
             //必須項目
-            $last_name = $_POST['last_name'];
-            $first_name = $_POST['first_name'];
-            $area_id = $_POST['area'];
-            $city = $_POST['city'];
-            $station = $_POST['station'];
-            $category_id = $_POST['categories'];
-            $past = $_POST['past'];
+            $last_name = h($_POST['last_name']);
+            $first_name = h($_POST['first_name']);
+            $area_id = h($_POST['area']);
+            $city = h($_POST['city']);
+            $station = h($_POST['station']);
+            $category_id = h($_POST['categories']);
+            $past = h($_POST['past']);
             // 任意項目
-            $nickname = $_POST['nickname'];
-            $category_other = $_POST['category_other'];
-            $profile = $_POST['profile'];
+            $nickname = h($_POST['nickname']);
+            $category_other = h($_POST['category_other']);
+            $profile = h($_POST['profile']);
 
             // 必須項目のバリデーション
             $user_prof_infos = ['last_name'=>$last_name, 'first_name'=>$first_name, 'area_id'=>$area_id, 'city'=>$city, 'station'=>$station, 'category_id'=>$category_id, 'past'=>$past];
@@ -132,29 +152,40 @@
                 }
             }
 
-            if ($_FILES['img_name']['name'] != '') {
-                $file_name = date('YmdHis') .$_FILES['img_name']['name'];
-                $tmp_file = $_FILES['img_name']['tmp_name'];
-                $destination = 'user_profile_img/'.$file_name;
-                move_uploaded_file($tmp_file, $destination);
-            }else{
-                $file_name = '';
+            $file_name = $_FILES['img_name']['name'];
+            if(empty($file_name)){
+                $file_name = $profile_t['img_name'];
             }
 
 
             // 必須項目入力済みの場合の処理
             if(empty($validations)) {
 
-                // profile_tへデータ登録
-                $sql='INSERT INTO `profiles_t` SET `user_id`=?, `nickname`=?, `img_name`=?, `area_id`=?, `city`=?, `station`=?, `past`=?, `profile`=?, `created`=NOW()';
+                if ($file_name != $profile_t['img_name']) {
+                    $file_name = date('YmdHis') .$file_name;
+                    $tmp_file = $_FILES['img_name']['tmp_name'];
+                    $destination = 'user_profile_img/'.$file_name;
+                    move_uploaded_file($tmp_file, $destination);
+                }
+
+                // もし名字・名前に変更があったら
+                if($last_name != $signin_user['last_name'] || $first_name != $signin_user['first_name']){
+                    $user_sql='UPDATE `users` SET `first_name`=?, `last_name`=?, `updated`=NOW() WHERE `id`=?';
+                    $user_stmt = $dbh->prepare($user_sql);
+                    $user_data = [$first_name, $last_name, $signin_user['id']];
+                    $user_stmt->execute($user_data);
+                }
+
+                // profile_tへデータ更新
+                $sql='UPDATE `profiles_t` SET `nickname`=?, `img_name`=?, `area_id`=?, `city`=?, `station`=?, `past`=?, `profile`=?, `updated`=NOW() WHERE `user_id`=?';
                 $stmt = $dbh->prepare($sql);
-                $data = array($signin_user['id'],$nickname, $file_name, $area_id, $city, $station, $past, $profile);
+                $data = [$nickname, $file_name, $area_id, $city, $station, $past, $profile,$signin_user['id']];
                 $stmt->execute($data);
 
-                // user_categoriesへデータ登録
-                $user_categories_sql='INSERT INTO `user_categories` SET `user_id`=?, `category_id`=?, `created`=NOW()';
+                // user_categoriesへデータ更新
+                $user_categories_sql='UPDATE `user_categories` SET `category_id`=?, `updated`=NOW() WHERE `user_id`=?';
                 $user_categories_stmt = $dbh->prepare($user_categories_sql);
-                $user_categories_data = array($signin_user['id'], $category_id);
+                $user_categories_data = [$category_id, $signin_user['id']];
                 $user_categories_stmt->execute($user_categories_data);
 
 
