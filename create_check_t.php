@@ -1,5 +1,5 @@
-<?php
-           //SESSIONの有効化
+<?php 
+       //SESSIONの有効化
     session_start();
 
     //データベースとの接続
@@ -10,6 +10,8 @@
     if (!isset($_SESSION['eaty'])) {
       header('Location: create_lesson.php');
     }
+    v($_POST,'$_POST');
+    v($_SESSION,'$SESSION');
 
     $day = $_SESSION['EATY']['day'];
     $daytime = $_SESSION['EATY']['daytime'];
@@ -39,13 +41,13 @@
 
         unset($_SESSION['eaty']);
 
-        header('Location: create_check_t.php');
+        header('Location: bkg.php');
         exit();
       }
       
     
-    
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -82,41 +84,39 @@
 
   <div class="create_check_content text-center">
     <div class="blog-inner-prof text-center">
-      <h3>レッスン名</h3>
-      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
-      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;"><br>
-      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
-      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
+      <h3>レッスン名:<?= h($lesson_name);?></h3>
+      <img class="lesson_img" src="<?= h($img_1);?>" style="width:300px;height:200px;">
+      <img class="lesson_img" src="<?= h($img_2);?>" style="width:300px;height:200px;"><br>
+      <img class="lesson_img" src="<?= h($img_3);?>" style="width:300px;height:200px;">
+      <img class="lesson_img" src="<?= h($img_4);?>" style="width:300px;height:200px;">
 
       <div class="row contents">
           <div class="col-md-4">
-            <span><i class="far fa-calendar-alt fa-2x icon"></i>日時</span>
+            <span><i class="far fa-calendar-alt fa-2x icon"></i>日時:<?= h($day);?></span>
           </div>
           <div class="col-md-4">
-            <span><i class="fas fa-train fa-2x icon"></i>最寄り駅</span>
+            <span><i class="fas fa-train fa-2x icon"></i>最寄り駅:<?= h($place);?></span>
           </div>
           <div class="col-md-4">
-            <span><i class="fas fa-yen-sign fa-2x icon"></i>料金</span>
+            <span><i class="fas fa-yen-sign fa-2x icon"></i>料金:<?= h($fee);?></span>
           </div>
       </div>
 
       <div class="row content_border">
         <div class="col-md-6" style="border-right: 1px solid #ccc;">
-          <span>メニュー数</span>
+          <span>メニュー数:<?= h($menu);?></span>
         </div>
         <div class="col-md-6">
-          <span>所要時間</span>
+          <span>所要時間:<?= h($requiretime);?></span>
         </div>
       </div>
 
       <div>
         <ul>
           <li>メニュー内容</li>
-          <li>メニュー内容</li>
-          <li>メニュー内容</li>
-          <li>メニュー内容</li>
-          <li>メニュー内容</li>
-          <li>メニュー内容</li>
+          <li><?= h($menudetail);?></li>
+          <li>カテゴリー:<?= h($category_id);?></li>
+          
         </ul>
       </div>
 
@@ -129,14 +129,14 @@
             <h3>持ち物</h3>
             <span>+</span>
             <div class="inner">
-              <p>持ち物を表示</p>
+              <p><?= h($bring);?></p>
             </div>
           </li>
           <li class="lesson-list-item">
             <h3>注意事項</h3>
             <span>+</span>
             <div class="inner">
-              <p>注意事項を表示</p>
+              <p><?= h($precaution);?></p>
             </div>
           </li>
         </ul>
