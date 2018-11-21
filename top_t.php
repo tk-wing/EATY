@@ -38,7 +38,7 @@
     $categories_stmt->execute($categories_sql_data);
 
     // ユーザーカテゴリー情報を取得
-    $user_categories_sql='SELECT * FROM `user_categories` WHERE `user_id`';
+    $user_categories_sql='SELECT * FROM `user_categories` WHERE `user_id`=?';
     $user_categories_stmt = $dbh->prepare($user_categories_sql);
     $user_categories_sql_data = [$signin_user['id']];
     $user_categories_stmt->execute($user_categories_sql_data);

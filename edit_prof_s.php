@@ -19,6 +19,178 @@
 
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // 必須項目
+    $last_name = $signin_user['last_name'];
+    $first_name = $signin_user['first_name'];
+
+    // pロフィール情報をを取得
+    $profile_t_sql='SELECT `p`.*, `uc`.`category_id` FROM `profiles_s` AS `p` LEFT JOIN `user_categories` AS `uc` ON `p`.`user_id` = `uc`.`user_id` WHERE `p`.`user_id`=?';
+    $profile_s_stmt = $dbh->prepare($profile_t_sql);
+    $profile_s_sql_data = [$signin_user['id']];
+    $profile_s_stmt->execute($profile_s_sql_data);
+    $profile_s = $profile_s_stmt->fetch(PDO::FETCH_ASSOC);
+
+    if($profile_s != FALSE){
+        $nickname = h($profile_s['nickname']);
+        $category_id = h($profile_s['category_id']);
+        $category_other = '';
+        $profile = h($profile_s['profile']);
+        $file_name = $profile_s['img_name'];
+    }else{
+        $nickname = '';
+        $category_id = '';
+        $category_other = '';
+        $profile = '';
+        $file_name = '';
+
+    }
+
+    // カテゴリー情報を取得
+    $categories_sql='SELECT * FROM `categories`';
+    $categories_stmt = $dbh->prepare($categories_sql);
+    $categories_sql_data = [];
+    $categories_stmt->execute($categories_sql_data);
+
+
+    // pロフィール情報をを取得
+    $profile_t_sql='SELECT `p`.*, `uc`.`category_id` FROM `profiles_t` AS `p` LEFT JOIN `user_categories` AS `uc` ON `p`.`user_id` = `uc`.`user_id` WHERE `p`.`user_id`=?';
+    $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_stmt->execute($profile_t_sql_data);
+    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // カテゴリー情報を取得
+    $categories_sql='SELECT * FROM `categories`';
+    $categories_stmt = $dbh->prepare($categories_sql);
+    $categories_sql_data = [];
+    $categories_stmt->execute($categories_sql_data);
+
+    if($profile_s == FALSE){
+        if(!empty($_POST)){
+            $last_name = h($_POST['last_name']);
+            $first_name = h($_POST['first_name']);
+
+            $nickname = h($_POST['nickname']);
+            $category_id = h($_POST['categories']);
+            $category_other = h($_POST['category_other']);
+            $profile = h($_POST['profile']);
+
+
+            // 必須項目のバリデーション
+            $user_prof_infos = ['last_name'=>$last_name, 'first_name'=>$first_name,];
+
+            foreach ($user_prof_infos as $index => $user_prof_info) {
+                if ($user_prof_info == '') {
+                    $validations[$index] = 'blank';
+                }
+            }
+
+            $file_name = $_FILES['img_name']['name'];
+
+            // 必須項目入力済みの場合の処理
+            if(empty($validations)) {
+
+                if (!empty($file_name)) {
+                    $file_name = date('YmdHis') .$file_name;
+                    $tmp_file = $_FILES['img_name']['tmp_name'];
+                    $destination = 'user_profile_img/'.$file_name;
+                    move_uploaded_file($tmp_file, $destination);
+                }
+
+                // もし名字・名前に変更があったら
+                if($last_name != $signin_user['last_name'] || $first_name != $signin_user['first_name']){
+                    $user_sql='UPDATE `users` SET `first_name`=?, `last_name`=? `updated`=NOW() WHERE `id`=?';
+                    $user_stmt = $dbh->prepare($user_sql);
+                    $user_data = [$first_name, $last_name, $signin_user['id']];
+                    $user_stmt->execute($user_data);
+                }
+
+                // profile_tへデータ登録
+                $sql='INSERT INTO `profiles_s` SET `user_id`=?, `nickname`=?, `img_name`=?, `profile`=?, `created`=NOW()';
+                $stmt = $dbh->prepare($sql);
+                $data = [$signin_user['id'],$nickname, $file_name, $profile];
+                $stmt->execute($data);
+
+                // user_categoriesへデータ登録
+                $user_categories_sql='INSERT INTO `user_categories` SET `user_id`=?, `category_id`=?, `created`=NOW()';
+                $user_categories_stmt = $dbh->prepare($user_categories_sql);
+                $user_categories_data = array($signin_user[id], $category_id);
+                $user_categories_stmt->execute($user_categories_data);
+
+
+                header('Location: top_s.php');
+                exit();
+            }
+        }
+
+    }else{
+        if(!empty($_POST)){
+            $last_name = h($_POST['last_name']);
+            $first_name = h($_POST['first_name']);
+
+            $nickname = h($_POST['nickname']);
+            $category_id = h($_POST['categories']);
+            $category_other = h($_POST['category_other']);
+            $profile = h($_POST['profile']);
+
+            // 必須項目のバリデーション
+            $user_prof_infos = ['last_name'=>$last_name, 'first_name'=>$first_name,];
+
+            foreach ($user_prof_infos as $index => $user_prof_info) {
+                if ($user_prof_info == '') {
+                    $validations[$index] = 'blank';
+                }
+            }
+
+            $file_name = $_FILES['img_name']['name'];
+            if(empty($file_name)){
+                $file_name = $profile_s['img_name'];
+            }
+
+            // 必須項目入力済みの場合の処理
+            if(empty($validations)) {
+
+                if ($file_name != $profile_s['img_name']) {
+                    $file_name = date('YmdHis') .$file_name;
+                    $tmp_file = $_FILES['img_name']['tmp_name'];
+                    $destination = 'user_profile_img/'.$file_name;
+                    move_uploaded_file($tmp_file, $destination);
+                }
+
+                // もし名字・名前に変更があったら
+                if($last_name != $signin_user['last_name'] || $first_name != $signin_user['first_name']){
+                    $user_sql='UPDATE `users` SET `first_name`=?, `last_name`=?, `updated`=NOW() WHERE `id`=?';
+                    $user_stmt = $dbh->prepare($user_sql);
+                    $user_data = [$first_name, $last_name, $signin_user['id']];
+                    $user_stmt->execute($user_data);
+                }
+
+                // profile_tへデータ更新
+                $sql='UPDATE `profiles_s` SET `nickname`=?, `img_name`=?, `profile`=?, `updated`=NOW() WHERE `user_id`=?';
+                $stmt = $dbh->prepare($sql);
+                $data = [$nickname, $file_name, $profile,$signin_user['id']];
+                $stmt->execute($data);
+
+                // user_categoriesへデータ更新
+                $user_categories_sql='UPDATE `user_categories` SET `category_id`=?, `updated`=NOW() WHERE `user_id`=?';
+                $user_categories_stmt = $dbh->prepare($user_categories_sql);
+                $user_categories_data = [$category_id, $signin_user['id']];
+                $user_categories_stmt->execute($user_categories_data);
+
+
+                header('Location: top_s.php');
+                exit();
+            }
+
+
+        }
+
+
+
+    }
+
+
+
 
 
 ?>
@@ -32,6 +204,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="css/stylesheet_t.css">
+  <link rel="stylesheet" href="css/stylesheet_s.css">
+
   <!-- BootstrapのCSS読み込み -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <!-- jQuery読み込み -->
@@ -83,17 +257,21 @@
     </div>
   </header>
 
-  <div class="edit_content text-center">
-    <form method="POST" action="">
+  <div class="edit_content_s text-center">
+    <form method="POST" action="" enctype="multipart/form-data">
       <div class="row">
         <div class="col-md-4 text-center">
-          <img id="img1" src="https://placehold.jp/160x160.png" style="width:160px;height:160px;border-radius: 50%;">
+          <?php if ($file_name == ''): ?>
+            <img id="img1" src="img/profile_img_defult.png" style="width:160px;height:160px;border-radius: 50%;">
+          <?php else: ?>
+            <img id="img1" src="user_profile_img/<?php echo $file_name ?>" style="width:160px;height:160px;border-radius: 50%;">
+          <?php endif ?>
           <label>
             <span class="filelabel" title="ファイルを選択">
               <i class="fas fa-camera-retro"></i>
               選択
             </span>
-            <input type="file" class="filesend" id="filesend" name="img_name">
+            <input type="file" class="filesend" id="filesend" name="img_name" accept="image/*">
           </label>
         </div>
 
@@ -113,7 +291,7 @@
           <div class="form-group">
             <div class="row">
               <div class="col-md-9">
-               <input id="nickname" name="nickname" type="text" placeholder="ニックネーム(任意)"" class="form-control input-md">
+               <input id="nickname" name="nickname" type="text" placeholder="ニックネーム(任意)" value="<?php echo $nickname ?>" class="form-control input-md">
               </div>
             </div>
           </div>
@@ -122,31 +300,57 @@
             <p class="col-md-8 check_content"><?php echo $signin_user['email'] ?></p>
           </div>
 
+          <!-- ジャンル -->
           <div class="form-group">
             <div class="row">
-              <div class="col-md-4">
-                <select id="genre" name="genre" class="form-control">
-                  <option value="1">Option one</option>
-                  <option value="2">Option two</option>
-                </select>
-              </div>
               <div class="col-md-6">
-                <input id="genre_other" name="genre_other" type="text" placeholder="その他ジャンル" class="form-control input-md">
+                <ul id="category">
+                  <li class="category-item">
+                    <p class="ml-1">ジャンル</p><br>
+                    <span class="category-button">+</span>
+                    <div class="inner">
+                       <div class="checkbox">
+                         <?php while(1): ?>
+                            <?php $categories = $categories_stmt->fetch(PDO::FETCH_ASSOC) ?>
+                            <?php if ($categories == FALSE): ?>
+                              <?php break ?>
+                            <?php endif ?>
+                            <?php if ($category_id == $categories['id']): ?>
+                              <label>
+                                <input type="checkbox" name="categories"  value="<?php echo $categories['id'] ?>" checked>
+                                <?php echo $categories['category_name'] ?>
+                              </label><br>
+                              <?php else: ?>
+                                <label>
+                                  <input type="checkbox" name="categories"  value="<?php echo $categories['id'] ?>">
+                                  <?php echo $categories['category_name'] ?>
+                                </label><br>
+                            <?php endif ?>
+                          <?php endwhile ?>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- その他ジャンル -->
+              <div class="col-md-6">
+                <input id="category_other" name="category_other" type="text" placeholder="その他ジャンル" class="form-control input-md" value="<?php echo $category_other ?>">
               </div>
             </div>
+
+              <!-- 自己紹介・コメント（任意項目） -->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="comment"></label>
+                <div class="col-md-14">
+                  <textarea class="form-control" id="profile" name="profile" placeholder="自己紹介＆コメント" style="height: 100px;"><?php echo $profile ?></textarea>
+                </div>
+              </div>
+
+              <input type="submit" class="btn btn-primary" value="完了">
           </div>
 
-          <!-- Textarea -->
-          <div class="form-group">
-            <label class="col-md-4 control-label" for="comment"></label>
-            <div class="col-md-14">
-              <textarea class="form-control" id="comment" name="comment" style="height: 100px;">自己紹介＆コメント</textarea>
-            </div>
-          </div>
-
-          <input type="submit" class="btn btn-primary" value="完了">
         </div>
-
       </div>
     </form>
   </div>
@@ -159,5 +363,5 @@
       <p>©ex chef</p>
     </div>
   </footer>
-
+  <script src="js/app.js"></script>
 </body>
