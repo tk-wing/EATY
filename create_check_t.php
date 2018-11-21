@@ -17,6 +17,9 @@
     v($_POST,'$_POST');
     v($_SESSION,'$SESSION');
 
+    //$SESSIONで持ってきた値を変数に変える
+    if (!empty($_SESSION)) {
+      //DBへの入力
     $day = $_SESSION['eaty']['day'];
     $daytime = $_SESSION['eaty']['daytime'];
     $station = $_SESSION['eaty']['station'];
@@ -36,20 +39,20 @@
     $img_3 = $_SESSION['eaty']['img_3'];
     $img_4 = $_SESSION['eaty']['img_4'];
 
-      if (!empty($_POST)) {
-        //DBへの入力
-        $sql = 'INSERT INTO `lessons_t` SET `img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`station`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`created`= NOW()';//`user_id`=?,
-        $data =array($img_1,$img_2,$img_3,$img_4,$day,$daytime,$station,$fee,$requiretime,$category_id,$menu,$capacity,$basic,$lesson_name,$menudetail,$bring,$precaution);//$_SESSION['id']
-        $stmt = $dbh->prepare($sql);
-        $stmt->execute($data);
+        //完了ボタンを押した時に再読み込み
+        if (!empty($_POST)) {
+          //DBへの入力
+          $sql = 'INSERT INTO `lessons_t` SET `img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`station`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`created`= NOW()';//`user_id`=?,
+          $data =array($img_1,$img_2,$img_3,$img_4,$day,$daytime,$station,$fee,$requiretime,$category_id,$menu,$capacity,$basic,$lesson_name,$menudetail,$bring,$precaution);//$_SESSION['id']
+          $stmt = $dbh->prepare($sql);
+          $stmt->execute($data);
 
-        unset($_SESSION['eaty']);//一度空に
-
-        // header('Location: bkg.php');
-        // exit();
-      }
-      
-    
+          unset($_SESSION['eaty']);//一度空に
+          header('Location: bkg_t.php');
+          exit();
+        }
+        
+    }
 ?>
 
 <!DOCTYPE html>
@@ -86,7 +89,7 @@
     </div>
   </header>
 
-  <!-- <form method="POST" action="" enctype="multipart/form-data"> -->
+<form method="POST" action="" enctype="multipart/form-data">
   <div class="create_check_content text-center">
     <div class="blog-inner-prof text-center">
       <h3>レッスン名:<?= h($lesson_name);?></h3>
@@ -144,15 +147,18 @@
               <p><?= h($precaution);?></p>
             </div>
           </li>
-        </ul>
-          <form method="POST" action="" enctype="multipart/form-data">
+          <input type="hidden" name="str_1" value="str2"/>
+          <!-- １回目来た時にPOSTに値が入っていない為 -->
+
+
             <input type="submit" class="btn btn-primary" value="完了">
-            <a href="create_lesson.php"><button type="button" class="btn btn-secondary">編集</button></a>
-          </form>
+            <a href="javascript:history.back(create_lesson.php)"><button type="button" class="btn btn-secondary" >編集</button></a>
+
+
 
     </div>
   </div>
-  <!-- </form> -->
+  </form>
   <footer>
     <div class="sns text-center">
       <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>
