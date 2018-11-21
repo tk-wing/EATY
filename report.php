@@ -15,6 +15,17 @@
 
     v($signin_user,'signin_user');
 
+    $sql = 'SELECT * FROM `reports` WHERE `user_id`=?';
+    $data = array($signin_user['id']);
+
+    // var_dump($_SESSION['EATY']['id']);
+
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+
+    $reports = $stmt->fetch(PDO::FETCH_ASSOC);
+    v($reports,'reports');
+
 ?>
 
 
@@ -62,9 +73,9 @@
     <div class="row">
 
       <div class="col-md-3 text-center">
-        <span>2018/12/31</span>
+        <span><?php echo $reports['created']; ?></span>
         <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/250x150.png" alt="Blog">
+          <img class="img-responsive" src="<?php echo $reports['img_name']; ?>" alt="Blog">
           <div class="desc">
 
             <form method="POST" action="">
