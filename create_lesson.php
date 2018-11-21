@@ -9,6 +9,7 @@
     $validations = [];
 
     v($_FILES,'$_FILES');
+
     v($_POST,'$_POST');
 
     // ユーザー情報を取得
@@ -19,11 +20,13 @@
 
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // 都道府県情報の取得
-    $areas_sql='SELECT * FROM `areas`';
-    $areas_stmt = $dbh->prepare($areas_sql);
-    $areas_sql_data = [];
-    $areas_stmt->execute($areas_sql_data);
+    // カテゴリー情報を取得
+    $categories_sql='SELECT * FROM `categories`';
+    $categories_stmt = $dbh->prepare($categories_sql);
+    $categories_sql_data = [];
+    $categories_stmt->execute($categories_sql_data);
+
+ 
 
 
 
@@ -135,7 +138,7 @@ if (!empty($_POST)) {
          //格項目
          $_SESSION['eaty']['day']  = $day;
          $_SESSION['eaty']['daytime']  = $daytime;
-         $_SESSION['eaty']['place']  = $place;
+         $_SESSION['eaty']['station']  = $station;
          $_SESSION['eaty']['fee']  = $fee;
          $_SESSION['eaty']['requiretime']  = $requiretime;
          $_SESSION['eaty']['category_id']  = $capacity;
@@ -421,7 +424,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="requiretime" type="text" placeholder="" class="form-control input-md">
+                  <input id="name" name="requiretime" type="time" placeholder="" class="form-control input-md">
                   <?php if(isset($validations['requiretime'])&& $validations['requiretime']=='blank'): ?>
                   <span class="error_msg">所要時間を指定してください</span>
                   <?php endif; ?>
@@ -436,11 +439,23 @@ if (!empty($_POST)) {
             <div class="row">
               <div class="col-md-3">
                 <span style="line-height: 40px;">カテゴリ</span>
+
               </div>
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="category_id" type="text" placeholder="" class="form-control input-md">
+                  <!-- <input id="name" name="category_id" type="text" placeholder="" class="form-control input-md"> -->
+                  <select id="category" name="category_id" class="form-control">
+                    <option value="">選択してください。</option>
+                    <?php while(1): ?>
+                      <?php  $categories = $categories_stmt->fetch(PDO::FETCH_ASSOC); ?>
+                      <?php if ($categories == false): ?>
+                        <?php break; ?>
+                        <?php else: ?>
+                        <option value="<?php echo $categories['id'];?>"><?php echo $categories['category_name'] ?></option>
+                      <?php endif ?>
+                    <?php endwhile; ?>
+                  </select>
 
                   <?php if(isset($validations['category_id'])&& $validations['category_id']=='blank'): ?>
                   <span class="error_msg">カテゴリーを指定してください</span>
