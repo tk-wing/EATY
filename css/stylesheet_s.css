@@ -63,6 +63,11 @@ ul{
   margin-left: 300px;
 }
 
+.edit_content_s{
+  height: 50%;
+  margin: 100px 350px;
+}
+
 .title{
   border-bottom: solid 2px black;
   padding: 20px;

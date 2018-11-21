@@ -19,6 +19,41 @@
 
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // 必須項目
+    $last_name = $signin_user['last_name'];
+    $first_name = $signin_user['first_name'];
+
+    // pロフィール情報をを取得
+    $profile_t_sql='SELECT `p`.*, `uc`.`category_id` FROM `profiles_t` AS `p` LEFT JOIN `user_categories` AS `uc` ON `p`.`user_id` = `uc`.`user_id` WHERE `p`.`user_id`=?';
+    $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_stmt->execute($profile_t_sql_data);
+    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // カテゴリー情報を取得
+    $categories_sql='SELECT * FROM `categories`';
+    $categories_stmt = $dbh->prepare($categories_sql);
+    $categories_sql_data = [];
+    $categories_stmt->execute($categories_sql_data);
+
+
+    // pロフィール情報をを取得
+    $profile_t_sql='SELECT `p`.*, `uc`.`category_id` FROM `profiles_t` AS `p` LEFT JOIN `user_categories` AS `uc` ON `p`.`user_id` = `uc`.`user_id` WHERE `p`.`user_id`=?';
+    $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_stmt->execute($profile_t_sql_data);
+    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // カテゴリー情報を取得
+    $categories_sql='SELECT * FROM `categories`';
+    $categories_stmt = $dbh->prepare($categories_sql);
+    $categories_sql_data = [];
+    $categories_stmt->execute($categories_sql_data);
+
+    
+
+
+
 
 
 ?>
@@ -32,6 +67,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="css/stylesheet_t.css">
+  <link rel="stylesheet" href="css/stylesheet_s.css">
+
   <!-- BootstrapのCSS読み込み -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <!-- jQuery読み込み -->
@@ -83,7 +120,7 @@
     </div>
   </header>
 
-  <div class="edit_content text-center">
+  <div class="edit_content_s text-center">
     <form method="POST" action="">
       <div class="row">
         <div class="col-md-4 text-center">
@@ -122,31 +159,48 @@
             <p class="col-md-8 check_content"><?php echo $signin_user['email'] ?></p>
           </div>
 
+          <!-- ジャンル -->
           <div class="form-group">
             <div class="row">
-              <div class="col-md-4">
-                <select id="genre" name="genre" class="form-control">
-                  <option value="1">Option one</option>
-                  <option value="2">Option two</option>
-                </select>
-              </div>
               <div class="col-md-6">
-                <input id="genre_other" name="genre_other" type="text" placeholder="その他ジャンル" class="form-control input-md">
+                <ul id="category">
+                  <li class="category-item">
+                    <p class="ml-1">ジャンル</p><br>
+                    <span class="category-button">+</span>
+                    <div class="inner">
+                       <div class="checkbox">
+                         <?php while(1): ?>
+                            <?php $categories = $categories_stmt->fetch(PDO::FETCH_ASSOC) ?>
+                            <?php if ($categories == FALSE): ?>
+                              <?php break ?>
+                            <?php endif ?>
+                            <?php if ($category_id == $categories['id']): ?>
+                              <label>
+                                <input type="checkbox" name="categories"  value="<?php echo $categories['id'] ?>" checked>
+                                <?php echo $categories['category_name'] ?>
+                              </label><br>
+                              <?php else: ?>
+                                <label>
+                                  <input type="checkbox" name="categories"  value="<?php echo $categories['id'] ?>">
+                                  <?php echo $categories['category_name'] ?>
+                                </label><br>
+                            <?php endif ?>
+                          <?php endwhile ?>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- その他ジャンル -->
+              <div class="col-md-6">
+                <input id="category_other" name="category_other" type="text" placeholder="その他ジャンル" class="form-control input-md" value="<?php echo $category_other ?>">
               </div>
             </div>
+              <input type="submit" class="btn btn-primary" value="完了">
           </div>
 
-          <!-- Textarea -->
-          <div class="form-group">
-            <label class="col-md-4 control-label" for="comment"></label>
-            <div class="col-md-14">
-              <textarea class="form-control" id="comment" name="comment" style="height: 100px;">自己紹介＆コメント</textarea>
-            </div>
-          </div>
-
-          <input type="submit" class="btn btn-primary" value="完了">
         </div>
-
       </div>
     </form>
   </div>
@@ -159,5 +213,5 @@
       <p>©ex chef</p>
     </div>
   </footer>
-
+  <script src="js/app.js"></script>
 </body>
