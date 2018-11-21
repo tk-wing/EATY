@@ -19,11 +19,17 @@
 
 
     // pロフィール情報をを取得
-    $profile_t_sql='SELECT `p`.*, `uc`.`category_id` FROM `profiles_t` AS `p` LEFT JOIN `user_categories` AS `uc` ON `p`.`user_id` = `uc`.`user_id` WHERE `p`.`user_id`=?';
+    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
     $profile_t_stmt = $dbh->prepare($profile_t_sql);
     $profile_t_sql_data = [$signin_user['id']];
     $profile_t_stmt->execute($profile_t_sql_data);
     $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // ユーザーカテゴリー情報をを取得
+    $user_categories_sql='SELECT * FROM `user_categories` WHERE `user_id`=?';
+    $user_categories_stmt = $dbh->prepare($user_categories_sql);
+    $user_categories_data = [$signin_user['id']];
+    $user_categories_stmt->execute($user_categories_data);
 
 
 
@@ -31,18 +37,25 @@
         $area_id = h($profile_t['area_id']);
         $city = h($profile_t['city']);
         $station = h($profile_t['station']);
-        $category_id = h($profile_t['category_id']);
         $past = h($profile_t['past']);
+
+        while(1){
+            $user_categories = $user_categories_stmt->fetch(PDO::FETCH_ASSOC);
+            if ($user_categories == FALSE) {
+                break;
+            }
+            $categories_id[] = $user_categories['category_id'];
+        }
         // 任意項目
         $nickname = h($profile_t['nickname']);
-        $category_other = '';
+        $category_other = h($profile_t['category_other']);;
         $profile = h($profile_t['profile']);
         $file_name = $profile_t['img_name'];
     }else{
         $area_id = '';
         $city = '';
         $station = '';
-        $category_id = '';
+        $categories_id = '';
         $past = '';
         // 任意項目
         $nickname = '';
@@ -50,7 +63,6 @@
         $profile = '';
         $file_name = '';
     }
-
 
     // 都道府県情報の取得
     $areas_sql='SELECT * FROM `areas`';
@@ -73,7 +85,7 @@
             $area_id = h($_POST['area']);
             $city = h($_POST['city']);
             $station = h($_POST['station']);
-            $category_id = h($_POST['categories']);
+            $categories_id = $_POST['categories'];
             $past = h($_POST['past']);
             // 任意項目
             $nickname = h($_POST['nickname']);
@@ -81,7 +93,7 @@
             $profile = h($_POST['profile']);
 
             // 必須項目のバリデーション
-            $user_prof_infos = ['last_name'=>$last_name, 'first_name'=>$first_name, 'area_id'=>$area_id, 'city'=>$city, 'station'=>$station, 'category_id'=>$category_id, 'past'=>$past];
+            $user_prof_infos = ['last_name'=>$last_name, 'first_name'=>$first_name, 'area_id'=>$area_id, 'city'=>$city, 'station'=>$station, 'categories_id'=>$categories_id, 'past'=>$past];
 
             foreach ($user_prof_infos as $index => $user_prof_info) {
                 if ($user_prof_info == '') {
@@ -111,16 +123,18 @@
                 }
 
                 // profile_tへデータ登録
-                $sql='INSERT INTO `profiles_t` SET `user_id`=?, `nickname`=?, `img_name`=?, `area_id`=?, `city`=?, `station`=?, `past`=?, `profile`=?, `created`=NOW()';
+                $sql='INSERT INTO `profiles_t` SET `user_id`=?, `nickname`=?, `img_name`=?, `area_id`=?, `city`=?, `station`=?, `category_other`=?, `past`=?, `profile`=?, `created`=NOW()';
                 $stmt = $dbh->prepare($sql);
-                $data = [$signin_user['id'],$nickname, $file_name, $area_id, $city, $station, $past, $profile];
+                $data = [$signin_user['id'],$nickname, $file_name, $area_id, $city, $station, $category_other, $past, $profile];
                 $stmt->execute($data);
 
                 // user_categoriesへデータ登録
-                $user_categories_sql='INSERT INTO `user_categories` SET `user_id`=?, `category_id`=?, `created`=NOW()';
-                $user_categories_stmt = $dbh->prepare($user_categories_sql);
-                $user_categories_data = array($signin_user[id], $category_id);
-                $user_categories_stmt->execute($user_categories_data);
+                foreach ($categories_id as $category_id) {
+                    $user_categories_sql='INSERT INTO `user_categories` SET `user_id`=?, `category_id`=?, `created`=NOW()';
+                    $user_categories_stmt = $dbh->prepare($user_categories_sql);
+                    $user_categories_data = array($signin_user['id'], $category_id);
+                    $user_categories_stmt->execute($user_categories_data);
+                }
 
 
                 header('Location: top_t.php');
@@ -136,7 +150,7 @@
             $area_id = h($_POST['area']);
             $city = h($_POST['city']);
             $station = h($_POST['station']);
-            $category_id = h($_POST['categories']);
+            $categories_id = $_POST['categories'];
             $past = h($_POST['past']);
             // 任意項目
             $nickname = h($_POST['nickname']);
@@ -144,7 +158,7 @@
             $profile = h($_POST['profile']);
 
             // 必須項目のバリデーション
-            $user_prof_infos = ['last_name'=>$last_name, 'first_name'=>$first_name, 'area_id'=>$area_id, 'city'=>$city, 'station'=>$station, 'category_id'=>$category_id, 'past'=>$past];
+            $user_prof_infos = ['last_name'=>$last_name, 'first_name'=>$first_name, 'area_id'=>$area_id, 'city'=>$city, 'station'=>$station, 'categories_id'=>$categories_id, 'past'=>$past];
 
             foreach ($user_prof_infos as $index => $user_prof_info) {
                 if ($user_prof_info == '') {
@@ -177,17 +191,24 @@
                 }
 
                 // profile_tへデータ更新
-                $sql='UPDATE `profiles_t` SET `nickname`=?, `img_name`=?, `area_id`=?, `city`=?, `station`=?, `past`=?, `profile`=?, `updated`=NOW() WHERE `user_id`=?';
+                $sql='UPDATE `profiles_t` SET `nickname`=?, `img_name`=?, `area_id`=?, `city`=?, `station`=?, `category_other`=?, `past`=?, `profile`=?, `updated`=NOW() WHERE `user_id`=?';
                 $stmt = $dbh->prepare($sql);
-                $data = [$nickname, $file_name, $area_id, $city, $station, $past, $profile,$signin_user['id']];
+                $data = [$nickname, $file_name, $area_id, $city, $station, $category_other, $past, $profile,$signin_user['id']];
                 $stmt->execute($data);
 
-                // user_categoriesへデータ更新
-                $user_categories_sql='UPDATE `user_categories` SET `category_id`=?, `updated`=NOW() WHERE `user_id`=?';
+                // user_categoriesへデータ削除
+                $user_categories_sql='DELETE FROM `user_categories` WHERE `user_id`=?';
                 $user_categories_stmt = $dbh->prepare($user_categories_sql);
-                $user_categories_data = [$category_id, $signin_user['id']];
+                $user_categories_data = [$signin_user['id']];
                 $user_categories_stmt->execute($user_categories_data);
 
+                // user_categoriesへデータ登録
+                foreach ($categories_id as $category_id) {
+                    $user_categories_sql='INSERT INTO `user_categories` SET `user_id`=?, `category_id`=?, `created`=NOW()';
+                    $user_categories_stmt = $dbh->prepare($user_categories_sql);
+                    $user_categories_data = array($signin_user['id'], $category_id);
+                    $user_categories_stmt->execute($user_categories_data);
+                }
 
                 header('Location: top_t.php');
                 exit();
@@ -366,16 +387,16 @@
                             <?php if ($categories == FALSE): ?>
                               <?php break ?>
                             <?php endif ?>
-                            <?php if ($category_id == $categories['id']): ?>
+                            <?php if (is_check_user_category($categories_id,$categories['id']) == $categories['id'] ): ?>
                               <label>
-                                <input type="checkbox" name="categories"  value="<?php echo $categories['id'] ?>" checked>
+                                <input type="checkbox" name="categories[]"  value="<?php echo $categories['id'] ?>" checked>
                                 <?php echo $categories['category_name'] ?>
                               </label><br>
-                              <?php else: ?>
-                                <label>
-                                  <input type="checkbox" name="categories"  value="<?php echo $categories['id'] ?>">
-                                  <?php echo $categories['category_name'] ?>
-                                </label><br>
+                            <?php else: ?>
+                              <label>
+                                <input type="checkbox" name="categories[]"  value="<?php echo $categories['id'] ?>">
+                                <?php echo $categories['category_name'] ?>
+                              </label><br>
                             <?php endif ?>
                           <?php endwhile ?>
                       </div>

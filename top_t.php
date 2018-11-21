@@ -143,6 +143,7 @@
                 <?php for($i=0; $i<count($user_categories); $i++): ?>
                   <span><?php echo $user_categories[$i]; ?></span><span>&emsp;</span>
                 <?php endfor ?>
+                <span><?php echo $profile_t['category_other'] ?></span>
               </div><br>
               <div>
                 ＜経歴・資格＞

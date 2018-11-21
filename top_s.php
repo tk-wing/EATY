@@ -44,20 +44,22 @@
         }
         $user_categories_id[] = $user_categories['category_id'];
     }
-    
 
-    while (1) {
-        $categories = $categories_stmt->fetch(PDO::FETCH_ASSOC);
-        // v($categories, '$categories');
-        if ($categories == FALSE) {
-            break;
-        }
-        foreach ($user_categories_id as $user_category_id) {
-            if ($user_category_id == $categories['id']) {
-                $user_categories[] = $categories['category_name'];
+    if (!empty($user_categories_id)) {
+        while (1) {
+            $categories = $categories_stmt->fetch(PDO::FETCH_ASSOC);
+            // v($categories, '$categories');
+            if ($categories == FALSE) {
+                break;
+            }
+            foreach ($user_categories_id as $user_category_id) {
+                if ($user_category_id == $categories['id']) {
+                    $user_categories[] = $categories['category_name'];
+                }
             }
         }
     }
+
 
 
     //ニックネームが登録されていない場合
@@ -128,6 +130,7 @@
                   <?php for($i=0; $i<count($user_categories); $i++): ?>
                     <span><?php echo $user_categories[$i]; ?></span><span>&emsp;</span>
                   <?php endfor ?>
+                  <span><?php echo $profile_s['category_other'] ?></span>
                 </div><br>
                 <div>
                   ＜自己紹介＆メッセージ＞
