@@ -17,6 +17,7 @@
 
     v($signin_user, '$signin_user');
 
+    // 必須項目
     $last_name = $signin_user['last_name'];
     $first_name = $signin_user['first_name'];
     $area_id = '';
@@ -30,24 +31,25 @@
     $profile = '';
     $file_name = '';
 
-    // V($_FILES, '$_FILES');
+    V($_FILES, '$_FILES');
     // V($_POST, '$_POST');
 
     // 都道府県情報の取得
     $areas_sql='SELECT * FROM `areas`';
     $areas_stmt = $dbh->prepare($areas_sql);
-    $data = [];
-    $areas_stmt->execute($data);
+    $areas_sql_data = [];
+    $areas_stmt->execute($areas_sql_data);
 
     // カテゴリー情報を取得
     $categories_sql='SELECT * FROM `categories`';
     $categories_stmt = $dbh->prepare($categories_sql);
-    $data = [];
-    $categories_stmt->execute($data);
+    $categories_sql_data = [];
+    $categories_stmt->execute($categories_sql_data);
 
 
 
     if(!empty($_POST)){
+        //必須項目
         $last_name = $_POST['last_name'];
         $first_name = $_POST['first_name'];
         $area_id = $_POST['area'];
@@ -69,21 +71,30 @@
             }
         }
 
-        $file_name = $_FILES['img_name']['name'];
-
-
-
-        if(empty($validations)) {
-
+        if ($_FILES['img_name']['name'] != '') {
             $file_name = date('YmdHis') .$_FILES['img_name']['name'];
             $tmp_file = $_FILES['img_name']['tmp_name'];
             $destination = 'user_profile_img/'.$file_name;
             move_uploaded_file($tmp_file, $destination);
+        }else{
+            $file_name = '';
+        }
 
+
+        // 必須項目入力済みの場合の処理
+        if(empty($validations)) {
+
+            // profile_tへデータ登録
             $sql='INSERT INTO `profiles_t` SET `user_id`=?, `nickname`=?, `img_name`=?, `area_id`=?, `city`=?, `station`=?, `past`=?, `profile`=?, `created`=NOW()';
             $stmt = $dbh->prepare($sql);
             $data = array($signin_user['id'],$nickname, $file_name, $area_id, $city, $station, $past, $profile);
             $stmt->execute($data);
+
+            // user_categoriesへデータ登録
+            $user_categories_sql='INSERT INTO `user_categories` SET `user_id`=?, `category_id`=?, `created`=NOW()';
+            $user_categories_stmt = $dbh->prepare($user_categories_sql);
+            $user_categories_data = array($signin_user['id'], $category_id);
+            $user_categories_stmt->execute($user_categories_data);
 
 
             header('Location: top_t.php');
@@ -173,7 +184,7 @@
           <?php if ($file_name == ''): ?>
             <img id="img1" src="img/profile_img_defult.png" style="width:160px;height:160px;border-radius: 50%;">
           <?php else: ?>
-            <img id="img1" src="user_profile_img/<?php echo $first_name ?>" style="width:160px;height:160px;border-radius: 50%;">
+            <img id="img1" src="user_profile_img/<?php echo $file_name ?>" style="width:160px;height:160px;border-radius: 50%;">
           <?php endif ?>
 
           <label>
@@ -242,7 +253,17 @@
           <div class="form-group">
             <div class="row">
               <div class="col-md-4">
-                <select id="category" name="category" class="form-control">
+                <ul id="category">
+                  <li class="category-item">
+                    <p class="ml-1">ジャンル</p><br>
+                    <span class="category-button">+</span>
+                    <div class="inner">
+                      <p>持ち物を表示</p>
+                    </div>
+                  </li>
+                </ul>
+
+<!--                 <select id="category" name="category" class="form-control">
                   <option value="">選択してください。</option>
                   <?php while(1): ?>
                     <?php  $categories = $categories_stmt->fetch(PDO::FETCH_ASSOC); ?>
@@ -252,7 +273,7 @@
                       <option value="<?php echo $categories['id'];?>"><?php echo $categories['category_name'] ?></option>
                     <?php endif ?>
                   <?php endwhile; ?>
-                </select>
+                </select> -->
               </div>
               <!-- その他ジャンル -->
               <div class="col-md-6">
@@ -292,5 +313,5 @@
       <p>©ex chef</p>
     </div>
   </footer>
-
+<script src="js/app.js"></script>
 </body>
