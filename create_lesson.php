@@ -105,8 +105,8 @@ if (!empty($_POST)) {
     }
     //     //レッスン作成が適切に入力されていた場合
         if ($_FILES['img_1']['name']) {
-          $file_name = date('YmdHis') .$_FILES['img_1']['name'];
-            $tmp_file1 = $_FILES['img_1']['tmp_name'];
+          $file_name1 = date('YmdHis') .$_FILES['img_1']['name'];
+            $tmp_file = $_FILES['img_1']['tmp_name'];
             $destination = 'users_lesson_img/'.$file_name1;
             move_uploaded_file($tmp_file, $destination);
         }
