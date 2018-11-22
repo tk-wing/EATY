@@ -106,26 +106,26 @@ if (!empty($_POST)) {
     //     //レッスン作成が適切に入力されていた場合
         if ($_FILES['img_1']['name']) {
           $file_name = date('YmdHis') .$_FILES['img_1']['name'];
-            $tmp_file = $_FILES['img_1']['tmp_name'];
-            $destination = 'users_lesson_img/'.$file_name;
+            $tmp_file1 = $_FILES['img_1']['tmp_name'];
+            $destination = 'users_lesson_img/'.$file_name1;
             move_uploaded_file($tmp_file, $destination);
         }
          if ($_FILES['img_2']['name']) {
-          $file_name = date('YmdHis') .$_FILES['img_2']['name'];
+          $file_name2 = date('YmdHis') .$_FILES['img_2']['name'];
             $tmp_file = $_FILES['img_2']['tmp_name'];
-            $destination = 'users_lesson_img/'.$file_name;
+            $destination = 'users_lesson_img/'.$file_name2;
             move_uploaded_file($tmp_file, $destination);
         }
          if ($_FILES['img_3']['name']) {
-          $file_name = date('YmdHis') .$_FILES['img_3']['name'];
+          $file_name3 = date('YmdHis') .$_FILES['img_3']['name'];
             $tmp_file = $_FILES['img_3']['tmp_name'];
-            $destination = 'users_lesson_img/'.$file_name;
+            $destination = 'users_lesson_img/'.$file_name3;
             move_uploaded_file($tmp_file, $destination);
         }
          if ($_FILES['img_4']['name']) {
-          $file_name = date('YmdHis') .$_FILES['img_4']['name'];
+          $file_name4 = date('YmdHis') .$_FILES['img_4']['name'];
             $tmp_file = $_FILES['img_4']['tmp_name'];
-            $destination = 'users_lesson_img/'.$file_name;
+            $destination = 'users_lesson_img/'.$file_name4;
             move_uploaded_file($tmp_file, $destination);
         }
 
@@ -150,10 +150,10 @@ if (!empty($_POST)) {
          $_SESSION['EATY']['bring']  = $bring;
          $_SESSION['EATY']['precaution']  = $precaution;
          //画像
-         $_SESSION['EATY']['img_1']  = $img_1;
-         $_SESSION['EATY']['img_2']  = $img_2;
-         $_SESSION['EATY']['img_3']  = $img_3;
-         $_SESSION['EATY']['img_4']  = $img_4;
+         $_SESSION['EATY']['img_1']  = $file_name1;
+         $_SESSION['EATY']['img_2']  = $file_name2;
+         $_SESSION['EATY']['img_3']  = $file_name3;
+         $_SESSION['EATY']['img_4']  = $$file_name4;
 
          header('Location: create_check_t.php');
          exit();
