@@ -224,7 +224,7 @@
       </div>
     </div>
     <div class="text-center">
-      <a href="#"><button type="button" class="btn btn-secondary">レッスン追加</button></a>
+      <a href="create_lesson.php"><button type="button" class="btn btn-secondary">レッスン追加</button></a>
       <a href="bkg_t.php"><button type="button" class="btn btn-secondary">レッスン管理一覧</button></a>
     </div>
 

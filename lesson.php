@@ -1,3 +1,26 @@
+<?php
+    //SESSIONの有効化
+    session_start();
+    require('dbconnect.php');
+    require('functions.php');
+
+    // ユーザー情報を取得
+    $sql='SELECT * FROM `users` WHERE `id`=?';
+    $stmt = $dbh->prepare($sql);
+    $data = [($_SESSION['EATY']['id'])];
+    $stmt->execute($data);
+
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // レッスン情報を取得
+    $lesson_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
+    $lesson_stmt = $dbh->prepare($lesson_sql);
+    $lesson_sql_data = [$signin_user['id']];
+    $lesson_stmt->execute($lesson_sql_data);
+    $lesson = $lesson_stmt->fetch(PDO::FETCH_ASSOC);
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
