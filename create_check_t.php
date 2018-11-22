@@ -7,7 +7,7 @@
     require('functions.php');
 
     //$_SESSIONの中にeatyが定義されてなければsing
-    if (!isset($_SESSION['eaty'])) {
+    if (!isset($_SESSION['EATY'])) {
       header('Location: create_lesson.php');
     }
 
@@ -20,24 +20,24 @@
     //$SESSIONで持ってきた値を変数に変える
     if (!empty($_SESSION)) {
       //DBへの入力
-    $day = $_SESSION['eaty']['day'];
-    $daytime = $_SESSION['eaty']['daytime'];
-    $station = $_SESSION['eaty']['station'];
-    $fee = $_SESSION['eaty']['fee'];
-    $requiretime = $_SESSION['eaty']['requiretime'];
-    $category_id = $_SESSION['eaty']['category_id'];
-    $menu = $_SESSION['eaty']['menu'];
-    $capacity = $_SESSION['eaty']['capacity'];
-    $basic = $_SESSION['eaty']['basic'];
-    $lesson_name = $_SESSION['eaty']['lesson_name'];
-    $menudetail =  $_SESSION['eaty']['menudetail'];
-    $bring = $_SESSION['eaty']['bring'];
-    $precaution = $_SESSION['eaty']['precaution'];
+    $day = $_SESSION['EATY']['day'];
+    $daytime = $_SESSION['EATY']['daytime'];
+    $station = $_SESSION['EATY']['station'];
+    $fee = $_SESSION['EATY']['fee'];
+    $requiretime = $_SESSION['EATY']['requiretime'];
+    $category_id = $_SESSION['EATY']['category_id'];
+    $menu = $_SESSION['EATY']['menu'];
+    $capacity = $_SESSION['EATY']['capacity'];
+    $basic = $_SESSION['EATY']['basic'];
+    $lesson_name = $_SESSION['EATY']['lesson_name'];
+    $menudetail =  $_SESSION['EATY']['menudetail'];
+    $bring = $_SESSION['EATY']['bring'];
+    $precaution = $_SESSION['EATY']['precaution'];
     //画像
-    $img_1 = $_SESSION['eaty']['img_1'];
-    $img_2 = $_SESSION['eaty']['img_2'];
-    $img_3 = $_SESSION['eaty']['img_3'];
-    $img_4 = $_SESSION['eaty']['img_4'];
+    $img_1 = $_SESSION['EATY']['img_1'];
+    $img_2 = $_SESSION['EATY']['img_2'];
+    $img_3 = $_SESSION['EATY']['img_3'];
+    $img_4 = $_SESSION['EATY']['img_4'];
 
         //完了ボタンを押した時に再読み込み
         if (!empty($_POST)) {
@@ -47,7 +47,7 @@
           $stmt = $dbh->prepare($sql);
           $stmt->execute($data);
 
-          unset($_SESSION['eaty']);//一度空に
+          unset($_SESSION['EATY']);//一度空に
           header('Location: bkg_t.php');
           exit();
         }
