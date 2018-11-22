@@ -13,8 +13,8 @@ $(function(){
     }
   });
 
-  $('.category-item').on('click', function(){
-    var inner = $(this).find('.inner');
+  $('.ml-1').on('click', function(){
+    var inner = $(this).parent().find('.inner');
     if (inner.hasClass('open')) {
       inner.removeClass('open');
       inner.slideUp();
