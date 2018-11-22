@@ -33,4 +33,14 @@
       }
     }
 
+    function is_check_user_category($categories_id,$categories){
+        if (!empty($categories_id)) {
+            for ($i=0; $i < count($categories_id) ; $i++) {
+                if ($categories_id[$i] == $categories) {
+                    return $categories_id[$i];
+                }
+            }
+        }
+    }
+
 ?>
