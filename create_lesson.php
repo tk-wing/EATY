@@ -15,7 +15,7 @@
     // ユーザー情報を取得
     $sql='SELECT * FROM `users` WHERE `id`=?';
     $stmt = $dbh->prepare($sql);
-    $data = array($_SESSION['eaty']['id']);
+    $data = array($_SESSION['EATY']['id']);
     $stmt->execute($data);
 
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -136,24 +136,24 @@ if (!empty($_POST)) {
         //     move_uploaded_file($tmp_file, $destination);
         if (empty($validations)) {
          //格項目
-         $_SESSION['eaty']['day']  = $day;
-         $_SESSION['eaty']['daytime']  = $daytime;
-         $_SESSION['eaty']['station']  = $station;
-         $_SESSION['eaty']['fee']  = $fee;
-         $_SESSION['eaty']['requiretime']  = $requiretime;
-         $_SESSION['eaty']['category_id']  = $capacity;
-         $_SESSION['eaty']['menu']  = $menu;
-         $_SESSION['eaty']['capacity']  = $capacity;
-         $_SESSION['eaty']['basic']  = $basic;
-         $_SESSION['eaty']['lesson_name']  = $lesson_name;
-         $_SESSION['eaty']['menudetail']  = $menudetail;
-         $_SESSION['eaty']['bring']  = $bring;
-         $_SESSION['eaty']['precaution']  = $precaution;
+         $_SESSION['EATY']['day']  = $day;
+         $_SESSION['EATY']['daytime']  = $daytime;
+         $_SESSION['EATY']['station']  = $station;
+         $_SESSION['EATY']['fee']  = $fee;
+         $_SESSION['EATY']['requiretime']  = $requiretime;
+         $_SESSION['EATY']['category_id']  = $capacity;
+         $_SESSION['EATY']['menu']  = $menu;
+         $_SESSION['EATY']['capacity']  = $capacity;
+         $_SESSION['EATY']['basic']  = $basic;
+         $_SESSION['EATY']['lesson_name']  = $lesson_name;
+         $_SESSION['EATY']['menudetail']  = $menudetail;
+         $_SESSION['EATY']['bring']  = $bring;
+         $_SESSION['EATY']['precaution']  = $precaution;
          //画像
-         $_SESSION['eaty']['img_1']  = $img_1;
-         $_SESSION['eaty']['img_2']  = $img_2;
-         $_SESSION['eaty']['img_3']  = $img_3;
-         $_SESSION['eaty']['img_4']  = $img_4;
+         $_SESSION['EATY']['img_1']  = $img_1;
+         $_SESSION['EATY']['img_2']  = $img_2;
+         $_SESSION['EATY']['img_3']  = $img_3;
+         $_SESSION['EATY']['img_4']  = $img_4;
 
          header('Location: create_check_t.php');
          exit();
