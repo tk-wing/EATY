@@ -7,15 +7,16 @@
     // ユーザー情報を取得
     $sql='SELECT * FROM `users` WHERE `id`=?';
     $stmt = $dbh->prepare($sql);
-    $data = [($_SESSION['EATY']['id'])];
+    $data = [($_SESSION['EATY']['lesson_user_id'])];
     $stmt->execute($data);
 
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // レッスン情報を取得
-    $lesson_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
+    $lesson_sql='SELECT * FROM `lessons_t` WHERE `id`=? AND `user_id`=?';
     $lesson_stmt = $dbh->prepare($lesson_sql);
-    $lesson_sql_data = [$signin_user['id']];
+    // $lesson_sql_data = [$_SESSION['EATY']['lesson_id'] ,$_SESSIN['EATY']['lesson_user_id']];
+    $lesson_sql_data = [50 ,6];
     $lesson_stmt->execute($lesson_sql_data);
     $lesson = $lesson_stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -57,30 +58,52 @@
 
   <div class="lesson_content text-center">
     <div class="blog-inner-prof text-center">
-      <h3>レッスン名</h3>
-      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
-      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;"><br>
-      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
-      <img class="lesson_img" src="https://placehold.jp/300x200.png" style="width:300px;height:200px;">
+      <h3><?php echo $lesson['lesson_name'] ?></h3>
+      <?php if ($lesson['img_1']): ?>
+        <img class="lesson_img" src="users_lesson_img/<?php echo $lesson['img_1'] ?>" style="width:300px;height:200px;">
+      <?php endif ?>
+
+      <?php if ($lesson['img_2']): ?>
+        <img class="lesson_img" src="users_lesson_img/<?php echo $lesson['img_2'] ?>" style="width:300px;height:200px;"><br>
+      <?php endif ?>
+
+      <?php if ($lesson['img_3']): ?>
+        <img class="lesson_img" src="users_lesson_img/<?php echo $lesson['img_3'] ?>" style="width:300px;height:200px;">
+      <?php endif ?>
+
+      <?php if ($lesson['img_4']): ?>
+        <img class="lesson_img" src="users_lesson_img/<?php echo $lesson['img_4'] ?>" style="width:300px;height:200px;">
+      <?php endif ?>
+
 
       <div class="row contents">
           <div class="col-md-4">
-            <span><i class="far fa-calendar-alt fa-2x icon"></i>日時</span>
+            <span><i class="far fa-calendar-alt fa-2x icon"></i>日時</span><br>
+            <span><?php echo $lesson['day'] ?></span>
+            <span>&emsp;</span>
+            <span><?php echo $lesson['daytime'] ?></span>
+            <span></span>
           </div>
           <div class="col-md-4">
-            <span><i class="fas fa-train fa-2x icon"></i>最寄り駅</span>
+            <span><i class="fas fa-train fa-2x icon"></i>最寄り駅</span><br>
+            <span><?php echo $lesson['station'] ?></span>
           </div>
           <div class="col-md-4">
-            <span><i class="fas fa-yen-sign fa-2x icon"></i>料金</span>
+            <span><i class="fas fa-yen-sign fa-2x icon"></i>料金</span><br>
+            <span><?php echo $lesson['fee'] ?></span>
           </div>
       </div>
 
       <div class="row content_border">
         <div class="col-md-6" style="border-right: 1px solid #ccc;">
           <span>メニュー数</span>
+          <span>&emsp;</span>
+          <span><?php echo $lesson['menu'] ?></span>
         </div>
         <div class="col-md-6">
           <span>所要時間</span>
+          <span>&emsp;</span>
+          <span><?php echo $lesson['requiretime'] ?></span>
         </div>
       </div>
 
@@ -104,22 +127,24 @@
             <h3>持ち物</h3>
             <span>+</span>
             <div class="inner">
-              <p>持ち物を表示</p>
+              <p><?php echo $lesson['bring'] ?></p>
             </div>
           </li>
           <li class="lesson-list-item">
             <h3>注意事項</h3>
             <span>+</span>
             <div class="inner">
-              <p>注意事項を表示</p>
+              <p><?php echo $lesson['precaution'] ?></p>
             </div>
           </li>
         </ul>
 
         <form method="POST" action="">
           <a href="#"><button type="button" class="btn btn-primary">予約する</button></a><br>
-          <button type="button" class="btn btn-secondary"><i class="fas fa-heart" style="color: #F76AC0"></i></button>
-          <button type="button" class="btn btn-secondary"><i class="fas fa-star text-warning"></i></button>
+          <?php if ($_SESSION['EATY']['id']): ?>
+            <button type="button" class="btn btn-secondary"><i class="fas fa-heart" style="color: #F76AC0"></i></button>
+            <button type="button" class="btn btn-secondary"><i class="fas fa-star text-warning"></i></button>
+          <?php endif ?>
         </form>
 
     </div>
