@@ -1,3 +1,35 @@
+<?php 
+
+    session_start();
+    require('dbconnect.php');
+    require('functions.php');
+    $sql = 'SELECT * FROM `profiles_s` WHERE `user_id`=?';
+    $data = array($_SESSION['EATY']['id']);
+
+    var_dump($_SESSION['EATY']['id']);
+
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    v($signin_user,'signin_user');
+
+    $sql = 'SELECT * FROM `reports` WHERE `user_id`=?';
+    $data = array($signin_user['id']);
+
+    // var_dump($_SESSION['EATY']['id']);
+
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+
+    $reports = $stmt->fetch(PDO::FETCH_ASSOC);
+    v($reports,'reports');
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -34,16 +66,16 @@
 
   <div class="wrapper">
     <div class="top-content text-center">
-      <img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;">
-      <p>○○さんのつくれぽ</p>
+       <img src="user_profile_img/<?php echo $signin_user['img_name']; ?>" style="width:120px;height:120px;border-radius: 50%;">
+       <p><?php echo $signin_user['nickname']; ?></p>
     </div>
 
     <div class="row">
 
       <div class="col-md-3 text-center">
-        <span>2018/12/31</span>
+        <span><?php echo $reports['created']; ?></span>
         <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/250x150.png" alt="Blog">
+          <img class="img-responsive" src="<?php echo $reports['img_name']; ?>" alt="Blog">
           <div class="desc">
 
             <form method="POST" action="">
