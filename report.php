@@ -60,7 +60,7 @@
 <body>
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/eatylogo.png" width="100"></a>
+      <a href="#"><img src="img/logo.jpg" width="90"></a>
     </div>
   </header>
 
@@ -73,7 +73,7 @@
     <div class="row">
 
       <div class="col-md-3 text-center">
-        <span><?php echo $reports['created']; ?></span>
+        <span><?php echo date('Y/m/d/', strtotime($reports['created'])); ?></span>
         <div class="blog-inner">
           <img class="img-responsive" src="<?php echo $reports['img_name']; ?>" alt="Blog">
           <div class="desc">
