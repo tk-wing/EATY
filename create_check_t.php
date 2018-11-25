@@ -9,8 +9,22 @@
     //$_SESSIONの中にeatyが定義されてなければsing
     if (!isset($_SESSION['EATY'])) {
       header('Location: create_lesson.php');
-    }
+      }
+    // // ユーザー情報を取得
+    // $sql='SELECT * FROM `users` WHERE `id`=?';
+    // $stmt = $dbh->prepare($sql);
+    // $data = array($_SESSION['EATY']['id']);
+    // $stmt->execute($data);
 
+    // $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+    // // pロフィール情報をを取得
+    // $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
+    // $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    // $profile_t_sql_data = [$signin_user['id']];
+    // $profile_t_stmt->execute($profile_t_sql_data);
+    // $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
 
 
 
@@ -20,6 +34,9 @@
     //$SESSIONで持ってきた値を変数に変える
     if (!empty($_SESSION)) {
       //DBへの入力
+
+    $user_id = $_SESSION['EATY']['user_id'];
+
     $day = $_SESSION['EATY']['day'];
     $daytime = $_SESSION['EATY']['daytime'];
     $station = $_SESSION['EATY']['station'];
@@ -42,9 +59,10 @@
         //完了ボタンを押した時に再読み込み
         if (!empty($_POST)) {
           //DBへの入力
-          $sql = 'INSERT INTO `lessons_t` SET `img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`station`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`created`= NOW()';//`user_id`=?,
-          $data =array($img_1,$img_2,$img_3,$img_4,$day,$daytime,$station,$fee,$requiretime,$category_id,$menu,$capacity,$basic,$lesson_name,$menudetail,$bring,$precaution);//$_SESSION['id']
+          $sql = 'INSERT INTO `lessons_t` SET `user_id`=?,`img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`station`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`created`= NOW()';
           $stmt = $dbh->prepare($sql);
+          $data =array($user_id['id'],$img_1,$img_2,$img_3,$img_4,$day,$daytime,$station,$fee,$requiretime,$category_id,$menu,$capacity,$basic,$lesson_name,$menudetail,$bring,$precaution);
+
           $stmt->execute($data);
 
           unset($_SESSION['EATY']);//一度空に
@@ -149,6 +167,7 @@
           </li>
           <input type="hidden" name="str_1" value="str2"/>
           <!-- １回目来た時にPOSTに値が入っていない為 -->
+          <input type="hidden" name="user_id" value="user_id">
 
 
             <input type="submit" class="btn btn-primary" value="完了">
