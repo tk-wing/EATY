@@ -15,7 +15,7 @@
 
     v($signin_user,'signin_user');
 
-    $sql = 'SELECT * FROM `reports` WHERE `user_id`=?';
+    $sql = 'SELECT * FROM `reports` WHERE `user_id`=? ORDER BY `created` DESC LIMIT 5 OFFSET 0';
     $data = array($signin_user['id']);
 
     // var_dump($_SESSION['EATY']['id']);
@@ -75,7 +75,7 @@
       <div class="col-md-3 text-center">
         <span><?php echo date('Y/m/d/', strtotime($reports['created'])); ?></span>
         <div class="blog-inner">
-          <img class="img-responsive" src="<?php echo $reports['img_name']; ?>" alt="Blog">
+          <img class="img-responsive" src="user_report_img/<?php echo $reports['img_name']; ?>" alt="Blog">
           <div class="desc">
 
             <form method="POST" action="">
