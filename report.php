@@ -17,14 +17,21 @@
 
     $sql = 'SELECT * FROM `reports` WHERE `user_id`=? ORDER BY `created` DESC LIMIT 5 OFFSET 0';
     $data = array($signin_user['id']);
-
-    // var_dump($_SESSION['EATY']['id']);
-
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
 
-    $reports = $stmt->fetch(PDO::FETCH_ASSOC);
+    $reports = [];
+
+      while (true) {
+      $report = $stmt->fetch(PDO::FETCH_ASSOC);
+      if ($report==false) {
+        break;
+      }
+      $reports[]=$report;
+    }
     v($reports,'reports');
+
+
 
 ?>
 
@@ -70,12 +77,17 @@
        <p><?php echo $signin_user['nickname']; ?></p>
     </div>
 
-    <div class="row">
+    <div class="row text-center">
+      <?php if (empty($reports)): ?>
+        まだつくれぽ投稿がありません。
+        <?php else: ?>
+
+      <?php foreach($reports as $report_each):?>
 
       <div class="col-md-3 text-center">
-        <span><?php echo date('Y/m/d/', strtotime($reports['created'])); ?></span>
+        <span><?php echo date('Y/m/d', strtotime($report_each['created'])); ?></span>
         <div class="blog-inner">
-          <img class="img-responsive" src="user_report_img/<?php echo $reports['img_name']; ?>" alt="Blog">
+          <img class="img-responsive" src="user_report_img/<?php echo $report_each['img_name']; ?>" alt="Blog">
           <div class="desc">
 
             <form method="POST" action="">
@@ -92,8 +104,9 @@
           </div>
         </div>
       </div>
+    <?php endforeach; ?>
 
-      <div class="col-md-3 text-center">
+<!--       <div class="col-md-3 text-center">
         <span>2018/12/31</span>
         <div class="blog-inner">
           <img class="img-responsive" src="http://placehold.jp/250x150.png" alt="Blog">
@@ -176,6 +189,8 @@
           </div>
         </div>
       </div>
+ -->    
+      <?php endif; ?>
     </div>
 
   </div>
