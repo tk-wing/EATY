@@ -20,13 +20,25 @@
 
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // pロフィール情報をを取得
+    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
+    $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_stmt->execute($profile_t_sql_data);
+    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // if($profile_t == FALSE){
+    //     header('Location: edit_prof_t.php');
+    //     exit();
+    // }
+
     // カテゴリー情報を取得
     $categories_sql='SELECT * FROM `categories`';
     $categories_stmt = $dbh->prepare($categories_sql);
     $categories_sql_data = [];
     $categories_stmt->execute($categories_sql_data);
 
- 
+    
 
 
 
@@ -105,27 +117,27 @@ if (!empty($_POST)) {
     }
     //     //レッスン作成が適切に入力されていた場合
         if ($_FILES['img_1']['name']) {
-          $file_name = date('YmdHis') .$_FILES['img_1']['name'];
+          $file_name1 = date('YmdHis') .$_FILES['img_1']['name'];
             $tmp_file = $_FILES['img_1']['tmp_name'];
-            $destination = 'users_lesson_img/'.$file_name;
+            $destination = 'users_lesson_img/'.$file_name1;
             move_uploaded_file($tmp_file, $destination);
         }
          if ($_FILES['img_2']['name']) {
-          $file_name = date('YmdHis') .$_FILES['img_2']['name'];
+          $file_name2 = date('YmdHis') .$_FILES['img_2']['name'];
             $tmp_file = $_FILES['img_2']['tmp_name'];
-            $destination = 'users_lesson_img/'.$file_name;
+            $destination = 'users_lesson_img/'.$file_name2;
             move_uploaded_file($tmp_file, $destination);
         }
          if ($_FILES['img_3']['name']) {
-          $file_name = date('YmdHis') .$_FILES['img_3']['name'];
+          $file_name3 = date('YmdHis') .$_FILES['img_3']['name'];
             $tmp_file = $_FILES['img_3']['tmp_name'];
-            $destination = 'users_lesson_img/'.$file_name;
+            $destination = 'users_lesson_img/'.$file_name3;
             move_uploaded_file($tmp_file, $destination);
         }
          if ($_FILES['img_4']['name']) {
-          $file_name = date('YmdHis') .$_FILES['img_4']['name'];
+          $file_name4 = date('YmdHis') .$_FILES['img_4']['name'];
             $tmp_file = $_FILES['img_4']['tmp_name'];
-            $destination = 'users_lesson_img/'.$file_name;
+            $destination = 'users_lesson_img/'.$file_name4;
             move_uploaded_file($tmp_file, $destination);
         }
 
@@ -136,6 +148,9 @@ if (!empty($_POST)) {
         //     move_uploaded_file($tmp_file, $destination);
         if (empty($validations)) {
          //格項目
+         $_SESSION['EATY']['user_id']  =  $signin_user;
+
+
          $_SESSION['EATY']['day']  = $day;
          $_SESSION['EATY']['daytime']  = $daytime;
          $_SESSION['EATY']['station']  = $station;
@@ -150,10 +165,10 @@ if (!empty($_POST)) {
          $_SESSION['EATY']['bring']  = $bring;
          $_SESSION['EATY']['precaution']  = $precaution;
          //画像
-         $_SESSION['EATY']['img_1']  = $img_1;
-         $_SESSION['EATY']['img_2']  = $img_2;
-         $_SESSION['EATY']['img_3']  = $img_3;
-         $_SESSION['EATY']['img_4']  = $img_4;
+         $_SESSION['EATY']['img_1']  = $file_name1;
+         $_SESSION['EATY']['img_2']  = $file_name2;
+         $_SESSION['EATY']['img_3']  = $file_name3;
+         $_SESSION['EATY']['img_4']  = $file_name4;
 
          header('Location: create_check_t.php');
          exit();
