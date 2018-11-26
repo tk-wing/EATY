@@ -77,7 +77,7 @@
        <p><?php echo $signin_user['nickname']; ?></p>
     </div>
 
-    <div class="row text-center">
+    <div class="row">
       <?php if (empty($reports)): ?>
         まだつくれぽ投稿がありません。
         <?php else: ?>
