@@ -19,7 +19,7 @@
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
-    // pロフィール情報をを取得
+    // プロフィール情報をを取得
     $profile_s_sql='SELECT * FROM `profiles_s` WHERE `user_id`=?';
     $profile_s_stmt = $dbh->prepare($profile_s_sql);
     $profile_s_sql_data = [$signin_user['id']];
@@ -196,8 +196,8 @@
           <div class="row">
             <?php foreach ($lessons_s as $lesson): ?>
             <div class="col-md-2 text-center">
-              <p><?php echo $lesson['day'] ?></p>
-              <p><?php echo $lesson['daytime'] ?>~</p>
+              <p><?php echo date('m月d日',  strtotime($lesson['day'])) ?></p>
+              <p><?php echo date('H時i分', strtotime($lesson['daytime'])) ?>~</p>
             </div>
 
             <div class="col-md-2 text-center">
@@ -210,12 +210,16 @@
             </div>
 
             <div class="col-md-2 text-center">
-              <p><?php $lesson['status'] ?></p>
+              <?php if ($lesson['status']=='1'): ?>
+                <p style="color: blue">予約済み</p>
+              <?php elseif($lesson['status']=='2'): ?>
+                <p style="color: red;">キャンセル</p>
+              <?php endif ?>
             </div>
 
             <div class="col-md-4 text-center">
               <a href="lesson.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-primary">レッスン詳細</button></a>
-              <a href="#"><button type="button" class="btn btn-primary" style="width: 125px">キャンセル</button></a>
+              <a href="cancel_lesson_s.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-danger" style="width: 125px">キャンセル</button></a>
             </div>
             <?php endforeach ?>
           </div>
