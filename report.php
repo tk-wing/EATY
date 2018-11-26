@@ -74,10 +74,10 @@
   <div class="wrapper">
     <div class="top-content text-center">
        <img src="user_profile_img/<?php echo $signin_user['img_name']; ?>" style="width:120px;height:120px;border-radius: 50%;">
-       <p><?php echo $signin_user['nickname']; ?></p>
+       <p><?php echo $signin_user['nickname']; ?>さんのつくれぽ</p>
     </div>
 
-    <div class="row text-center">
+    <div class="row text-center" style="border: 4px solid #2C373B;border-radius: 240px 15px 185px 15px / 15px 200px 15px 185px;margin: 2em 0;padding: 2em;">
       <?php if (empty($reports)): ?>
         <div class="col-md-12 text-center">まだつくれぽ投稿がありません。</div>
         <?php else: ?>
@@ -93,10 +93,10 @@
             <form method="POST" action="">
               <div class="row">
                 <div class="col">
-                  <a href="#"><button type="button" class="btn btn-danger">投稿削除</button></a>
+                  <a href="#"><button type="button" class="btn btn-warning">投稿削除</button></a>
                 </div>
                 <div class="col">
-                  <a href="#"><button type="button" class="btn btn-primary">投稿内容編集</button></a>
+                  <a href="#"><button type="button" class="btn btn-default">投稿内容編集</button></a>
                 </div>
               </div>
             </form>
