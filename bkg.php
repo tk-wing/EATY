@@ -1,3 +1,47 @@
+<?php
+    session_start();
+    require('dbconnect.php');
+    require('functions.php');
+    // $sql = 'SELECT * FROM `profiles_s` WHERE `user_id`=?';
+    // $data = array($_SESSION['EATY']['id']);
+
+    // var_dump($_SESSION['EATY']['id']);
+
+    // $stmt = $dbh->prepare($sql);
+    // $stmt->execute($data);
+    // $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $sql = 'SELECT * FROM `users` WHERE `id`=?';
+    $data = array($_SESSION['EATY']['id']);
+
+    var_dump($_SESSION['EATY']['id']);
+
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $sql = 'SELECT * FROM `lessons_t` WHERE `id`="10"';
+    $data = array($_SESSION['EATY']['id']);
+
+    var_dump($_SESSION['EATY']['id']);
+
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+    $id = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $sql = 'SELECT * FROM `profiles_t` WHERE `user_id`=?';
+    $data = array($_SESSION['EATY']['id']);
+
+    var_dump($_SESSION['EATY']['id']);
+
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+
+    $user_id = $stmt->fetch(PDO::FETCH_ASSOC);
+ ?>
+
+
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -37,29 +81,29 @@
 
     <div class="blog-inner-prof text-center">
         <div>
-          <h4 class="title_1">レッスン名</h4>
-          <p class="title_1">日時: 2018/11/30 14：00～</p>
-          <p class="title_1">料金: ¥5000/一人</p>
-          <p class="title_1">注意事項: レッスンは男性限定です！</p>
+          <h4 class="title_1"><?php echo $id['lesson_name']; ?></h4>
+          <p class="title_1">日時: <?php echo date('Y/m/d', strtotime($id['day'])); ?><br><?php echo $id['daytime']; ?>～</p>
+          <p class="title_1">料金: ¥<?php echo $id['fee']; ?>/一人</p>
+          <p class="title_1">注意事項: <?php echo $id['precaution']; ?></p>
         </div>
 
         <div class="title_2">
           <div class="row">
             <div class="col-5 text-right">
               <span>お名前</span><br>
-              <span>○○○○</span>
+              <span><?php echo $signin_user['first_name']; ?><?php echo $signin_user['last_name']; ?></span>
             </div>
             <div class="col-2"></div>
             <div class="col-5 text-left">
               <span>メールアドレス</span>
-              <p>●●●●＠gmail.com</p>
+              <p><?php echo $signin_user['email']; ?></p>
             </div>
           </div>
         </div>
 
         <form method="POST" action="">
           <div class="form-group title_1">
-              <p>○○○○さん(講師)へのメッセージ</p>
+              <p><?php echo $user_id['nickname']; ?>さん(講師)へのメッセージ</p>
               <textarea class="form-control col-md-8" name="attention" style="height: 100px; display: inline-block;"></textarea>
           </div>
 
