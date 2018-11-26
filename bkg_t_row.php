@@ -15,16 +15,24 @@
       </div>
 
       <div class="col-md-2 text-center">
-        <p><?php echo $lessons_each["capacity"]; ?></p>
+        <p><?php echo $lessons_each["basic"]; ?></p>
+        <!-- ここはデータベース上変わってく、何人の生徒が予約したか -->
+        <p>/<?php echo $lessons_each["capacity"]; ?></p>
       </div>
 
       <div class="col-md-2 text-center">
-        <p><?php echo $lessons_each["status"]; ?></p>
+        <p>受付中</p>
       </div>
 
       <div class="col-md-2 text-center">
-        <a href="#"><button type="button" class="btn btn-primary">レッスン詳細</button></a>
-        <a href="#"><button type="button" class="btn btn-primary">レッスン編集</button></a>
+        <form action="create_check_t.php" method="POST">
+          <input type="hidden" name="day" value="<?=$lessons_each['day'];?>" >
+          <input type="hidden" name="daytime" value="<?=$lessons_each['daytime'];?>" >
+          <a href="#"><button type="hidden" class="btn btn-primary">レッスン詳細</button></a>
+          <!-- 詳細はcreate_checkへ -->
+        </form>
+        <a href="create_lesson.php"><button type="button" class="btn btn-primary">レッスン編集</button></a>
+        <!-- 編集はcreate_lessonへ -->
       </div>
 
     </div>
