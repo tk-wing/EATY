@@ -32,6 +32,14 @@
         $name = $teacher['nickname'];
     }
 
+    // 生徒がレッスンを予約済みかを確認する。
+    $reservation_sql='SELECT * FROM `reservations` WHERE `user_id`=? AND `lesson_id`=?';
+    $reservation_stmt = $dbh->prepare($reservation_sql);
+    $reservation_sql_data = [$user_id,$lesson_id];
+    $reservation_stmt->execute($reservation_sql_data);
+    $reservation = $reservation_stmt->fetch(PDO::FETCH_ASSOC);
+
+
 
 ?>
 
@@ -94,9 +102,8 @@
           <div class="row contents">
               <div class="col-md-4">
                 <span><i class="far fa-calendar-alt fa-2x icon"></i>日時</span><br>
-                <span><?php echo $lesson['day'] ?></span>
-                <span>&emsp;</span>
-                <span><?php echo $lesson['daytime'] ?></span>
+                <span><?php echo date('m月d日',  strtotime($lesson['day'])) ?></span><br>
+                <span><?php echo date('H時i分', strtotime($lesson['daytime'])) ?></span>
                 <span></span>
               </div>
               <div class="col-md-4">
@@ -105,7 +112,7 @@
               </div>
               <div class="col-md-4">
                 <span><i class="fas fa-yen-sign fa-2x icon"></i>料金</span><br>
-                <span><?php echo $lesson['fee'] ?></span>
+                <span><?php echo $lesson['fee'] ?>円</span>
               </div>
           </div>
 
@@ -159,7 +166,14 @@
                 <a href="create_check_t.php?lesson_id=<?php echo $lesson_id?>"><button type="button" class="btn btn-primary">編集する</button></a><br>
               <?php endif ?>
               <?php if ($user_type == '2'): ?>
-                <a href="#"><button type="button" class="btn btn-primary">予約する</button></a><br>
+                <?php if ($reservation == FALSE): ?>
+                  <a href="#"><button type="button" class="btn btn-primary">予約する</button></a><br>
+                  <?php elseif ($reservation['status'] == '2'): ?>
+                    <p style="color: red">キャンセル済みのレッスンです！</p>
+                    <a href="#"><button type="button" class="btn btn-primary">再予約する</button></a><br>
+                <?php else: ?>
+                  <p style="color: red">予約済みのレッスンです！</p>
+                <?php endif ?>
                 <button type="button" class="btn btn-secondary"><i class="fas fa-heart" style="color: #F76AC0"></i></button>
                 <button type="button" class="btn btn-secondary"><i class="fas fa-star text-warning"></i></button>
               <?php endif ?>
