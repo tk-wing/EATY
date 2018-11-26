@@ -56,6 +56,7 @@
         $record = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $_SESSION['EATY']['id'] = $record['id'];
+        $_SESSION['EATY']['user_type'] = $record['user_type'];
 
         // v($session, '$session');
 
