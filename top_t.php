@@ -24,6 +24,20 @@
         exit();
     }
 
+    // レッスン情報をを取得
+    $lessons_t_sql='SELECT * FROM `lessons_t` WHERE `user_id`=? LIMIT 0,3';
+    $lessons_t_stmt = $dbh->prepare($lessons_t_sql);
+    $lessons_t_sql_data = [$signin_user['id']];
+    $lessons_t_stmt->execute($lessons_t_sql_data);
+
+    while (1) {
+        $lesson_t = $lessons_t_stmt->fetch(PDO::FETCH_ASSOC);
+        if ($lesson_t == FALSE) {
+            break;
+        }
+        $lessons_t[] = $lesson_t;
+    }
+
     // 都道府県情報を取得
     $area_sql = 'SELECT * FROM `areas` WHERE `id` = ?';
     $area_data = array($profile_t['area_id']);
@@ -164,65 +178,31 @@
 
   <!-- レッスン一覧 -->
   <div class="middle wrapper">
-    <div class="text-center title">レッスン紹介</div>
+    <div class="text-center title">直近のレッスン</div>
     <div class="row middle-content">
-      <div class="col-md-4 text-center">
-          <div class="row">
-            <div class="col-md-6">
-              <span>2018/12/31</span>
+
+      <?php foreach ($lessons_t as $lesson_t): ?>
+        <div class="col-md-4 text-center">
+            <div class="row">
+              <div class="col-md-6">
+                <span><?php echo $lesson_t['day'] ?></span>
+              </div>
+              <div class="col-md-6">
+                <span>最寄り駅：<?php echo $lesson_t['station'] ?></span>
+              </div>
             </div>
-            <div class="col-md-6">
-              <span>東京都品川区</span>
+          <div class="blog-inner">
+            <img class="img-responsive" src="users_lesson_img/<?php echo $lesson_t['img_1'] ?>" alt="Blog" width="100%" style="height: 250px;">
+            <div class="desc">
+              <h3><a href="#"><?php echo $lesson_t['lesson_name'] ?></a></h3>
+              <span>料金:¥<?php echo $lesson_t['fee'] ?>/1人</span>
+              <span>残り１席</span>
+              <p><a href="lesson.php?lesson_id=<?php echo $lesson_t['id']?>" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
             </div>
           </div>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-          <div class="desc">
-            <h3><a href="#">レッスン名</a></h3>
-            <span>¥5000/1人</span>
-            <span>残り１席</span>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
-          </div>
         </div>
-      </div>
-      <div class="col-md-4 text-center">
-        <div class="row">
-          <div class="col-md-6">
-            <span>2018/12/31</span>
-          </div>
-          <div class="col-md-6">
-            <span>東京都品川区</span>
-          </div>
-        </div>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-          <div class="desc">
-            <h3><a href="#">レッスン名</a></h3>
-            <span>¥5000/1人</span>
-            <span>残り１席</span>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 text-center">
-        <div class="row">
-          <div class="col-md-6">
-            <span>2018/12/31</span>
-          </div>
-          <div class="col-md-6">
-            <span>東京都品川区</span>
-          </div>
-        </div>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-          <div class="desc">
-            <h3><a href="#">レッスン名</a></h3>
-            <span>¥5000/1人</span>
-            <span>残り１席</span>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
-          </div>
-        </div>
-      </div>
+      <?php endforeach ?>
+
     </div>
     <div class="text-center">
       <a href="create_lesson.php"><button type="button" class="btn btn-secondary">レッスン追加</button></a>
