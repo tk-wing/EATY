@@ -153,7 +153,7 @@ if (!empty($_POST)) {
          $_SESSION['EATY']['img_1']  = $file_name1;
          $_SESSION['EATY']['img_2']  = $file_name2;
          $_SESSION['EATY']['img_3']  = $file_name3;
-         $_SESSION['EATY']['img_4']  = $$file_name4;
+         $_SESSION['EATY']['img_4']  = $file_name4;
 
          header('Location: create_check_t.php');
          exit();
