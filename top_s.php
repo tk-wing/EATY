@@ -9,6 +9,7 @@
         exit();
     }
 
+
     // ユーザー情報を取得
     $sql='SELECT * FROM `users` WHERE `id`=?';
     $stmt = $dbh->prepare($sql);
@@ -16,6 +17,7 @@
     $stmt->execute($data);
 
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
 
     // pロフィール情報をを取得
     $profile_s_sql='SELECT * FROM `profiles_s` WHERE `user_id`=?';
@@ -36,6 +38,21 @@
     $user_categories_stmt = $dbh->prepare($user_categories_sql);
     $user_categories_sql_data = [$signin_user['id']];
     $user_categories_stmt->execute($user_categories_sql_data);
+
+    // 予約済みレッスン情報をを取得
+    $lessons_s_sql='SELECT `r`.*, `l`.`day`, `l`.`daytime`, `l`.`station`, `l`.`lesson_name` FROM `reservations` AS `r` INNER JOIN `lessons_t` AS `l` ON `r`.`lesson_id` = `l`.`id` WHERE `r`.`user_id`=?';
+    $lessons_s_stmt = $dbh->prepare($lessons_s_sql);
+    $lessons_s_sql_data = [$signin_user['id']];
+    $lessons_s_stmt->execute($lessons_s_sql_data);
+
+    while (1) {
+        $lesson_s = $lessons_s_stmt->fetch(PDO::FETCH_ASSOC);
+        if ($lesson_s == FALSE) {
+            break;
+        }
+        $lessons_s[] = $lesson_s;
+    }
+
 
     while (1) {
         $user_categories = $user_categories_stmt->fetch(PDO::FETCH_ASSOC);
@@ -177,29 +194,30 @@
 
       <div class="blog-inner-prof">
           <div class="row">
+            <?php foreach ($lessons_s as $lesson): ?>
             <div class="col-md-2 text-center">
-              <p>12/24</p>
-              <p>13:00~</p>
+              <p><?php echo $lesson['day'] ?></p>
+              <p><?php echo $lesson['daytime'] ?>~</p>
             </div>
 
             <div class="col-md-2 text-center">
-              <p>クリスマスケーキ</p>
+              <p><?php echo $lesson['lesson_name'] ?></p>
             </div>
 
             <div class="col-md-2 text-center">
-              <span>東京都</span><br>
-              <span>渋谷区</span>
+              <span>最寄り駅</span><br>
+              <span><?php echo $lesson['station'] ?></span>
             </div>
 
             <div class="col-md-2 text-center">
-              <p>予約済</p>
+              <p><?php $lesson['status'] ?></p>
             </div>
 
             <div class="col-md-4 text-center">
-              <a href="#"><button type="button" class="btn btn-primary">レッスン詳細</button></a>
+              <a href="lesson.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-primary">レッスン詳細</button></a>
               <a href="#"><button type="button" class="btn btn-primary" style="width: 125px">キャンセル</button></a>
             </div>
-
+            <?php endforeach ?>
           </div>
       </div>
 
