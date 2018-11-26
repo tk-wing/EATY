@@ -20,13 +20,25 @@
 
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // pロフィール情報をを取得
+    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
+    $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_stmt->execute($profile_t_sql_data);
+    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // if($profile_t == FALSE){
+    //     header('Location: edit_prof_t.php');
+    //     exit();
+    // }
+
     // カテゴリー情報を取得
     $categories_sql='SELECT * FROM `categories`';
     $categories_stmt = $dbh->prepare($categories_sql);
     $categories_sql_data = [];
     $categories_stmt->execute($categories_sql_data);
 
- 
+    
 
 
 
@@ -136,6 +148,9 @@ if (!empty($_POST)) {
         //     move_uploaded_file($tmp_file, $destination);
         if (empty($validations)) {
          //格項目
+         $_SESSION['EATY']['user_id']  =  $signin_user;
+
+
          $_SESSION['EATY']['day']  = $day;
          $_SESSION['EATY']['daytime']  = $daytime;
          $_SESSION['EATY']['station']  = $station;
