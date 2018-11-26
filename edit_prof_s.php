@@ -316,7 +316,7 @@
               <div class="col-md-6">
                 <ul id="category">
                   <li class="category-item">
-                    <p class="ml-1">ジャンル</p><br>
+                    <p class="ml-1">ジャンル</p>
                     <span class="category-button">+</span>
                     <div class="inner">
                        <div class="checkbox">
