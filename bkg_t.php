@@ -22,17 +22,16 @@
     $profile_t_stmt->execute($profile_t_sql_data);
     $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
 
-    if($profile_t == FALSE){
+    if($signin_user == FALSE){
         header('Location: signup.php');
         exit();
     }
     if (empty($_SESSION['id'])) {
 
 
-        $lessons_sql ='SELECT `lessons_t`.*,`users`.`first_name` FROM `lessons_t` INNER JOIN `users` ON `lessons_t`.`user_id`=`users`.`id`';
-
-
-        $lessons_data =[];
+        $lessons_sql ='SELECT * FROM `lessons_t` WHERE `user_id`=?';
+        // $lessons_sql ='SELECT * FROM `lessons_t` WHERE `day`=?,`daytime`=?,`lesson_name`=?,`station`=?,`basic`=?,`capacity`=?';
+        $lessons_data =[$signin_user['id']];
         $lessons_stmt = $dbh->prepare($lessons_sql);
         $lessons_stmt->execute($lessons_data);
 
