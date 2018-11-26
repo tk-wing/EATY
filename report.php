@@ -86,17 +86,18 @@
 
       <div class="col-md-3 text-center">
         <span><?php echo date('Y/m/d', strtotime($report_each['created'])); ?></span>
-        <div class="blog-inner">
+        <div class="blog-inner" style="border:solid 1px; ">
           <img class="img-responsive" src="user_report_img/<?php echo $report_each['img_name']; ?>" alt="Blog" style="margin: 5px">
+          <p style="text-align: left; padding: 3px 3px"><?php echo $report_each['feed']; ?></p>
           <div class="desc">
 
             <form method="POST" action="">
               <div class="row">
-                <div class="col">
-                  <a href="#"><button type="button" class="btn btn-warning">投稿削除</button></a>
-                </div>
-                <div class="col">
-                  <a href="#"><button type="button" class="btn btn-default">投稿内容編集</button></a>
+                <div class="col" style="padding: 0px">
+                  <a href="#"><button type="button" class="btn btn-warning" style="font-size: 13px">投稿削除</button></a>
+                <!-- </div>
+                <div class="col"> -->
+                  <a href="#"><button type="button" class="btn btn-default" style="font-size: 13px">投稿内容編集</button></a>
                 </div>
               </div>
             </form>
