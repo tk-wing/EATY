@@ -115,20 +115,16 @@
             <div class="col-md-12">
               <img src="user_profile_img/<?php echo $signin_user['img_name']; ?>" style="width:100px;height:100px;border-radius: 50%;">
               <p><?php echo $signin_user['nickname']; ?></p>
-              <div class="form-group">
-                <input id="textinput" name="post_time" type="text" placeholder="投稿日" class="form-control input-md col-md-3" style="display: inline-block;">
-                <!--箱があるかないか確認するisset先生-->
-                <?php if(isset($validations['post_time']) && $validations['post_time'] == 'etsuko'): ?>
-                  <br>
-                  投稿日を入力してください
-                <?php endif; ?>
-              </div>
+              <!-- <div class="form-group">
+                
+              </div> -->
                <label class="filelabel_create">
                 <img id="img2" src="https://placehold.jp/130x100.png" style="width:130px;height:100px;">
                 <input type="file" class="filesend" id="filesend_1" name="report_img_name" accept="image/*">
               </label>
               <div class="text-center">
                 <textarea class="form-control col-md-3" id="textarea" name="feed" placeholder="一言コメント" style="height: 90px; display: inline-block;"></textarea>
+                <!--箱があるかないか確認するisset先生-->
                 <?php if(isset($validations['feed']) && $validations['feed'] == 'etsuko'): ?>
                   <br>
                   コメントを入力してください
