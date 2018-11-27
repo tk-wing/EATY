@@ -1,3 +1,46 @@
+<?php
+    session_start();
+
+    require('dbconnect.php');
+    require('functions.php');
+
+    v($_SESSION,'$_SESSION');
+
+       // ユーザー情報を取得
+    $sql='SELECT * FROM `users` WHERE `id`=?';
+    $stmt = $dbh->prepare($sql);
+    $data = array($_SESSION['EATY']['id']);
+    $stmt->execute($data);
+
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // pロフィール情報をを取得(生徒)
+    $profile_t_sql='SELECT * FROM `profiles_s` WHERE `user_id`=?';
+    $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_stmt->execute($profile_t_sql_data);
+    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // カテゴリー情報を取得
+    $categories_sql='SELECT * FROM `categories`';
+    $categories_stmt = $dbh->prepare($categories_sql);
+    $categories_sql_data = [];
+    $categories_stmt->execute($categories_sql_data);
+    
+    // 都道府県情報の取得
+    $areas_sql='SELECT * FROM `areas`';
+    $areas_stmt = $dbh->prepare($areas_sql);
+    $areas_sql_data = [];
+    $areas_stmt->execute($areas_sql_data);
+
+
+    if (!empty($_POST)) {
+        $day = $_POST['day'];
+      }
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -38,38 +81,64 @@
    
     <div class="title font-weight-bold">
       日付
-      <div style="float: right">
-        <select id="genre" name="genre" class="form-control">
+      <!-- <div style="float: right"> -->
+<!--         <select id="genre" name="genre" class="form-control">
           <option value="1">Option one</option>
           <option value="2">Option two</option>
-        </select>
+        </select> -->
+          <input id="name" name="day" type="date" placeholder="" class="form-control input-md">
+
       </div>
     </div>
     <div class="title font-weight-bold">
       開催場所
-      <div style="float: right">
-        <select id="genre" name="genre" class="form-control">
-          <option value="1">Option one</option>
-          <option value="2">Option two</option>
-        </select>
+      <!-- <div style="float: right"> -->
+        <div class="col-md-4">
+          <select id="area" name="area" class="form-control">
+            <option value="">選択してください。</option>
+            <?php while(1): ?>
+              <?php  $areas = $areas_stmt->fetch(PDO::FETCH_ASSOC); ?>
+              <?php if ($areas == false): ?>
+                <?php break; ?>
+              <?php endif ?>
+                <?php if ($area_id == $areas['id']): ?>
+                  <option value="<?php echo $areas['id']?>" selected><?php echo $areas['name'] ?></option>
+                <?php else: ?>
+                  <option value="<?php echo $areas['id']?>"><?php echo $areas['name'] ?></option>
+                <?php endif ?>
+            <?php endwhile ?>
+          </select>
+        </div>
+
       </div>
     </div>
     <div class="title font-weight-bold">
-      ジャンル
+      カテゴリー
       <div style="float: right">
-        <select id="genre" name="genre" class="form-control">
-          <option value="1">Option one</option>
-          <option value="2">Option two</option>
+        <select id="category" name="category_id[]" class="form-control">
+          <option value="">選択してください。</option>
+          <?php while(1): ?>
+            <?php  $category_id = $categories_stmt->fetch(PDO::FETCH_ASSOC); ?>
+            <?php if ($category_id == false): ?>
+              <?php break; ?>
+              <?php else: ?>
+              <option value="<?php echo $category_id['id'];?>"><?php echo $category_id['category_name'] ?></option>
+            <?php endif ?>
+          <?php endwhile; ?>
         </select>
+
+        <?php if(isset($validations['category_id'])&& $validations['category_id']=='blank'): ?>
+        <span class="error_msg">カテゴリーを指定してください</span>
+        <?php endif; ?>
       </div>
     </div>
     <div class="title font-weight-bold">
       キーワード
       <div style="float: right">
-        <select id="genre" name="genre" class="form-control">
-          <option value="1">Option one</option>
-          <option value="2">Option two</option>
-        </select>
+        <input id="name" name="keyword" type="text" placeholder="その他" class="form-control input-md">
+       <!--  <?php if(isset($validations['fee'])&& $validations['fee']=='blank'): ?>
+        <span class="error_msg">キーワードを指定してください</span>
+        <?php endif; ?> -->
       </div>
     </div>
 
