@@ -12,6 +12,19 @@
   $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     v($signin_user,'signin_user');
+
+      //更新処理（更新ボタンが押されたときの処理）
+  if (!empty($_POST)) {
+      $update_sql = "UPDATE `reports` SET `feed` = ? WHERE `reports`.`id`=?";
+      $data = array($_POST["feed"],$reports_id);
+      //sql文の実行
+      $stmt = $dbh->prepare($update_sql);
+      $stmt->execute($data);
+      
+      //つくれぽ一覧へ遷移
+      header("Location: report.php");
+      exit();
+  }
 ?>
 
 
@@ -93,14 +106,14 @@
                 <input type="file" class="filesend" id="filesend_1" name="report_img_name" accept="image/*">
               </label>
               <div class="text-center">
-                <textarea class="form-control col-md-3" id="textarea" name="feed" placeholder="一言コメント" style="height: 90px; display: inline-block;"><?php echo $reports["feed"]; ?></textarea>
+                <textarea class="form-control col-md-3" id="textarea" name="feed" placeholder="一言コメント" style="height: 90px; display: inline-block;"><?php echo $signin_user["feed"]; ?></textarea>
                 <!--箱があるかないか確認するisset先生-->
                 <?php if(isset($validations['feed']) && $validations['feed'] == 'etsuko'): ?>
                   <br>
                   コメントを入力してください
                 <?php endif; ?>
               </div>
-                <div class="text-center"><input type="submit" value="この内容で投稿" class="btn btn-inverse mt-3" style="width:200px;"></div>
+                <div class="text-center"><input type="submit" value="更新する" class="btn btn-warning mt-3" style="width:200px;"></div>
             </div>
           </div>
         </form>
