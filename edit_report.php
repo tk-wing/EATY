@@ -1,14 +1,15 @@
 <?php
-    require_once('dbconnect.php');
+  require('dbconnect.php');
+  require('functions.php');
+//v($_GET['feed_id'],"feed_id");
+  $report_each = $_GET["report_each"];
+  $sql = "SELECT `reports`.*,`profiles_s`.`nickname`,`profiles_s`.`img_name` FROM `reports` LEFT JOIN `profiles_s` ON `reports`.`user_id`=`profiles_s`.`id` WHERE `reports`.`id`=$report_each";
 
-    $report_each = $_GET["report_each"];
+  $data = array($report_each);
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute($data);
 
-    $sql = "SELECT `reports`.*,`profiles_s`.`nickname`.`img_name` FROM `reports` LEFT JOIN `profiles_s` ON `reports`.`user_id`=`profiles_s`.`id` WHERE `reports`.`id`=$report_each";
-
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute($reports);
-
-    $reports = $stmt->fetch(PDO::FETCH_ASSOC);
+  $reports = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 

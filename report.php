@@ -97,7 +97,8 @@
                   <a onclick="return confirm('削除してよろしいですか？')" href="delete_report.php?report_each=<?php echo $report_each['id']; ?>"class="btn btn-warning" style="font-size: 13px">投稿削除</a>
                 <!-- </div>
                 <div class="col"> -->
-                  <a href="edit_report.php?report_each=<?php echo $report_each['id']; ?>" class="btn btn-default" style="font-size: 13px">投稿内容編集</a>
+                  <a href="edit_report.php?report_each=<?php echo $report_each['id']; ?>" class="btn btn-success" style="font-size: 13px">投稿内容編集</a>
+
                 </div>
               </div>
             </form>
