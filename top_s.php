@@ -158,7 +158,7 @@
             <div class="row">
               <div class="col text-right">
                 <a href="report.php"><button type="button" class="btn btn-secondary">つくれぽ一覧を見る</button></a><br>
-                <a href="#"><button type="button" class="btn btn-secondary">お気に入りレッスン</button></a>
+                <a href="favorites.php"><button type="button" class="btn btn-secondary">お気に入りレッスン</button></a>
               </div>
               <div class="col text-left">
                 <a href="report_send.php"><button type="button" class="btn btn-secondary">つくれぽを投稿する</button></a><br>
