@@ -74,29 +74,30 @@
   <div class="wrapper">
     <div class="top-content text-center">
        <img src="user_profile_img/<?php echo $signin_user['img_name']; ?>" style="width:120px;height:120px;border-radius: 50%;">
-       <p><?php echo $signin_user['nickname']; ?></p>
+       <p><?php echo $signin_user['nickname']; ?>さんのつくれぽ</p>
     </div>
 
-    <div class="row">
+    <div class="row text-center" style="border: 4px solid #2C373B;border-radius: 240px 15px 185px 15px / 15px 200px 15px 185px;margin: 2em 0;padding: 2em;">
       <?php if (empty($reports)): ?>
-        まだつくれぽ投稿がありません。
+        <div class="col-md-12 text-center">まだつくれぽ投稿がありません。</div>
         <?php else: ?>
 
       <?php foreach($reports as $report_each):?>
 
       <div class="col-md-3 text-center">
         <span><?php echo date('Y/m/d', strtotime($report_each['created'])); ?></span>
-        <div class="blog-inner">
-          <img class="img-responsive" src="user_report_img/<?php echo $report_each['img_name']; ?>" alt="Blog">
+        <div class="blog-inner" style="border:solid 1px; ">
+          <img class="img-responsive" src="user_report_img/<?php echo $report_each['img_name']; ?>" alt="Blog" style="margin: 5px">
+          <p style="text-align: left; padding: 3px 3px"><?php echo $report_each['feed']; ?></p>
           <div class="desc">
 
             <form method="POST" action="">
               <div class="row">
-                <div class="col">
-                  <a href="#"><button type="button" class="btn btn-danger">投稿削除</button></a>
-                </div>
-                <div class="col">
-                  <a href="#"><button type="button" class="btn btn-primary">投稿内容編集</button></a>
+                <div class="col" style="padding: 0px">
+                  <a href="#"><button type="button" class="btn btn-warning" style="font-size: 13px">投稿削除</button></a>
+                <!-- </div>
+                <div class="col"> -->
+                  <a href="#"><button type="button" class="btn btn-default" style="font-size: 13px">投稿内容編集</button></a>
                 </div>
               </div>
             </form>
