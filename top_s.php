@@ -219,7 +219,9 @@
 
             <div class="col-md-4 text-center">
               <a href="lesson.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-primary">レッスン詳細</button></a>
-              <a href="cancel_lesson_s.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-danger" style="width: 125px">キャンセル</button></a>
+              <?php if ($lesson['status']=='1'): ?>
+                <a onclick="return confirm('本当にキャンセルしますか？')" href="cancel_lesson_s.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-danger" style="width: 125px">キャンセル</button></a>
+              <?php endif ?>
             </div>
             <?php endforeach ?>
           </div>
