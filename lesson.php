@@ -161,9 +161,9 @@
               </li>
             </ul>
 
-            <form method="POST" action="">
+            <div>
               <?php if ($user_type == '1'): ?>
-                <a href="create_check_t.php?lesson_id=<?php echo $lesson_id?>"><button type="button" class="btn btn-primary">編集する</button></a><br>
+                <a href="bkg_edit_t.php=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">編集する</button></a><br>
               <?php endif ?>
               <?php if ($user_type == '2'): ?>
                 <?php if ($reservation == FALSE): ?>
@@ -174,10 +174,13 @@
                 <?php else: ?>
                   <p style="color: red">予約済みのレッスンです！</p>
                 <?php endif ?>
-                <button type="button" class="btn btn-secondary"><i class="fas fa-heart" style="color: #F76AC0"></i></button>
-                <button type="button" class="btn btn-secondary"><i class="fas fa-star text-warning"></i></button>
+                <!-- <button type="button" class="btn btn-secondary"><i class="fas fa-heart" style="color: #F76AC0"></i></button> -->
+                <span hidden id="user_id"><?php echo $_SESSION['EATY']['id'] ?></span>
+                <span hidden id="lesson_id"><?php echo $lesson_id  ?></span>
+                <button type="button" id="like" class="btn btn-secondary"><i class="fas fa-star"></i></button>
+                <button type="button" id="unlike" class="btn btn-warning"><i class="fas fa-star"></i></button>
               <?php endif ?>
-            </form>
+            </div>
 
         </div>
       </div>
