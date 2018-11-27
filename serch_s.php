@@ -1,3 +1,76 @@
+<?php
+    session_start();
+
+    require('dbconnect.php');
+    require('functions.php');
+
+    v($_SESSION,'$_SESSION');
+
+       // ユーザー情報を取得
+    $sql='SELECT * FROM `users` WHERE `id`=?';
+    $stmt = $dbh->prepare($sql);
+    $data = array($_SESSION['EATY']['id']);
+    $stmt->execute($data);
+
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // pロフィール情報をを取得(生徒)
+    $profile_t_sql='SELECT * FROM `profiles_s` WHERE `user_id`=?';
+    $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_stmt->execute($profile_t_sql_data);
+    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // カテゴリー情報を取得
+    $categories_sql='SELECT * FROM `categories`';
+    $categories_stmt = $dbh->prepare($categories_sql);
+    $categories_sql_data = [];
+    $categories_stmt->execute($categories_sql_data);
+    
+    // 都道府県情報の取得
+    $areas_sql='SELECT * FROM `areas`';
+    $areas_stmt = $dbh->prepare($areas_sql);
+    $areas_sql_data = [];
+    $areas_stmt->execute($areas_sql_data);
+
+    $validations=[];
+
+
+    //検索ボタンを押した時
+    if (!empty($_POST)) {
+      $day=$_POST['day'];
+
+      //バリデーション
+      if ($day == '' ) {
+        $validations['day']= 'blank';
+        
+      }else{
+        //検査結果を表示。（同じ値だったものすべて）
+        $lessons_sql ='SELECT * FROM `lessons_t` WHERE `id`=?';
+        $lessons_data =[$signin_user['id']];//POSTしたきの値
+        $lessons_stmt = $dbh->prepare($lessons_sql);
+        $lessons_stmt->execute($lessons_data);
+      }
+    
+    }
+
+
+        $lessons = []; 
+        // while (true) {
+        //   $lesson = $lessons_stmt->fetch(PDO::FETCH_ASSOC);//データ一個分
+
+        //   if ($lesson == false) {
+        //     //所得データは全て所得できているので、繰り返しを中断する
+        //     break;
+        //   }
+         // $lessons[]= $lesson;
+
+        // }
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -46,14 +119,11 @@
                   <li>
                     <p>日付</p>
                   </li>
-
                   <li>
-                    <select id="genre" name="genre" class="form-control">
-                      <option value="1">Option one</option>
-                      <option value="2">Option two</option>
-                    </select>
+                    <input id="name" name="day" type="date" placeholder="" class="form-control input-md">
                   </li>
                   <li>
+
                     <p>開催場所</p>
                   </li>
                     <li>
@@ -66,26 +136,30 @@
                       <p>ジャンル</p>
                     </li>
                     <li class="">
-                      <select id="genre" name="genre" class="form-control">
-                        <option value="1">Option one</option>
-                        <option value="2">Option two</option>
+                      <select id="category" name="category_id[]" class="form-control">
+                        <option value="">選択してください。</option>
+                        <?php while(1): ?>
+                          <?php  $category_id = $categories_stmt->fetch(PDO::FETCH_ASSOC); ?>
+                          <?php if ($category_id == false): ?>
+                            <?php break; ?>
+                            <?php else: ?>
+                            <option value="<?php echo $category_id['id'];?>"><?php echo $category_id['category_name'] ?></option>
+                          <?php endif ?>
+                        <?php endwhile; ?>
                       </select>
                     </li>
                     <li>
                       <p>キーワード</p>
                     </li>
                     <li class="">
-                      <select id="genre" name="genre" class="form-control">
-                        <option value="1">Option one</option>
-                        <option value="2">Option two</option>
-                      </select>
+                        <input id="name" name="keyword" type="text" placeholder="その他" class="form-control input-md">
                     </li>
                         <!-- <input type="submit" class="btn btn-primary" value="レッスン検索"> -->
                 </ul>
-    </nav>
-                <input type="submit" class="btn btn-primary" value="レッスン検索">
+                  </nav>
+                <input type="submit"  class="btn btn-primary" value="レッスン検索">
 
-
+  <!-- レッスン検査結果表示 POST送信した時に表示 -->
   <div class="container">
       <div id="products" class="row view-group">
 
