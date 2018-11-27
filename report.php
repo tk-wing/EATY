@@ -94,7 +94,7 @@
             <form method="POST" action="">
               <div class="row">
                 <div class="col" style="padding: 0px">
-                  <a href="#"><button type="button" class="btn btn-warning" style="font-size: 13px">投稿削除</button></a>
+                  <a onclick="return confirm('本当に消すの？')" href="delete_report.php?report_each=<?php echo $report_each['id']; ?>"class="btn btn-warning" style="font-size: 13px">投稿削除</a>
                 <!-- </div>
                 <div class="col"> -->
                   <a href="#"><button type="button" class="btn btn-default" style="font-size: 13px">投稿内容編集</button></a>
