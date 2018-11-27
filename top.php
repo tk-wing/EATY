@@ -1,3 +1,27 @@
+<?php
+    session_start();
+    require('dbconnect.php');
+    require('functions.php');
+
+    $lessons = [];
+
+    // レッスン情報を取得
+    $lesson_sql='SELECT * FROM `lessons_t` ORDER BY `created` DESC LIMIT 0,3';
+    $lesson_stmt = $dbh->prepare($lesson_sql);
+    $lesson_data = [];
+    $lesson_stmt->execute($lesson_data);
+
+
+    while(1){
+      $lesson = $lesson_stmt->fetch(PDO::FETCH_ASSOC);
+      if ($lesson == FALSE) {
+          break;
+      }
+      $lessons[] = $lesson;
+    }
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -26,14 +50,11 @@
 <body>
 
   <!-- ヘッダー -->
-  <header>
-    <button type="button" class="btn btn-light my-btn">TOP</button>
-    <div class="sns">
-      <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>
-      <a href="" class="btn-twitter sns-btn"><i class="fab fa-twitter fa-2x"></i></a>
-      <a href="" class="btn-instagram sns-btn"><i class="fab fa-instagram fa-2x"></i></a>
+<!--   <header>
+    <div class="text-center">
+      <a href="#"><img src="img/eatylogo.png" width="100"></a>
     </div>
-  </header>
+  </header> -->
 
   <!-- TOP上部・３つのボタン・コンセプト -->
   <div class="top wrapper">
@@ -77,60 +98,28 @@
   <div class="middle wrapper">
     <div class="text-center title">レッスン紹介</div>
     <div class="row middle-content">
+      <?php foreach ($lessons as $lesson): ?>
+        
       <div class="col-md-4 text-center">
         <div class="row">
           <div class="col-md-6">
-            <span>2018/12/31</span>
+            <span><?php echo date('m月d日', strtotime($lesson['day'])) ?></span>
           </div>
           <div class="col-md-6">
-            <span>東京都品川区</span>
+            <span><?php echo $lesson['station'] ?></span>
           </div>
         </div>
         <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
+          <img class="img-responsive" src="users_lesson_img/<?php echo $lesson['img_1'] ?>" alt="Blog" width="100%" style="height: 250px;">
           <div class="desc">
-            <h3><a href="#">レッスン名</a></h3>
-            <p>¥5000/1人</p>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
+            <h3><a href="lesson.php?lesson_id=<?php echo $lesson['id']?>"><?php echo $lesson['lesson_name'] ?></a></h3>
+            <p>¥<?php echo $lesson['fee'] ?>/1人</p>
+            <p><a href="lesson.php?lesson_id=<?php echo $lesson['id']?>" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
           </div>
         </div>
       </div>
-      <div class="col-md-4 text-center">
-        <div class="row">
-          <div class="col-md-6">
-            <span>2018/12/31</span>
-          </div>
-          <div class="col-md-6">
-            <span>東京都品川区</span>
-          </div>
-        </div>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-          <div class="desc">
-            <h3><a href="#">レッスン名</a></h3>
-            <p>¥5000/1人</p>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 text-center">
-        <div class="row">
-          <div class="col-md-6">
-            <span>2018/12/31</span>
-          </div>
-          <div class="col-md-6">
-            <span>東京都品川区</span>
-          </div>
-        </div>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-          <div class="desc">
-            <h3><a href="#">レッスン名</a></h3>
-            <p>¥5000/1人</p>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
-          </div>
-        </div>
-      </div>
+      <?php endforeach ?>
+
     </div>
     <div class="text-center"><button type="button" class="btn btn-secondary">more</button></div>
   </div>
@@ -217,6 +206,12 @@
   </div>
 
   <footer>
+    <div class="sns text-center">
+      <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>
+      <a href="" class="btn-twitter sns-btn"><i class="fab fa-twitter fa-2x"></i></a>
+      <a href="" class="btn-instagram sns-btn"><i class="fab fa-instagram fa-2x"></i></a>
+      <p>©ex chef</p>
+    </div>
   </footer>
 
 </body>
