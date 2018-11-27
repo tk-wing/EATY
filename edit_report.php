@@ -93,7 +93,7 @@
                 <input type="file" class="filesend" id="filesend_1" name="report_img_name" accept="image/*">
               </label>
               <div class="text-center">
-                <textarea class="form-control col-md-3" id="textarea" name="feed" placeholder="一言コメント" style="height: 90px; display: inline-block;"><?php echo $reports["feed"]; ?></textarea>
+                <textarea class="form-control col-md-3" id="textarea" name="feed" placeholder="一言コメント" style="height: 90px; display: inline-block;"><?php echo $signin_user["feed"]; ?></textarea>
                 <!--箱があるかないか確認するisset先生-->
                 <?php if(isset($validations['feed']) && $validations['feed'] == 'etsuko'): ?>
                   <br>
