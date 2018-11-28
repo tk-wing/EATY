@@ -74,7 +74,7 @@
         <a href="signin.php"><button type="button" class="btn  btn-default">ログイン</button></a>
       </div>
       <div class="col text-center area serch">
-      <button type="button" class="btn btn-default">レッスン検索</button>
+      <button class="btn btn-default">レッスン検索</button>
       </div>
     </div>
     </div>
