@@ -1,11 +1,11 @@
-<?php
+<?ph<?php
     session_start();
 
     require('dbconnect.php');
     require('functions.php');
 
     v($_SESSION,'$_SESSION');
-
+    v($_GET,'$_GET');
        // ユーザー情報を取得
     $sql='SELECT * FROM `users` WHERE `id`=?';
     $stmt = $dbh->prepare($sql);
@@ -13,6 +13,13 @@
     $stmt->execute($data);
 
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // pロフィール情報をを取得
+    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
+    $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_stmt->execute($profile_t_sql_data);
+    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
 
     // pロフィール情報をを取得(生徒)
     $profile_t_sql='SELECT * FROM `profiles_s` WHERE `user_id`=?';
@@ -35,37 +42,50 @@
 
     $validations=[];
 
+    
 
     //検索ボタンを押した時
-    if (!empty($_POST)) {
-      $day=$_POST['day'];
+    if (isset($_GET['day'])) {
+        //同じ値の情報をDBから持ってくる。
+        //１つでも値に入ってたら検索する。
+        $lessons_sql='SELECT * FROM `lessons_t` WHERE `day`=?';
+        $day=$_GET['day'];
+        // $category_id=$_GET['category_id'];
+        //$areas=$_GET['area'];//テーブルに都道府県がない為引っ張って来れない
+        //$keyword = $_GET['keyword'];
+        // $search_word = "%".$_GET['keyword']."%";
 
-      //バリデーション
-      if ($day == '' ) {
-        $validations['day']= 'blank';
-        
-      }else{
+        $lessons_data = [$day];
+
+
+
+        }else{
         //検査結果を表示。（同じ値だったものすべて）
-        $lessons_sql ='SELECT * FROM `lessons_t` WHERE `id`=?';
-        $lessons_data =[$signin_user['id']];//POSTしたきの値
+            // $lessons_sql ='SELECT * FROM `lessons_t` WHERE 1';
+            $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
+            $lessons_data =[];
+        } 
+
         $lessons_stmt = $dbh->prepare($lessons_sql);
         $lessons_stmt->execute($lessons_data);
-      }
-    
-    }
+        $lessons = [];
+
+        while (true) {
+          $lesson = $lessons_stmt->fetch(PDO::FETCH_ASSOC);//データ一個分
+
+          if ($lesson == false) {
+            //所得データは全て所得できているので、繰り返しを中断する
+            break;
+          }
+         $lessons[]= $lesson;
+
+        }
 
 
-        $lessons = []; 
-        // while (true) {
-        //   $lesson = $lessons_stmt->fetch(PDO::FETCH_ASSOC);//データ一個分
 
-        //   if ($lesson == false) {
-        //     //所得データは全て所得できているので、繰り返しを中断する
-        //     break;
-        //   }
-         // $lessons[]= $lesson;
 
-        // }
+
+
 
 ?>
 
@@ -112,9 +132,12 @@
 
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <form method="GET" action="" enctype="multipart/form-data">
+    <!-- GET送信　　画像が送れるように -->
+
 <!------ Include the above in your HEAD tag ---------->
-<div class="container text-center">
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container text-center">
+      <nav class="navbar navbar-expand-lg navbar-dark">
                 <ul>
                   <li>
                     <p>日付</p>
@@ -127,13 +150,23 @@
                     <p>開催場所</p>
                   </li>
                     <li>
-                       <select id="genre" name="genre" class="form-control">
-                         <option value="1">Option one</option>
-                         <option value="2">Option two</option>
-                       </select>
+                      <select id="area" name="area" class="form-control">
+                                  <option value="">選択してください。</option>
+                                  <?php while(1): ?>
+                                    <?php  $areas = $areas_stmt->fetch(PDO::FETCH_ASSOC); ?>
+                                    <?php if ($areas == false): ?>
+                                      <?php break; ?>
+                                    <?php endif ?>
+                                      <?php if ($area_id == $areas['id']): ?>
+                                        <option value="<?php echo $areas['id']?>" selected><?php echo $areas['name'] ?></option>
+                                      <?php else: ?>
+                                        <option value="<?php echo $areas['id']?>"><?php echo $areas['name'] ?></option>
+                                      <?php endif ?>
+                                  <?php endwhile ?>
+                                </select>
                     </li>
                     <li>
-                      <p>ジャンル</p>
+                      <p>カテゴリー</p>
                     </li>
                     <li class="">
                       <select id="category" name="category_id[]" class="form-control">
@@ -158,256 +191,15 @@
                 </ul>
                   </nav>
                 <input type="submit"  class="btn btn-primary" value="レッスン検索">
+    </form>
 
   <!-- レッスン検査結果表示 POST送信した時に表示 -->
-  <div class="container">
-      <div id="products" class="row view-group">
 
-                <div class="item col-xs-4 col-lg-4">
+  <?php foreach ($lessons as $lessons_each) {
+    include("serch_s_row.php");
 
-                    <div class="thumbnail card">
-                      <!-- 全体の白い枠 -->
-                      <h4 class="group card-title inner list-group-item-heading">簡単オムライス</h4>
-                        <div class="blog-inner">
-                          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-                        </div>
-                        <div class="caption card-body">
-                          <!-- 下の白い枠 -->
-                          <table>
-                            <tr>
-                              <td colspan="2">ざっくり場所</td>
-                              <td >¥3000/1人</td>
-                            </tr>
-                            <tr>
-                              <td><img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;"></td>
-                              <td>講師名</td>
-                              <td><input type="submit" class="btn btn-primary"  value="レッスン詳細"></td>
-                            </tr>
+  } ?>
 
-                          </table>
-                             
-                        </div>
-                    </div>
-                </div>
-                <div class="item col-xs-4 col-lg-4">
-
-                    <div class="thumbnail card">
-                      <!-- 全体の白い枠 -->
-                      <h4 class="group card-title inner list-group-item-heading">簡単オムライス</h4>
-                        <div class="blog-inner">
-                          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-                        </div>
-                        <div class="caption card-body">
-                          <!-- 下の白い枠 -->
-                          <table>
-                            <tr>
-                              <td colspan="2">ざっくり場所</td>
-                              <td >¥3000/1人</td>
-                            </tr>
-                            <tr>
-                              <td><img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;"></td>
-                              <td>講師名</td>
-                              <td><input type="submit" value="レッスン詳細"></td>
-                            </tr>
-
-                          </table>
-                             
-                        </div>
-                    </div>
-                </div>
-                <div class="item col-xs-4 col-lg-4">
-
-                    <div class="thumbnail card">
-                      <!-- 全体の白い枠 -->
-                      <h4 class="group card-title inner list-group-item-heading">簡単オムライス</h4>
-                        <div class="blog-inner">
-                          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-                        </div>
-                        <div class="caption card-body">
-                          <!-- 下の白い枠 -->
-                          <table>
-                            <tr>
-                              <td colspan="2">ざっくり場所</td>
-                              <td >¥3000/1人</td>
-                            </tr>
-                            <tr>
-                              <td><img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;"></td>
-                              <td>講師名</td>
-                              <td><input type="submit" value="レッスン詳細"></td>
-                            </tr>
-
-                          </table>
-                             
-                        </div>
-                    </div>
-                </div>
-                <div class="item col-xs-4 col-lg-4">
-
-                    <div class="thumbnail card">
-                      <!-- 全体の白い枠 -->
-                      <h4 class="group card-title inner list-group-item-heading">簡単オムライス</h4>
-                        <div class="blog-inner">
-                          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-                        </div>
-                        <div class="caption card-body">
-                          <!-- 下の白い枠 -->
-                          <table>
-                            <tr>
-                              <td colspan="2">ざっくり場所</td>
-                              <td >¥3000/1人</td>
-                            </tr>
-                            <tr>
-                              <td><img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;"></td>
-                              <td>講師名</td>
-                              <td><input type="submit" value="レッスン詳細"></td>
-                            </tr>
-
-                          </table>
-                             
-                        </div>
-                    </div>
-                </div>
-                <div class="item col-xs-4 col-lg-4">
-
-                    <div class="thumbnail card">
-                      <!-- 全体の白い枠 -->
-                      <h4 class="group card-title inner list-group-item-heading">簡単オムライス</h4>
-                        <div class="blog-inner">
-                          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-                        </div>
-                        <div class="caption card-body">
-                          <!-- 下の白い枠 -->
-                          <table>
-                            <tr>
-                              <td colspan="2">ざっくり場所</td>
-                              <td >¥3000/1人</td>
-                            </tr>
-                            <tr>
-                              <td><img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;"></td>
-                              <td>講師名</td>
-                              <td><input type="submit" value="レッスン詳細"></td>
-                            </tr>
-
-                          </table>
-                             
-                        </div>
-                    </div>
-                </div>
-                <div class="item col-xs-4 col-lg-4">
-
-                    <div class="thumbnail card">
-                      <!-- 全体の白い枠 -->
-                      <h4 class="group card-title inner list-group-item-heading">簡単オムライス</h4>
-                        <div class="blog-inner">
-                          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-                        </div>
-                        <div class="caption card-body">
-                          <!-- 下の白い枠 -->
-                          <table>
-                            <tr>
-                              <td colspan="2">ざっくり場所</td>
-                              <td >¥3000/1人</td>
-                            </tr>
-                            <tr>
-                              <td><img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;"></td>
-                              <td>講師名</td>
-                              <td><input type="submit" value="レッスン詳細"></td>
-                            </tr>
-
-                          </table>
-                             
-                        </div>
-                    </div>
-                </div>
-                <div class="item col-xs-4 col-lg-4">
-
-                    <div class="thumbnail card">
-                      <!-- 全体の白い枠 -->
-                      <h4 class="group card-title inner list-group-item-heading">簡単オムライス</h4>
-                        <div class="blog-inner">
-                          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-                        </div>
-                        <div class="caption card-body">
-                          <!-- 下の白い枠 -->
-                          <table>
-                            <tr>
-                              <td colspan="2">ざっくり場所</td>
-                              <td >¥3000/1人</td>
-                            </tr>
-                            <tr>
-                              <td><img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;"></td>
-                              <td>講師名</td>
-                              <td><input type="submit" value="レッスン詳細"></td>
-                            </tr>
-
-                          </table>
-                             
-                        </div>
-                    </div>
-                </div>
-                <div class="item col-xs-4 col-lg-4">
-
-                    <div class="thumbnail card">
-                      <!-- 全体の白い枠 -->
-                      <h4 class="group card-title inner list-group-item-heading">簡単オムライス</h4>
-                        <div class="blog-inner">
-                          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-                        </div>
-                        <div class="caption card-body">
-                          <!-- 下の白い枠 -->
-                          <table>
-                            <tr>
-                              <td colspan="2">ざっくり場所</td>
-                              <td >¥3000/1人</td>
-                            </tr>
-                            <tr>
-                              <td><img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;"></td>
-                              <td>講師名</td>
-                              <td><input type="submit" value="レッスン詳細"></td>
-                            </tr>
-
-                          </table>
-                             
-                        </div>
-                    </div>
-                </div>
-                <div class="item col-xs-4 col-lg-4">
-
-                    <div class="thumbnail card">
-                      <!-- 全体の白い枠 -->
-                      <h4 class="group card-title inner list-group-item-heading">簡単オムライス</h4>
-                        <div class="blog-inner">
-                          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-                        </div>
-                        <div class="caption card-body">
-                          <!-- 下の白い枠 -->
-                          <table>
-                            <tr>
-                              <td colspan="2">ざっくり場所</td>
-                              <td >¥3000/1人</td>
-                            </tr>
-                            <tr>
-                              <td><img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;"></td>
-                              <td>講師名</td>
-                              <td><input type="submit" value="レッスン詳細"></td>
-                            </tr>
-
-                          </table>
-                             
-                        </div>
-                    </div>
-                </div>
-
-                <input type="submit" class="btn btn-primary input" value="More" >
-      </div>
-   </div>
-</div>
-
-
-
-
-
-  
   <footer>
     <div class="sns text-center">
       <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>
