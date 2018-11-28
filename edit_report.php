@@ -100,7 +100,7 @@
                   コメントを入力してください
                 <?php endif; ?>
               </div>
-                <div class="text-center"><input type="submit" value="この内容で投稿" class="btn btn-inverse mt-3" style="width:200px;"></div>
+                <div class="text-center"><input type="submit" value="更新する" class="btn btn-warning mt-3" style="width:200px;"></div>
             </div>
           </div>
         </form>
