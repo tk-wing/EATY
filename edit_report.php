@@ -3,7 +3,7 @@
   require('functions.php');
 //v($_GET['feed_id'],"feed_id");
   $report_each = $_GET["report_each"];
-  $sql = "SELECT `reports`.*,`profiles_s`.`nickname`,`profiles_s`.`img_name` FROM `reports` LEFT JOIN `profiles_s` ON `reports`.`user_id`=`profiles_s`.`id` WHERE `reports`.`id`=$report_each";
+  $sql = "SELECT `reports`.*,`profiles_s`.`nickname`,`profiles_s`.`img_name` AS `profile_img` FROM `reports` LEFT JOIN `profiles_s` ON `reports`.`user_id`=`profiles_s`.`id` WHERE `reports`.`id`=$report_each";
 
   $data = array($report_each);
   $stmt = $dbh->prepare($sql);
@@ -102,7 +102,7 @@
                 
               </div> -->
                <label class="filelabel_create">
-                <img id="img2" src="<?php echo $reports["img_name"]; ?>" style="width:130px;height:100px;">
+                <img id="img2" src="user_report_img/<?php echo $signin_useruser["img_name"]; ?>" style="width:130px;height:100px;">
                 <input type="file" class="filesend" id="filesend_1" name="report_img_name" accept="image/*">
               </label>
               <div class="text-center">
