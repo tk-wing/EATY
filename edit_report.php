@@ -16,7 +16,7 @@
           //更新処理（更新ボタンが押されたときの処理）
   if (!empty($_POST)) {
       $update_sql = "UPDATE `reports` SET `feed` = ? WHERE `reports`.`id`=?";
-      $data = array($_POST["feed"],$reports_id);
+      $data = array($_POST["feed"],$_POST["report_id"]);
       //sql文の実行
       $stmt = $dbh->prepare($update_sql);
       $stmt->execute($data);
@@ -113,7 +113,7 @@
                   コメントを入力してください
                 <?php endif; ?>
               </div>
-                <div class="text-center"><input type="submit" value="更新する" class="btn btn-warning mt-3" style="width:200px;"></div>
+                <div class="text-center"><input type="hidden" name="report_id" value="<?php echo $signin_user["id"]; ?>"><input type="submit" value="更新する" class="btn btn-warning mt-3" style="width:200px;"></div>
             </div>
           </div>
         </form>
