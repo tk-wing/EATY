@@ -12,6 +12,19 @@
   $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     v($signin_user,'signin_user');
+
+          //更新処理（更新ボタンが押されたときの処理）
+  if (!empty($_POST)) {
+      $update_sql = "UPDATE `reports` SET `feed` = ? WHERE `reports`.`id`=?";
+      $data = array($_POST["feed"],$reports_id);
+      //sql文の実行
+      $stmt = $dbh->prepare($update_sql);
+      $stmt->execute($data);
+      
+      //つくれぽ一覧へ遷移
+      header("Location: report.php");
+      exit();
+  }
 ?>
 
 
