@@ -26,39 +26,63 @@ $(function(){
     }
   });
 
-  // いいねカウント
+  // お気入りレッスン登録
   $(document).on('click', '#like', function() {
       var user_id = $('#user_id').text();
       var lesson_id = $('#lesson_id').text();
       var like_btn = $(this);
 
-      console.log(user_id);
-      console.log(lesson_id);
-
       $.ajax({
-          url:'like.php',
+          url:'favorite_register.php',
           type:'POST',
           datatype: 'json',
           data:{
-            'feed_id':feed_id,
             'user_id':user_id,
+            'lesson_id':lesson_id,
             'is_liked':true
           }
       })
-      // .done(function(data){
-      //     if (data == 'true') {
-      //         like_count++;
-      //         like_btn.siblings('.like_count').text(like_count);
-      //         like_btn.removeClass('like');
-      //         like_btn.addClass('unlike');
-      //         like_btn.html('<i style="color: red;" class="fas fa-heart"></i>');
-      //     }
-      //   console.log(data);
-      // })
-      // .fail(function(err){
-      //   // 目的の処理が失敗したときの処理
-      //   console.log('error');
-      // })
+      .done(function(data){
+          if (data == 'true') {
+              like_btn.attr('id', 'unlike');
+              like_btn.removeClass('btn-secondary');
+              like_btn.addClass('btn-warning');
+          }
+        console.log(data);
+      })
+      .fail(function(err){
+        // 目的の処理が失敗したときの処理
+        console.log('error');
+      })
+
+  });
+
+  $(document).on('click', '#unlike', function() {
+      var user_id = $('#user_id').text();
+      var lesson_id = $('#lesson_id').text();
+      var like_btn = $(this);
+
+      $.ajax({
+          url:'favorite_register.php',
+          type:'POST',
+          datatype: 'json',
+          data:{
+            'user_id':user_id,
+            'lesson_id':lesson_id,
+          }
+      })
+      .done(function(data){
+          if (data == 'true') {
+              like_btn.attr('id', 'like');
+              like_btn.removeClass('btn-warning');
+              like_btn.addClass('btn-secondary');
+          }
+        console.log(data);
+      })
+      .fail(function(err){
+        // 目的の処理が失敗したときの処理
+        console.log('error');
+      })
 
   });
 

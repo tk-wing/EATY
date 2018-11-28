@@ -32,12 +32,23 @@
         $name = $teacher['nickname'];
     }
 
+    if($user_type == '2'){
     // 生徒がレッスンを予約済みかを確認する。
     $reservation_sql='SELECT * FROM `reservations` WHERE `user_id`=? AND `lesson_id`=?';
     $reservation_stmt = $dbh->prepare($reservation_sql);
     $reservation_sql_data = [$user_id,$lesson_id];
     $reservation_stmt->execute($reservation_sql_data);
     $reservation = $reservation_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // 生徒がお気入りへ登録済みかを確認
+    $favorite_flag_sql = "SELECT * FROM `like_lessons` WHERE `user_id` = ? AND `lesson_id` = ?";
+    $favorite_flag_data = [$user_id, $lesson_id];
+    $favorite_flag_stmt = $dbh->prepare($favorite_flag_sql);
+    $favorite_flag_stmt->execute($favorite_flag_data);
+    $is_favorite = $favorite_flag_stmt->fetch(PDO::FETCH_ASSOC);
+
+
+  }
 
 
 
@@ -163,7 +174,7 @@
 
             <div>
               <?php if ($user_type == '1'): ?>
-                <a href="bkg_edit_t.php=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">編集する</button></a><br>
+                <a href="bkg_edit_t.php?lesson_id=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">編集する</button></a><br>
               <?php endif ?>
               <?php if ($user_type == '2'): ?>
                 <?php if ($reservation == FALSE): ?>
@@ -177,8 +188,11 @@
                 <!-- <button type="button" class="btn btn-secondary"><i class="fas fa-heart" style="color: #F76AC0"></i></button> -->
                 <span hidden id="user_id"><?php echo $_SESSION['EATY']['id'] ?></span>
                 <span hidden id="lesson_id"><?php echo $lesson_id  ?></span>
-                <button type="button" id="like" class="btn btn-secondary"><i class="fas fa-star"></i></button>
-                <button type="button" id="unlike" class="btn btn-warning"><i class="fas fa-star"></i></button>
+                <?php if ($is_favorite == FALSE): ?>
+                  <button type="button" id="like" class="btn btn-secondary"><i class="fas fa-star"></i></button>
+                <?php else: ?>
+                  <button type="button" id="unlike" class="btn btn-warning"><i class="fas fa-star"></i></button>
+                <?php endif ?>
               <?php endif ?>
             </div>
 
