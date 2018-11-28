@@ -1,4 +1,7 @@
 <?php 
+      //作成時のチェックPHP
+
+
        //SESSIONの有効化
     session_start();
 
@@ -6,26 +9,23 @@
     require('dbconnect.php');
     require('functions.php');
 
+    //パーミッション
+    $lesson_id = $_GET['lesson_id'];
+    $user_type = '';
     //$_SESSIONの中にeatyが定義されてなければsing
     if (!isset($_SESSION['EATY'])) {
       header('Location: create_lesson.php');
       }
-    // // ユーザー情報を取得
-    // $sql='SELECT * FROM `users` WHERE `id`=?';
-    // $stmt = $dbh->prepare($sql);
-    // $data = array($_SESSION['EATY']['id']);
-    // $stmt->execute($data);
 
-    // $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+   
 
-
-    // // pロフィール情報をを取得
-    // $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
-    // $profile_t_stmt = $dbh->prepare($profile_t_sql);
-    // $profile_t_sql_data = [$signin_user['id']];
-    // $profile_t_stmt->execute($profile_t_sql_data);
-    // $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
-
+      // カテゴリー情報を取得
+      $categories_sql='SELECT * FROM `categories`';
+      $categories_stmt = $dbh->prepare($categories_sql);
+      $categories_sql_data = [];
+      $categories_stmt->execute($categories_sql_data);
+      
+    
 
 
     v($_POST,'$_POST');
@@ -65,7 +65,7 @@
 
           $stmt->execute($data);
 
-          unset($_SESSION['EATY']);//一度空に
+          // unset($_SESSION['EATY']);//一度空に
           header('Location: bkg_t.php');
           exit();
         }
