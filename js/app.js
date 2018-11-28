@@ -44,8 +44,7 @@ $(function(){
       })
       .done(function(data){
           if (data == 'true') {
-              like_btn.removeClass('like');
-              like_btn.addClass('unlike');
+              like_btn.attr('id', 'unlike');
               like_btn.removeClass('btn-secondary');
               like_btn.addClass('btn-warning');
           }
@@ -74,8 +73,7 @@ $(function(){
       })
       .done(function(data){
           if (data == 'true') {
-              like_btn.removeClass('unlike');
-              like_btn.addClass('like');
+              like_btn.attr('id', 'like');
               like_btn.removeClass('btn-warning');
               like_btn.addClass('btn-secondary');
           }
