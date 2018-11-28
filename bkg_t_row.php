@@ -25,14 +25,14 @@
       </div>
 
       <div class="col-md-2 text-center">
-        <form action="create_check_t.php" method="POST">
-          <input type="hidden" name="day" value="<?=$lessons_each['day'];?>" >
-          <input type="hidden" name="daytime" value="<?=$lessons_each['daytime'];?>" >
-          <a href="#"><button type="hidden" class="btn btn-primary">レッスン詳細</button></a>
-          <!-- 詳細はcreate_checkへ -->
-        </form>
-        <a href="create_lesson.php"><button type="button" class="btn btn-primary">レッスン編集</button></a>
+          <!-- 詳細はbkg_check_t.phpへ -->
+          <form action="bkg_edit_t.php" method="GET">
+
+          <a href="bkg_check_t.php"><button type="" class="btn btn-primary">レッスン詳細</button></a>
+
         <!-- 編集はcreate_lessonへ -->
+          <input type="button" class="btn btn-primary" value="レッスン編集" onclick="history.back()">
+          </form>
       </div>
 
     </div>
