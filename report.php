@@ -1,3 +1,42 @@
+<?php 
+
+    session_start();
+    require('dbconnect.php');
+    require('functions.php');
+    $sql = 'SELECT * FROM `profiles_s` WHERE `user_id`=?';
+    $data = array($_SESSION['EATY']['id']);
+
+    var_dump($_SESSION['EATY']['id']);
+
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    v($signin_user,'signin_user');
+
+    $sql = 'SELECT * FROM `reports` WHERE `user_id`=? ORDER BY `created` DESC LIMIT 5 OFFSET 0';
+    $data = array($signin_user['id']);
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+
+    $reports = [];
+
+      while (true) {
+      $report = $stmt->fetch(PDO::FETCH_ASSOC);
+      if ($report==false) {
+        break;
+      }
+      $reports[]=$report;
+    }
+    v($reports,'reports');
+
+
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -28,19 +67,48 @@
 <body>
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/eatylogo.png" width="100"></a>
+      <a href="#"><img src="img/logo.jpg" width="90"></a>
     </div>
   </header>
 
   <div class="wrapper">
     <div class="top-content text-center">
-      <img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;">
-      <p>○○さんのつくれぽ</p>
+       <img src="user_profile_img/<?php echo $signin_user['img_name']; ?>" style="width:120px;height:120px;border-radius: 50%;">
+       <p><?php echo $signin_user['nickname']; ?>さんのつくれぽ</p>
     </div>
 
-    <div class="row">
+    <div class="row text-center" style="border: 4px solid #2C373B;border-radius: 240px 15px 185px 15px / 15px 200px 15px 185px;margin: 2em 0;padding: 2em;">
+      <?php if (empty($reports)): ?>
+        <div class="col-md-12 text-center">まだつくれぽ投稿がありません。</div>
+        <?php else: ?>
+
+      <?php foreach($reports as $report_each):?>
 
       <div class="col-md-3 text-center">
+        <span><?php echo date('Y/m/d', strtotime($report_each['created'])); ?></span>
+        <div class="blog-inner" style="border:solid 1px; ">
+          <img class="img-responsive" src="user_report_img/<?php echo $report_each['img_name']; ?>" alt="Blog" style="margin: 5px">
+          <p style="text-align: left; padding: 3px 3px"><?php echo $report_each['feed']; ?></p>
+          <div class="desc">
+
+            <form method="POST" action="">
+              <div class="row">
+                <div class="col" style="padding: 0px">
+                  <a onclick="return confirm('削除してよろしいですか？')" href="delete_report.php?report_each=<?php echo $report_each['id']; ?>"class="btn btn-warning" style="font-size: 13px">投稿削除</a>
+                <!-- </div>
+                <div class="col"> -->
+                  <a href="edit_report.php?report_each=<?php echo $report_each['id']; ?>" class="btn btn-success" style="font-size: 13px">投稿内容編集</a>
+
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+
+<!--       <div class="col-md-3 text-center">
         <span>2018/12/31</span>
         <div class="blog-inner">
           <img class="img-responsive" src="http://placehold.jp/250x150.png" alt="Blog">
@@ -123,27 +191,8 @@
           </div>
         </div>
       </div>
-
-      <div class="col-md-3 text-center">
-        <span>2018/12/31</span>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/250x150.png" alt="Blog">
-          <div class="desc">
-
-            <form method="POST" action="">
-              <div class="row">
-                <div class="col">
-                  <a href="#"><button type="button" class="btn btn-danger">投稿削除</button></a>
-                </div>
-                <div class="col">
-                  <a href="#"><button type="button" class="btn btn-primary">投稿内容編集</button></a>
-                </div>
-              </div>
-            </form>
-
-          </div>
-        </div>
-      </div>
+ -->    
+      <?php endif; ?>
     </div>
 
   </div>
