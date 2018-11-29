@@ -86,7 +86,7 @@
     <div class="blog-inner-prof text-center">
         <div>
           <h4 class="title_1"><?php echo $lesson['lesson_name']; ?></h4>
-          <p class="title_1">日時: <?php echo date('Y/m/d', strtotime($lesson['day'])); ?><br><?php echo $lesson['daytime']; ?>～</p>
+          <p class="title_1">日時: <?php echo date('Y/m/d', strtotime($lesson['day'])); ?><br><?php echo date('G:i',strtotime($lesson['daytime'])); ?>～</p>
           <p class="title_1">料金: ¥<?php echo $lesson['fee']; ?>/一人</p>
           <p class="title_1">注意事項: <?php echo $lesson['precaution']; ?></p>
         </div>
