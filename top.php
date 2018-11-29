@@ -1,3 +1,27 @@
+<?php
+    session_start();
+    require('dbconnect.php');
+    require('functions.php');
+
+    $lessons = [];
+
+    // レッスン情報を取得
+    $lesson_sql='SELECT * FROM `lessons_t` ORDER BY `created` DESC LIMIT 0,3';
+    $lesson_stmt = $dbh->prepare($lesson_sql);
+    $lesson_data = [];
+    $lesson_stmt->execute($lesson_data);
+
+
+    while(1){
+      $lesson = $lesson_stmt->fetch(PDO::FETCH_ASSOC);
+      if ($lesson == FALSE) {
+          break;
+      }
+      $lessons[] = $lesson;
+    }
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -26,14 +50,11 @@
 <body>
 
   <!-- ヘッダー -->
-  <header>
-    <button type="button" class="btn btn-light my-btn">TOP</button>
-    <div class="sns">
-      <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>
-      <a href="" class="btn-twitter sns-btn"><i class="fab fa-twitter fa-2x"></i></a>
-      <a href="" class="btn-instagram sns-btn"><i class="fab fa-instagram fa-2x"></i></a>
+<!--   <header>
+    <div class="text-center">
+      <a href="#"><img src="img/eatylogo.png" width="100"></a>
     </div>
-  </header>
+  </header> -->
 
   <!-- TOP上部・３つのボタン・コンセプト -->
   <div class="top wrapper">
@@ -41,19 +62,19 @@
     <div class="container-flued" style="background-image: url(img/top2.jpg); height: 800px; background-size:cover;">
       <img class="mx-auto d-block"src="img/logo2.png" width="300">
 
-      <a href="signup.php"><button type="button" class="mx-auto d-block btn btn-outline-dark my-btn-signup">新規登録</button></a>
+      <a href="signup.php"><button type="button" class="mx-auto d-block btn btn-default my-btn-signup">新規登録</button></a>
     
 
     <!-- 3つのボタン -->
     <div class="row top-content">
       <div class="col text-center area aboutus">
-        <a href="#aboutus"><button type="button" class="btn btn-outline-dark">about us</button></a>
+        <a href="#aboutus"><button type="button" class="btn btn-default">about us</button></a>
       </div>
       <div class="col text-center area signin">
-        <a href="signin.php"><button type="button" class="btn btn-outline-dark">ログイン</button></a>
+        <a href="signin.php"><button type="button" class="btn  btn-default">ログイン</button></a>
       </div>
       <div class="col text-center area serch">
-      <button type="button" class="btn btn-outline-dark">レッスン検索</button>
+      <button type="button" class="btn btn-default">レッスン検索</button>
       </div>
     </div>
     </div>
@@ -61,7 +82,12 @@
     <div class="concept" id="aboutus">
       <div class="text-center title">about us</div>
       <div class="container">
-        <div class="text-center"><img src="img/concept.png" width="1000"></div>
+        <div class="text-center">
+          <a class="circle">教えたいexchef</a>
+          <a class="maltiply">×</a>
+          <a class="circle">習いたいYOU</a>
+          <div class="text-center description">Our web service is “ex chef” for connecting those who would like to work with professional skill of cooking and baking with those who would like to learn how to cook and bake.“ex chef”とは、料理とベーキングの専門的なスキルを身につけたい人と、料理とベーキングの方法を学びたい人とをつなぐためのサービスです。</div>
+        </div>
       </div>
     </div>
 
@@ -72,60 +98,28 @@
   <div class="middle wrapper">
     <div class="text-center title">レッスン紹介</div>
     <div class="row middle-content">
+      <?php foreach ($lessons as $lesson): ?>
+        
       <div class="col-md-4 text-center">
         <div class="row">
           <div class="col-md-6">
-            <span>2018/12/31</span>
+            <span><?php echo date('m月d日', strtotime($lesson['day'])) ?></span>
           </div>
           <div class="col-md-6">
-            <span>東京都品川区</span>
+            <span><?php echo $lesson['station'] ?></span>
           </div>
         </div>
         <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
+          <img class="img-responsive" src="users_lesson_img/<?php echo $lesson['img_1'] ?>" alt="Blog" width="100%" style="height: 250px;">
           <div class="desc">
-            <h3><a href="#">レッスン名</a></h3>
-            <p>¥5000/1人</p>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
+            <h3><a href="lesson.php?lesson_id=<?php echo $lesson['id']?>"><?php echo $lesson['lesson_name'] ?></a></h3>
+            <p>¥<?php echo $lesson['fee'] ?>/1人</p>
+            <p><a href="lesson.php?lesson_id=<?php echo $lesson['id']?>" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
           </div>
         </div>
       </div>
-      <div class="col-md-4 text-center">
-        <div class="row">
-          <div class="col-md-6">
-            <span>2018/12/31</span>
-          </div>
-          <div class="col-md-6">
-            <span>東京都品川区</span>
-          </div>
-        </div>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-          <div class="desc">
-            <h3><a href="#">レッスン名</a></h3>
-            <p>¥5000/1人</p>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 text-center">
-        <div class="row">
-          <div class="col-md-6">
-            <span>2018/12/31</span>
-          </div>
-          <div class="col-md-6">
-            <span>東京都品川区</span>
-          </div>
-        </div>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-          <div class="desc">
-            <h3><a href="#">レッスン名</a></h3>
-            <p>¥5000/1人</p>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
-          </div>
-        </div>
-      </div>
+      <?php endforeach ?>
+
     </div>
     <div class="text-center"><button type="button" class="btn btn-secondary">more</button></div>
   </div>
@@ -212,6 +206,12 @@
   </div>
 
   <footer>
+    <div class="sns text-center">
+      <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>
+      <a href="" class="btn-twitter sns-btn"><i class="fab fa-twitter fa-2x"></i></a>
+      <a href="" class="btn-instagram sns-btn"><i class="fab fa-instagram fa-2x"></i></a>
+      <p>©ex chef</p>
+    </div>
   </footer>
 
 </body>

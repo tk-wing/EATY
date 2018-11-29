@@ -139,16 +139,16 @@
 
       <!-- Text input-->
       <div class="form-group">
-        <input name="first_name" type="text" placeholder="姓" class="form-control" style="width:200px; display: inline-block;" value="<?=$first_name ?>">
-        <?php if(isset($validations['first_name'])): ?>
+        <input name="last_name" type="text" placeholder="姓" class="form-control" style="width:200px; display: inline-block;" value="<?=$last_name ?>">
+        <?php if(isset($validations['last_name'])): ?>
           <span style="color:red;"><?=$first_name_msg ?></span>
         <?php endif; ?>
       </div>
 
       <!-- Text input-->
       <div class="form-group">
-        <input name="last_name" type="text" placeholder="名" class="form-control" style="width:200px; display: inline-block;" value="<?=$last_name ?>" >
-        <?php if(isset($validations['last_name'])): ?>
+        <input name="first_name" type="text" placeholder="名" class="form-control" style="width:200px; display: inline-block;" value="<?=$first_name ?>" >
+        <?php if(isset($validations['first_name'])): ?>
           <span style="color:red;"><?=$last_name_msg ?></span>
         <?php endif; ?>
       </div>

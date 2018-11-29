@@ -39,7 +39,8 @@
     if (!empty($_POST)) {
       $sql = 'INSERT INTO `reports` SET `user_id`=?, `img_name`=?, `feed`=?,
       `created`=NOW(), `updated`=NOW()';
-      $data = array($signin_user['id'],$report_img_name,$feed,);
+
+      $data = array($signin_user['user_id'],$report_img_name,$feed,);
       $stmt = $dbh->prepare($sql);
       $stmt->execute($data);
     }

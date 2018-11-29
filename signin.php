@@ -38,6 +38,7 @@
 
                 if ($verify==true && $user_type == $user['user_type']) {
                     $_SESSION['EATY']['id'] = $user['id'];
+                    $_SESSION['EATY']['user_type'] = $user['user_type'];
 
                     //講師と生徒のリンク先の条件分岐
                     if ($user_type == 1) {

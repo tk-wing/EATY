@@ -1,6 +1,5 @@
-<?php 
-      //作成時のチェックPHP
-
+<?php
+      //bkgページで
 
        //SESSIONの有効化
     session_start();
@@ -12,6 +11,7 @@
     //パーミッション
     $lesson_id = $_GET['lesson_id'];
     $user_type = '';
+    
     //$_SESSIONの中にeatyが定義されてなければsing
     if (!isset($_SESSION['EATY'])) {
       header('Location: create_lesson.php');

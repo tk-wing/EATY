@@ -1,3 +1,75 @@
+<?php
+    session_start();
+
+    require('dbconnect.php');
+    require('functions.php');
+
+    v($_SESSION,'$_SESSION');
+
+    v($_POST,'$_POST');
+    // ユーザー情報を取得
+    $sql='SELECT * FROM `users` WHERE `id`=?';
+    $stmt = $dbh->prepare($sql);
+    $data = array($_SESSION['EATY']['id']);
+    $stmt->execute($data);
+
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // pロフィール情報をを取得
+    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
+    $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_stmt->execute($profile_t_sql_data);
+    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+    
+    // if($signin_user == FALSE){
+    //     header('Location: signup.php');
+    //     exit();
+    // }
+    if (empty($_SESSION['id'])) {
+
+
+        $lessons_sql ='SELECT * FROM `lessons_t` WHERE `user_id`=?';
+        // $lessons_sql ='SELECT * FROM `lessons_t` WHERE `day`=?,`daytime`=?,`lesson_name`=?,`station`=?,`basic`=?,`capacity`=?';
+        $lessons_data =[$signin_user['id']];
+        $lessons_stmt = $dbh->prepare($lessons_sql);
+        $lessons_stmt->execute($lessons_data);
+
+    }
+
+
+        $lessons = []; 
+        while (true) {
+          $lesson = $lessons_stmt->fetch(PDO::FETCH_ASSOC);//データ一個分
+
+          if ($lesson == false) {
+            //所得データは全て所得できているので、繰り返しを中断する
+            break;
+          }
+         $lessons[]= $lesson;
+
+        }
+
+
+      // $sql = 'SELECT * FROM `reservtions` WHERE `status` = ?';
+      // $data = array($status);
+      // $stmt = $dbh->prepare($sql);
+      // $stmt->execute($data);
+      // $status = $stmt->fetch(PDO::FETCH_ASSOC);
+      // if ($status == '1') {
+      //     $status_msg = '受付中';
+      // }else{
+      //     $status_msg = '満席';
+      // }
+  
+
+
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -34,7 +106,7 @@
 
   <div class="wrapper">
     <div class="top-content text-center">
-      <img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;">
+      <img src="user_profile_img/<?php echo $img_name ?>" style="width:120px;height:120px;border-radius: 50%;">
     </div>
 
     <div class="blog-inner-prof">
@@ -61,11 +133,11 @@
 
         </div>
     </div>
-
+<!--     
     <div class="blog-inner-prof">
         <div class="row">
           <div class="col-md-2 text-center">
-            <p>12/24</p>
+            <p><?php echo $lesson_data['day']; ?></p>
             <p>13:00~</p>
           </div>
 
@@ -91,7 +163,12 @@
           </div>
 
         </div>
-    </div>
+    </div> -->
+    <?php foreach ($lessons as $lessons_each) {
+      include("bkg_t_row.php");
+
+    } ?>
+
   </div>
 
 
