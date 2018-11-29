@@ -55,9 +55,8 @@
 
         $record = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        v($record,'$record');
-
         $_SESSION['EATY']['id'] = $record['id'];
+        $_SESSION['EATY']['user_type'] = $record['user_type'];
 
         // v($session, '$session');
 
@@ -105,7 +104,7 @@
 
     <div class="check">
       <h3 class="text-success"><?=$type ?></h3>
-      <p class="check_content"><?=$first_name . ' ' . $last_name ?></p>
+      <p class="check_content"><?=$last_name . ' ' . $first_name ?></p>
       <p class="check_content"><?=$email ?></p>
       <p class="check_content">●●●●●●●●</p>
     </div>
@@ -146,8 +145,8 @@
                       <p>ご登録ありがとうございました！</p>
                   </div>
                   <div class="modal-footer" style="display: inline-block;">
-                      <a href="card.html"><button type="button" class="btn btn-primary">マイページへ</button></a>
-                      <a href="card.html"><button type="button" class="btn btn-primary">レッスン検索</button></a>
+                      <a href="top_s.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                      <a href="serch_s.php"><button type="button" class="btn btn-primary">レッスン検索</button></a>
                   </div>
               </div>
           </div>

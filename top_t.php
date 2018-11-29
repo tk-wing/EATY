@@ -1,67 +1,101 @@
 <?php
-
-
     //SESSIONの有効化
     session_start();
+    require('dbconnect.php');
+    require('functions.php');
 
-    //SESSIONデータの受け取り
-    $user_id = $_SESSION['EATY']['id'];
-
-    //データベースとの接続
-    $dsn = 'mysql:dbname=eaty;host=localhost';
-    $user = 'root';
-    $password = '';
-    $dbh = new PDO($dsn, $user, $password);
-    $dbh->query('SET NAMES utf8');
-
-    //データベースのデータの読み込み
-    $sql = 'SELECT * FROM `profiles_t` INNER JOIN `users` ON `users`.`id` = `profiles_t`.`id` WHERE `users`.`id` = ?';
-    $data = array($user_id);
+    // ユーザー情報を取得
+    $sql='SELECT * FROM `users` WHERE `id`=?';
     $stmt = $dbh->prepare($sql);
+    $data = array($_SESSION['EATY']['id']);
     $stmt->execute($data);
-    $profile_t = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // pロフィール情報をを取得
+    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
+    $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_stmt->execute($profile_t_sql_data);
+    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+    if($profile_t == FALSE){
+        header('Location: edit_prof_t.php');
+        exit();
+    }
+
+    // レッスン情報をを取得
+    $lessons_t_sql='SELECT * FROM `lessons_t` WHERE `user_id`=? LIMIT 0,3';
+    $lessons_t_stmt = $dbh->prepare($lessons_t_sql);
+    $lessons_t_sql_data = [$signin_user['id']];
+    $lessons_t_stmt->execute($lessons_t_sql_data);
+
+    while (1) {
+        $lesson_t = $lessons_t_stmt->fetch(PDO::FETCH_ASSOC);
+        if ($lesson_t == FALSE) {
+            break;
+        }
+        $lessons_t[] = $lesson_t;
+    }
+
+    // 都道府県情報を取得
+    $area_sql = 'SELECT * FROM `areas` WHERE `id` = ?';
+    $area_data = array($profile_t['area_id']);
+    $area_stmt = $dbh->prepare($area_sql);
+    $area_stmt->execute($area_data);
+    $area = $area_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // カテゴリー情報を取得
+    $categories_sql='SELECT * FROM `categories`';
+    $categories_stmt = $dbh->prepare($categories_sql);
+    $categories_sql_data = [];
+    $categories_stmt->execute($categories_sql_data);
+
+    // ユーザーカテゴリー情報を取得
+    $user_categories_sql='SELECT * FROM `user_categories` WHERE `user_id`=?';
+    $user_categories_stmt = $dbh->prepare($user_categories_sql);
+    $user_categories_sql_data = [$signin_user['id']];
+    $user_categories_stmt->execute($user_categories_sql_data);
+
+    while (1) {
+        $user_categories = $user_categories_stmt->fetch(PDO::FETCH_ASSOC);
+        if ($user_categories == FALSE) {
+            break;
+        }
+        $user_categories_id[] = $user_categories['category_id'];
+    }
+
+    while (1) {
+        $categories = $categories_stmt->fetch(PDO::FETCH_ASSOC);
+        // v($categories, '$categories');
+        if ($categories == FALSE) {
+            break;
+        }
+        foreach ($user_categories_id as $user_category_id) {
+            if ($user_category_id == $categories['id']) {
+                $user_categories[] = $categories['category_name'];
+            }
+        }
+    }
+
+    // 登録必須項目(名前・ニックネーム以外)
+    $city = $profile_t['city'];
+    $station = $profile_t['station'];
+    $past = $profile_t['past'];
+
+    // $category_id = $profile_t['category'];
+    $area = $area['name'];
 
     //ニックネームが登録されていない場合
     if (empty($profile_t['nickname'])) {
-      $nickname = $profile_t['first_name'] . '　' . $profile_t['last_name'];
+        $name = $signin_user['last_name'] . '　' . $signin_user['first_name'];
     } else {
-      $nickname = $profile_t['nickname'];
+        $name = $profile_t['nickname'];
     }
 
-   //画像が登録されていない場合
-    if (empty($profile_t['img_name'])) {
-      $validation[''] = "未設定";
-    }
-
-   //エリアが登録されていない場合
-    if (empty($profile_t['area_id'])) {
-      ;
-    }
-
-   //市町村が登録されていない場合
-    if (empty($profile_t['city'])) {
-      ;
-    }
-
-   //駅が登録されていない場合
-    if (empty($profile_t['station'])) {
-      ;
-    }
-
-   //経歴/資格が登録されていない場合
-    if (empty($profile_t['past'])) {
-      ;
-    }
-
-   //カテゴリーが登録されていない場合
-    if (empty($profile_t['category_id'])) {
-      ;
-    }
-
-   //自己紹介＆コメントが登録されていない場合
-    if (empty($profile_t['profile'])) {
-      ;
-    }
+    // 以下登録任意項目
+    $img_name = $profile_t['img_name'];
+    $profile = $profile_t['profile'];
 
 ?>
 
@@ -106,104 +140,72 @@
       <div class="blog-inner-prof">
           <div class="row">
             <div class="col-md-3 text-center">
-              <img class="img-responsive" src="http://placehold.jp/140x140.png" alt="Blog" style="width:140px;height:140px;border-radius: 50%;">
-              <p><?=$nickname ?></p>
-              <p>東京都渋谷区 最寄り駅</p>
+              <?php if($img_name==''): ?>
+                <img class="img-responsive" src="img/profile_img_defult.png" alt="Blog" style="width:140px;height:140px;border-radius: 50%;">
+              <?php else: ?>
+                <img class="img-responsive" src="user_profile_img/<?php echo $img_name ?>" alt="Blog" style="width:140px;height:140px;border-radius: 50%;">
+              <?php endif; ?>
+              <p><?=$name ?></p>
+              <p><?php echo $area.$city ?><br>
+              <?php echo $station ?></p>
               <button type="button" class="btn btn-secondary"><i class="far fa-envelope"></i></button>
               <button type="button" class="btn btn-secondary"><i class="far fa-heart"></i></button>
             </div>
             <div class="col-md-9">
               <div>
-                ＜ジャンル＞
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                </p>
-              </div>
+                ＜ジャンル＞<br>
+                <?php for($i=0; $i<count($user_categories); $i++): ?>
+                  <span><?php echo $user_categories[$i]; ?></span><span>&emsp;</span>
+                <?php endfor ?>
+                <span><?php echo $profile_t['category_other'] ?></span>
+              </div><br>
               <div>
                 ＜経歴・資格＞
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                </p>
+                <p><?php echo $past ?></p>
               </div>
               <div>
                 ＜自己紹介＆メッセージ＞
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                </p>
+                <p><?php echo $profile ?></p>
               </div>
             </div>
           </div>
       </div>
       <div class="text-center">
-      <a href="#"><button type="button" class="btn btn-secondary">プロフィール編集</button></a>
+      <a href="edit_prof_t.php"><button type="button" class="btn btn-secondary">プロフィール編集</button></a>
       </div>
     </div>
   </div>
 
   <!-- レッスン一覧 -->
   <div class="middle wrapper">
-    <div class="text-center title">レッスン紹介</div>
+    <div class="text-center title">直近のレッスン</div>
     <div class="row middle-content">
-      <div class="col-md-4 text-center">
-          <div class="row">
-            <div class="col-md-6">
-              <span>2018/12/31</span>
+
+      <?php foreach ($lessons_t as $lesson_t): ?>
+        <div class="col-md-4 text-center">
+            <div class="row">
+              <div class="col-md-6">
+                <span><?php echo date('m月d日',  strtotime($lesson_t['day'])) ?></span>
+              </div>
+              <div class="col-md-6">
+                <span>最寄り駅：<?php echo $lesson_t['station'] ?></span>
+              </div>
             </div>
-            <div class="col-md-6">
-              <span>東京都品川区</span>
+          <div class="blog-inner">
+            <img class="img-responsive" src="users_lesson_img/<?php echo $lesson_t['img_1'] ?>" alt="Blog" width="100%" style="height: 250px;">
+            <div class="desc">
+              <h3><a href="lesson.php?lesson_id=<?php echo $lesson_t['id']?>"><?php echo $lesson_t['lesson_name'] ?></a></h3>
+              <span>料金:¥<?php echo $lesson_t['fee'] ?>/1人</span>
+              <span>残り１席</span>
+              <p><a href="lesson.php?lesson_id=<?php echo $lesson_t['id']?>" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
             </div>
           </div>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-          <div class="desc">
-            <h3><a href="#">レッスン名</a></h3>
-            <span>¥5000/1人</span>
-            <span>残り１席</span>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
-          </div>
         </div>
-      </div>
-      <div class="col-md-4 text-center">
-        <div class="row">
-          <div class="col-md-6">
-            <span>2018/12/31</span>
-          </div>
-          <div class="col-md-6">
-            <span>東京都品川区</span>
-          </div>
-        </div>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-          <div class="desc">
-            <h3><a href="#">レッスン名</a></h3>
-            <span>¥5000/1人</span>
-            <span>残り１席</span>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 text-center">
-        <div class="row">
-          <div class="col-md-6">
-            <span>2018/12/31</span>
-          </div>
-          <div class="col-md-6">
-            <span>東京都品川区</span>
-          </div>
-        </div>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/350x200.png" alt="Blog">
-          <div class="desc">
-            <h3><a href="#">レッスン名</a></h3>
-            <span>¥5000/1人</span>
-            <span>残り１席</span>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
-          </div>
-        </div>
-      </div>
+      <?php endforeach ?>
+
     </div>
     <div class="text-center">
-      <a href="#"><button type="button" class="btn btn-secondary">レッスン追加</button></a>
+      <a href="create_lesson.php"><button type="button" class="btn btn-secondary">レッスン追加</button></a>
       <a href="bkg_t.php"><button type="button" class="btn btn-secondary">レッスン管理一覧</button></a>
     </div>
 

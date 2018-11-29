@@ -5,9 +5,12 @@
     //データベースとの接続
     require('dbconnect.php');
     require('functions.php');
+    //パーミッション
+    $lesson_id = $_GET['lesson_id'];
+    $user_type = '';
 
     $validations = [];
-
+    
     v($_FILES,'$_FILES');
 
     v($_POST,'$_POST');
@@ -27,20 +30,11 @@
     $profile_t_stmt->execute($profile_t_sql_data);
     $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
 
-    // if($profile_t == FALSE){
-    //     header('Location: edit_prof_t.php');
-    //     exit();
-    // }
-
     // カテゴリー情報を取得
     $categories_sql='SELECT * FROM `categories`';
     $categories_stmt = $dbh->prepare($categories_sql);
     $categories_sql_data = [];
     $categories_stmt->execute($categories_sql_data);
-
-    
-
-
 
   //バリデーションの設定と変数定義
 if (!empty($_POST)) {
@@ -49,7 +43,7 @@ if (!empty($_POST)) {
     $station = $_POST['station'];
     $fee = $_POST['fee'];
     $requiretime = $_POST['requiretime'];
-    $category_id = $_POST['category_id'];
+    $category_id = $_POST['category_id[]'];
     $menu = $_POST['menu'];
     $capacity = $_POST['capacity'];
     $basic = $_POST['basic'];
@@ -75,7 +69,7 @@ if (!empty($_POST)) {
         $validations['requiretime'] = 'blank';
     }
      if ($category_id == '') {
-        $validations['category_id'] = 'blank';
+        $validations['category_id[]'] = 'blank';
     }
      if ($menu == '') {
         $validations['menu'] = 'blank';
@@ -140,12 +134,7 @@ if (!empty($_POST)) {
             $destination = 'users_lesson_img/'.$file_name4;
             move_uploaded_file($tmp_file, $destination);
         }
-
-        // if ($_FILES['img_name']['name'] != '') {
-        //     $file_name = date('YmdHis') .$_FILES['img_name']['name'];
-        //     $tmp_file = $_FILES['img_name']['tmp_name'];
-        //     $destination = 'user_profile_img/'.$file_name;
-        //     move_uploaded_file($tmp_file, $destination);
+        
         if (empty($validations)) {
          //格項目
          $_SESSION['EATY']['user_id']  =  $signin_user;
@@ -460,21 +449,22 @@ if (!empty($_POST)) {
                 <div class="form-group">
                   <div class="col-md-9">
                   <!-- <input id="name" name="category_id" type="text" placeholder="" class="form-control input-md"> -->
-                  <select id="category" name="category_id" class="form-control">
-                    <option value="">選択してください。</option>
-                    <?php while(1): ?>
-                      <?php  $categories = $categories_stmt->fetch(PDO::FETCH_ASSOC); ?>
-                      <?php if ($categories == false): ?>
-                        <?php break; ?>
-                        <?php else: ?>
-                        <option value="<?php echo $categories['id'];?>"><?php echo $categories['category_name'] ?></option>
-                      <?php endif ?>
-                    <?php endwhile; ?>
-                  </select>
+                       <select id="category" name="category_id['id']" class="form-control">
+                         <option value="">選択してください。</option>
+                         <?php while(1): ?>
+                           <?php  $category_id = $categories_stmt->fetch(PDO::FETCH_ASSOC); ?>
+                           <?php if ($category_id == false): ?>
+                             <?php break; ?>
+                             <?php else: ?>
+                             <option value="<?php echo $category_id['id'];?>"><?php echo $category_id['category_name'] ?></option>
+                           <?php endif ?>
+                         <?php endwhile; ?>
+                       </select>
 
-                  <?php if(isset($validations['category_id'])&& $validations['category_id']=='blank'): ?>
-                  <span class="error_msg">カテゴリーを指定してください</span>
-                  <?php endif; ?>
+                       <?php if(isset($validations['category_id'])&& $validations['category_id']=='blank'): ?>
+                       <span class="error_msg">カテゴリーを指定してください</span>
+                       <?php endif; ?>
+
                   </div>
                 </div>
               </div>
