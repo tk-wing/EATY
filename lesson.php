@@ -26,11 +26,13 @@
     $stmt->execute($data);
     $teacher = $stmt->fetch(PDO::FETCH_ASSOC);
 
+
     if ($teacher['nickname'] == '') {
-        $name = $teacher['last_name'] + '　' + $teacher['first_name'];
+        $name = $teacher['last_name'].'　'.$teacher['first_name'];
     }else{
         $name = $teacher['nickname'];
     }
+
 
     if($user_type == '2'){
     // 生徒がレッスンを予約済みかを確認する。
@@ -178,10 +180,10 @@
               <?php endif ?>
               <?php if ($user_type == '2'): ?>
                 <?php if ($reservation == FALSE): ?>
-                  <a href="#"><button type="button" class="btn btn-primary">予約する</button></a><br>
+                  <a href="bkg.php?lesson_id=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">予約する</button></a><br>
                   <?php elseif ($reservation['status'] == '2'): ?>
                     <p style="color: red">キャンセル済みのレッスンです！</p>
-                    <a href="#"><button type="button" class="btn btn-primary">再予約する</button></a><br>
+                    <a href="bkg.php?lesson_id=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">再予約する</button></a><br>
                 <?php else: ?>
                   <p style="color: red">予約済みのレッスンです！</p>
                 <?php endif ?>
