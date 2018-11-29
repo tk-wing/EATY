@@ -1,4 +1,4 @@
-<?ph<?php
+<?php
     session_start();
 
     require('dbconnect.php');
@@ -42,44 +42,49 @@
 
     $validations=[];
 
-    
+    $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
+    $lessons_data =[];
 
     //検索ボタンを押した時
-    if (isset($_GET['day'])) {
-        //同じ値の情報をDBから持ってくる。
-        //１つでも値に入ってたら検索する。
-        $lessons_sql='SELECT * FROM `lessons_t` WHERE `day`=?';
-        $day=$_GET['day'];
-        // $category_id=$_GET['category_id'];
-        //$areas=$_GET['area'];//テーブルに都道府県がない為引っ張って来れない
-        //$keyword = $_GET['keyword'];
-        // $search_word = "%".$_GET['keyword']."%";
+    if () {
+      # code...
+    }
+    // if (!isset($_GET['day']||$_GET['are']||$_GET['category_id']||$_GET['keyword'])) {
+    //     //同じ値の情報をDBから持ってくる。
+    //     //１つでも値に入ってたら検索する。
+    //     $lessons_sql='SELECT * FROM `lessons_t` WHERE `day`=? OR `area`=? OR `category_id`=?';
+    //     $day=$_GET['day'];
 
-        $lessons_data = [$day];
+    //     // $category_id=$_GET['category_id'];
+    //     // // $areas=$_GET['area'];//テーブルに都道府県がない為引っ張って来れない
+    //     // $keyword = $_GET['keyword'];
+    //     // $search_word = "%".$_GET['keyword']."%";
+
+    //     $lessons_data = [$day];
 
 
 
-        }else{
-        //検査結果を表示。（同じ値だったものすべて）
-            // $lessons_sql ='SELECT * FROM `lessons_t` WHERE 1';
-            $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
-            $lessons_data =[];
-        } 
+          // }
+        // }else{
+        // //検査結果を表示。（同じ値だったものすべて）
+        //     // $lessons_sql ='SELECT * FROM `lessons_t` WHERE 1';
+        //     $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
+        //     $lessons_data =[];
+        // } 
 
         $lessons_stmt = $dbh->prepare($lessons_sql);
         $lessons_stmt->execute($lessons_data);
-        $lessons = [];
+        $lessons_t = [];
 
-        while (true) {
-          $lesson = $lessons_stmt->fetch(PDO::FETCH_ASSOC);//データ一個分
-
-          if ($lesson == false) {
-            //所得データは全て所得できているので、繰り返しを中断する
-            break;
-          }
-         $lessons[]= $lesson;
-
+        while (1) {
+            $lesson_t = $lessons_stmt->fetch(PDO::FETCH_ASSOC);
+            if ($lesson_t == FALSE) {
+                break;
+            }
+            $lessons_t[] = $lesson_t;
         }
+
+
 
 
 
@@ -194,12 +199,31 @@
     </form>
 
   <!-- レッスン検査結果表示 POST送信した時に表示 -->
+     <div class="row middle-content">
+      <!-- レッスン検査結果表示 -->
+      <?php foreach ($lessons_t as $lesson_t): ?>
+        <div class="col-md-4 text-center">
+            <div class="row">
+              <div class="col-md-6">
+                <span><?php echo date('m月d日',  strtotime($lesson_t['day'])) ?></span>
+              </div>
+              <div class="col-md-6">
+                <span>最寄り駅：<?php echo $lesson_t['station'] ?></span>
+              </div>
+            </div>
+          <div class="blog-inner">
+            <img class="img-responsive" src="users_lesson_img/<?php echo $lesson_t['img_1'] ?>" alt="Blog" width="100%" style="height: 250px;">
+            <div class="desc">
+              <h3><a href="lesson.php?lesson_id=<?php echo $lesson_t['id']?>"><?php echo $lesson_t['lesson_name'] ?></a></h3>
+              <span>料金:¥<?php echo $lesson_t['fee'] ?>/1人</span>
+              <span>残り１席</span>
+              <p><a href="lesson.php?lesson_id=<?php echo $lesson_t['id']?>" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
+            </div>
+          </div>
+        </div>
+      <?php endforeach ?>
 
-  <?php foreach ($lessons as $lessons_each) {
-    include("serch_s_row.php");
-
-  } ?>
-
+    </div>
   <footer>
     <div class="sns text-center">
       <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>
