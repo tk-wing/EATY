@@ -16,7 +16,9 @@
     v($signin_user,'signin_user');
 
     $sql = 'SELECT * FROM `reports` WHERE `user_id`=? ORDER BY `created` DESC LIMIT 5 OFFSET 0';
+
     $data = array($signin_user['user_id']);
+
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
 
