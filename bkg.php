@@ -2,8 +2,9 @@
     session_start();
     require('dbconnect.php');
     require('functions.php');
-    $lesson_id = $_GET['lesson_id'];
-    $user_type = '';
+    // $lesson_id = $_GET['lesson_id'];
+    // $user_type = '';
+    
     // $sql = 'SELECT * FROM `profiles_s` WHERE `user_id`=?';
     // $data = array($_SESSION['EATY']['id']);
 
@@ -22,7 +23,7 @@
     $stmt->execute($data);
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $sql = 'SELECT * FROM `lessons_t` WHERE `id`=?';
+    $sql = 'SELECT * FROM `lessons_t` WHERE `id`="10"';
     $data = array($_SESSION['EATY']['id']);
 
     var_dump($_SESSION['EATY']['id']);
