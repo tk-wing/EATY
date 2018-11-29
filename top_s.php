@@ -45,6 +45,8 @@
     $lessons_s_sql_data = [$signin_user['id']];
     $lessons_s_stmt->execute($lessons_s_sql_data);
 
+    $lessons_s = [];
+
     while (1) {
         $lesson_s = $lessons_s_stmt->fetch(PDO::FETCH_ASSOC);
         if ($lesson_s == FALSE) {
@@ -194,36 +196,40 @@
 
       <div class="blog-inner-prof">
           <div class="row">
-            <?php foreach ($lessons_s as $lesson): ?>
-            <div class="col-md-2 text-center">
-              <p><?php echo date('m月d日',  strtotime($lesson['day'])) ?></p>
-              <p><?php echo date('H時i分', strtotime($lesson['daytime'])) ?>~</p>
-            </div>
+            <?php if (empty($lessons_s)): ?>
+              <p>レッスンの予約はございません。</p>
+            <?php else: ?>
+              <?php foreach ($lessons_s as $lesson): ?>
+              <div class="col-md-2 text-center">
+                <p><?php echo date('m月d日',  strtotime($lesson['day'])) ?></p>
+                <p><?php echo date('H時i分', strtotime($lesson['daytime'])) ?>~</p>
+              </div>
 
-            <div class="col-md-2 text-center">
-              <p><?php echo $lesson['lesson_name'] ?></p>
-            </div>
+              <div class="col-md-2 text-center">
+                <p><?php echo $lesson['lesson_name'] ?></p>
+              </div>
 
-            <div class="col-md-2 text-center">
-              <span>最寄り駅</span><br>
-              <span><?php echo $lesson['station'] ?></span>
-            </div>
+              <div class="col-md-2 text-center">
+                <span>最寄り駅</span><br>
+                <span><?php echo $lesson['station'] ?></span>
+              </div>
 
-            <div class="col-md-2 text-center">
-              <?php if ($lesson['status']=='1'): ?>
-                <p style="color: blue">予約済み</p>
-              <?php elseif($lesson['status']=='2'): ?>
-                <p style="color: red;">キャンセル</p>
-              <?php endif ?>
-            </div>
+              <div class="col-md-2 text-center">
+                <?php if ($lesson['status']=='1'): ?>
+                  <p style="color: blue">予約済み</p>
+                <?php elseif($lesson['status']=='2'): ?>
+                  <p style="color: red;">キャンセル</p>
+                <?php endif ?>
+              </div>
 
-            <div class="col-md-4 text-center">
-              <a href="lesson.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-primary">レッスン詳細</button></a>
-              <?php if ($lesson['status']=='1'): ?>
-                <a onclick="return confirm('本当にキャンセルしますか？')" href="cancel_lesson_s.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-danger" style="width: 125px">キャンセル</button></a>
-              <?php endif ?>
-            </div>
-            <?php endforeach ?>
+              <div class="col-md-4 text-center">
+                <a href="lesson.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-primary">レッスン詳細</button></a>
+                <?php if ($lesson['status']=='1'): ?>
+                  <a onclick="return confirm('本当にキャンセルしますか？')" href="cancel_lesson_s.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-danger" style="width: 125px">キャンセル</button></a>
+                <?php endif ?>
+              </div>
+              <?php endforeach ?>
+            <?php endif ?>
           </div>
       </div>
 
