@@ -26,12 +26,14 @@
 
       <div class="col-md-2 text-center">
           <!-- 詳細はbkg_check_t.phpへ -->
+
+          <form action="bkg_check_t.php" method="GET">
+          <a href="bkg_check_t.php"><button type="" class="btn btn-primary">レッスン詳細</button></a>
+          </form>
           <form action="bkg_edit_t.php" method="GET">
 
-          <a href="bkg_check_t.php"><button type="" class="btn btn-primary">レッスン詳細</button></a>
-
         <!-- 編集はcreate_lessonへ -->
-          <input type="button" class="btn btn-primary" value="レッスン編集" onclick="history.back()">
+          <input type="button" src class="btn btn-primary" value="レッスン編集" onclick="history.back()">
           </form>
       </div>
 

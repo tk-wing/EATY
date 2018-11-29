@@ -22,10 +22,11 @@
     $profile_t_stmt->execute($profile_t_sql_data);
     $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
 
-    if($signin_user == FALSE){
-        header('Location: signup.php');
-        exit();
-    }
+    
+    // if($signin_user == FALSE){
+    //     header('Location: signup.php');
+    //     exit();
+    // }
     if (empty($_SESSION['id'])) {
 
 
@@ -105,7 +106,7 @@
 
   <div class="wrapper">
     <div class="top-content text-center">
-      <img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;">
+      <img src="user_profile_img/<?php echo $img_name ?>" style="width:120px;height:120px;border-radius: 50%;">
     </div>
 
     <div class="blog-inner-prof">
