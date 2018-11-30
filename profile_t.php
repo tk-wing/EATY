@@ -4,32 +4,22 @@
     require('dbconnect.php');
     require('functions.php');
 
-    // ユーザー情報を取得
-    $sql='SELECT * FROM `users` WHERE `id`=?';
-    $stmt = $dbh->prepare($sql);
-    $data = array($_SESSION['EATY']['id']);
-    $stmt->execute($data);
+    $teacher_id = $_GET['teacher_id'];
 
-    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // pロフィール情報をを取得
-    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
+    // プロフィール情報をを取得
+    $profile_t_sql='SELECT `profiles_t`.*, `users`.`first_name`, `users`.`last_name` FROM `profiles_t` INNER JOIN `users` ON `profiles_t`.`user_id` = `users`.`id` WHERE `profiles_t`.`user_id`=?';
     $profile_t_stmt = $dbh->prepare($profile_t_sql);
-    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_sql_data = [$teacher_id];
     $profile_t_stmt->execute($profile_t_sql_data);
     $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
 
-    if($profile_t == FALSE){
-        header('Location: edit_prof_t.php');
-        exit();
-    }
 
     $lessons_t = [];
 
     // レッスン情報をを取得
     $lessons_t_sql='SELECT * FROM `lessons_t` WHERE `user_id`=? LIMIT 0,3';
     $lessons_t_stmt = $dbh->prepare($lessons_t_sql);
-    $lessons_t_sql_data = [$signin_user['id']];
+    $lessons_t_sql_data = [$teacher_id];
     $lessons_t_stmt->execute($lessons_t_sql_data);
 
     while (1) {
@@ -51,9 +41,9 @@
             $lesson_t['count'] = $lesson_t['capacity'] -$number_reservation['number_reservation'];
         }
 
-
         $lessons_t[] = $lesson_t;
     }
+
 
 
     // 都道府県情報を取得
@@ -72,7 +62,7 @@
     // ユーザーカテゴリー情報を取得
     $user_categories_sql='SELECT * FROM `user_categories` WHERE `user_id`=?';
     $user_categories_stmt = $dbh->prepare($user_categories_sql);
-    $user_categories_sql_data = [$signin_user['id']];
+    $user_categories_sql_data = [$teacher_id];
     $user_categories_stmt->execute($user_categories_sql_data);
 
     while (1) {
@@ -106,7 +96,7 @@
 
     //ニックネームが登録されていない場合
     if (empty($profile_t['nickname'])) {
-        $name = $signin_user['last_name'] . '　' . $signin_user['first_name'];
+        $name = $profile_t['last_name'] . '　' . $profile_t['first_name'];
     } else {
         $name = $profile_t['nickname'];
     }
@@ -188,9 +178,6 @@
             </div>
           </div>
       </div>
-      <div class="text-center">
-      <a href="edit_prof_t.php"><button type="button" class="btn btn-secondary">プロフィール編集</button></a>
-      </div>
     </div>
   </div>
 
@@ -230,10 +217,7 @@
       <?php endif ?>
 
     </div>
-    <div class="text-center">
-      <a href="create_lesson.php"><button type="button" class="btn btn-secondary">レッスン追加</button></a>
-      <a href="bkg_t.php"><button type="button" class="btn btn-secondary">レッスン管理一覧</button></a>
-    </div>
+
 
   </div>
 
@@ -319,7 +303,8 @@
                     <p>メニュー</p>
                 </div>
                 <div class="modal-footer text-center" style="display: inline-block;">
-                    <a href="top_t.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                    <a href="top_s.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                    <a href="serch_s.php"><button type="button" class="btn btn-primary">レッスン検索</button></a>
                     <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
                 </div>
             </div>

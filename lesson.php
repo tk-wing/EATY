@@ -43,9 +43,9 @@
 
 
     if ($number_reservation['number_reservation'] == $lesson['capacity']) {
-        $bkg = 'impossible';
+        $lesson['status'] = '満席';
     }else{
-        $bkg = 'possible';
+        $lesson['count'] = $lesson['capacity'] - $number_reservation['number_reservation'];
     }
 
 
@@ -108,9 +108,9 @@
       <div class="lesson_content text-center">
         <div class="blog-inner-prof text-center">
           <h3><?php echo $lesson['lesson_name'] ?></h3>
-          <?php if ($bkg == 'possible'): ?>
-            <p style="color: blue;">予約可</p>
-          <?php elseif ($bkg == 'impossible'): ?>
+          <?php if (isset($lesson['count'])): ?>
+            <p style="color: blue;">予約可(残り<?php echo $lesson['count'] ?>席)</p>
+          <?php else: ?>
             <p style="color: red;">予約不可(このレッスンは満席です。)</p>
           <?php endif ?>
 
@@ -231,7 +231,7 @@
         <img class="img-responsive rounded-circle" src="user_profile_img/<?php echo $teacher['img_name'] ?>" alt="Blog" style="width:140px;height:140px;">
       <?php endif ?>
       <p>講師名：<?php echo $name ?></p>
-      <a href="#"><button type="button" class="btn btn-primary">この講師のページへ行く</button></a><br>
+      <a href="profile_t.php?teacher_id=<?php echo $teacher['user_id'] ?>"><button type="button" class="btn btn-primary">この講師のページへ行く</button></a><br>
     </div>
   </div>
 
