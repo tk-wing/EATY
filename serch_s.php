@@ -4,8 +4,8 @@
     require('dbconnect.php');
     require('functions.php');
 
-    v($_SESSION,'$_SESSION');
-    v($_GET,'$_GET');
+    // v($_SESSION,'$_SESSION');
+    // v($_GET,'$_GET');
        // ユーザー情報を取得
     $sql='SELECT * FROM `users` WHERE `id`=?';
     $stmt = $dbh->prepare($sql);
@@ -33,56 +33,72 @@
     $categories_stmt = $dbh->prepare($categories_sql);
     $categories_sql_data = [];
     $categories_stmt->execute($categories_sql_data);
-    
+
     // 都道府県情報の取得
     $areas_sql='SELECT * FROM `areas`';
     $areas_stmt = $dbh->prepare($areas_sql);
     $areas_sql_data = [];
     $areas_stmt->execute($areas_sql_data);
 
-    $validations=[];
+    $validations = [];
+    $serch = [];
 
-    $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
-    $lessons_data =[];
 
-    //検索ボタンを押した時
-    if () {
-      # code...
+    // 検索ボタンが押されたら
+    if (!empty($_GET)){
+
+      $lessons_sql = "SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name` AS `profile_img` FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`";
+
+      $day = $_GET['day'];
+      $area = $_GET['area'];
+      $category_id = $_GET['category_id'];
+      $keyword = $_GET['keyword'];
+
+      $lessons_data = [];
+
+
+      if(!empty($day)){
+              $lessons_sql .= ' AND `lessons_t`.`day`=?';
+              $lessons_data[] = $day;
+          }
+
+      if(!empty($area)){
+              $lessons_sql .= ' AND `profiles_t`.`area_id`=?';
+              $lessons_data[] = $area;
+          }
+
+      if(!empty($category_id)){
+              $lessons_sql .= ' AND `lessons_t`.`category_id`=?';
+              $lessons_data[] = $category_id;
+          }
+
+      if(!empty($keyword)){
+              $lessons_sql .= ' AND CONCAT(`lessons_t`.`station`, `lessons_t`.`fee`, `lessons_t`.`lesson_name`, `lessons_t`.`menudetail`) LIKE ?';
+              $lessons_data[] = '%'.$keyword.'%';
+          }
+
+      $lessons_sql .= ' ORDER BY `lessons_t`.`day`';
+
+
+    }else{
+        $lessons_sql = 'SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name` AS `profile_img` FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id` ORDER BY `lessons_t`.`day`';
+        $lessons_data = [];
     }
-    // if (!isset($_GET['day']||$_GET['are']||$_GET['category_id']||$_GET['keyword'])) {
-    //     //同じ値の情報をDBから持ってくる。
-    //     //１つでも値に入ってたら検索する。
-    //     $lessons_sql='SELECT * FROM `lessons_t` WHERE `day`=? OR `area`=? OR `category_id`=?';
-    //     $day=$_GET['day'];
-
-    //     // $category_id=$_GET['category_id'];
-    //     // // $areas=$_GET['area'];//テーブルに都道府県がない為引っ張って来れない
-    //     // $keyword = $_GET['keyword'];
-    //     // $search_word = "%".$_GET['keyword']."%";
-
-    //     $lessons_data = [$day];
 
 
+    $lessons_stmt = $dbh->prepare($lessons_sql);
+    $lessons_stmt->execute($lessons_data);
 
-          // }
-        // }else{
-        // //検査結果を表示。（同じ値だったものすべて）
-        //     // $lessons_sql ='SELECT * FROM `lessons_t` WHERE 1';
-        //     $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
-        //     $lessons_data =[];
-        // } 
+    $lessons_t = [];
 
-        $lessons_stmt = $dbh->prepare($lessons_sql);
-        $lessons_stmt->execute($lessons_data);
-        $lessons_t = [];
 
-        while (1) {
-            $lesson_t = $lessons_stmt->fetch(PDO::FETCH_ASSOC);
-            if ($lesson_t == FALSE) {
-                break;
-            }
-            $lessons_t[] = $lesson_t;
+    while (1) {
+        $lesson_t = $lessons_stmt->fetch(PDO::FETCH_ASSOC);
+        if ($lesson_t == FALSE) {
+            break;
         }
+        $lessons_t[] = $lesson_t;
+    }
 
 
 
@@ -174,7 +190,7 @@
                       <p>カテゴリー</p>
                     </li>
                     <li class="">
-                      <select id="category" name="category_id[]" class="form-control">
+                      <select id="category" name="category_id" class="form-control">
                         <option value="">選択してください。</option>
                         <?php while(1): ?>
                           <?php  $category_id = $categories_stmt->fetch(PDO::FETCH_ASSOC); ?>

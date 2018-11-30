@@ -4,7 +4,7 @@
     require('dbconnect.php');
     require('functions.php');
 
-    v($_SESSION,'$_SESSION');
+    // v($_SESSION,'$_SESSION');
 
        // ユーザー情報を取得
     $sql='SELECT * FROM `users` WHERE `id`=?';
