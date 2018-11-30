@@ -199,6 +199,7 @@
 
   </div>
 
+
   <div id="report_modal">
     <div class="report_modal">
       <div class="blog-inner">
@@ -214,6 +215,7 @@
       </div>
     </div>
   </div>
+
 
   <footer>
     <div class="sns text-center">
