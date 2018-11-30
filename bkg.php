@@ -77,7 +77,7 @@
 <body>
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/eatylogo.png" width="100"></a>
+      <a href="#"><img src="img/logo.jpg" width="90"></a>
     </div>
   </header>
 
@@ -105,7 +105,7 @@
           </div>
         </div>
 
-        <form method="POST" action="">
+        <form method="POST" action="top_s.php">
           <div class="form-group title_1">
               <p><?php echo $name; ?>さん(講師)へのメッセージ</p>
               <textarea class="form-control col-md-8" name="attention" style="height: 100px; display: inline-block;"></textarea>
@@ -118,7 +118,7 @@
             </select>
           </div>
 
-          <input type="submit" class="btn btn-primary mt-5" value="完了">
+          <a href="top_s.php?"><input type="submit" class="btn btn-primary mt-5" value="完了"></a>
         </form>
 
         <div class="mt-5">
