@@ -133,7 +133,7 @@
 <body>
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/eatylogo.png" width="100"></a>
+      <a data-toggle="modal" data-target="#demoNormalModal"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
 
@@ -291,6 +291,21 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- メニュー -->
+    <div class="modal fade" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <p>メニュー</p>
+                </div>
+                <div class="modal-footer text-center" style="display: inline-block;">
+                    <a href="top_t.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                    <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
+                </div>
+            </div>
+        </div>
     </div>
 
   </div>
