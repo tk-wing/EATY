@@ -197,7 +197,7 @@
       <div class="blog-inner-prof">
           <div class="row">
             <?php if (empty($lessons_s)): ?>
-              <p>レッスンの予約はございません。</p>
+              <div class="col-md-12 text-center">レッスンの予約はございません。</div>
             <?php else: ?>
               <?php foreach ($lessons_s as $lesson): ?>
               <div class="col-md-2 text-center">

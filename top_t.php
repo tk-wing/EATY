@@ -24,6 +24,8 @@
         exit();
     }
 
+    $lessons_t = [];
+
     // レッスン情報をを取得
     $lessons_t_sql='SELECT * FROM `lessons_t` WHERE `user_id`=? LIMIT 0,3';
     $lessons_t_stmt = $dbh->prepare($lessons_t_sql);
@@ -37,6 +39,8 @@
         }
         $lessons_t[] = $lesson_t;
     }
+
+
 
     // 都道府県情報を取得
     $area_sql = 'SELECT * FROM `areas` WHERE `id` = ?';
@@ -181,27 +185,31 @@
     <div class="text-center title">直近のレッスン</div>
     <div class="row middle-content">
 
-      <?php foreach ($lessons_t as $lesson_t): ?>
-        <div class="col-md-4 text-center">
-            <div class="row">
-              <div class="col-md-6">
-                <span><?php echo date('m月d日',  strtotime($lesson_t['day'])) ?></span>
-              </div>
-              <div class="col-md-6">
-                <span>最寄り駅：<?php echo $lesson_t['station'] ?></span>
+      <?php if (empty($lessons_t)): ?>
+        <div class="col-md-12 mb-5 text-center">レッスンの登録がありません。</div>
+        <?php else: ?>
+          <?php foreach ($lessons_t as $lesson_t): ?>
+            <div class="col-md-4 text-center">
+                <div class="row">
+                  <div class="col-md-6">
+                    <span><?php echo date('m月d日',  strtotime($lesson_t['day'])) ?></span>
+                  </div>
+                  <div class="col-md-6">
+                    <span>最寄り駅：<?php echo $lesson_t['station'] ?></span>
+                  </div>
+                </div>
+              <div class="blog-inner">
+                <img class="img-responsive" src="users_lesson_img/<?php echo $lesson_t['img_1'] ?>" alt="Blog" width="100%" style="height: 250px;">
+                <div class="desc">
+                  <h3><a href="lesson.php?lesson_id=<?php echo $lesson_t['id']?>"><?php echo $lesson_t['lesson_name'] ?></a></h3>
+                  <span>料金:¥<?php echo $lesson_t['fee'] ?>/1人</span>
+                  <span>残り１席</span>
+                  <p><a href="lesson.php?lesson_id=<?php echo $lesson_t['id']?>" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
+                </div>
               </div>
             </div>
-          <div class="blog-inner">
-            <img class="img-responsive" src="users_lesson_img/<?php echo $lesson_t['img_1'] ?>" alt="Blog" width="100%" style="height: 250px;">
-            <div class="desc">
-              <h3><a href="lesson.php?lesson_id=<?php echo $lesson_t['id']?>"><?php echo $lesson_t['lesson_name'] ?></a></h3>
-              <span>料金:¥<?php echo $lesson_t['fee'] ?>/1人</span>
-              <span>残り１席</span>
-              <p><a href="lesson.php?lesson_id=<?php echo $lesson_t['id']?>" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
-            </div>
-          </div>
-        </div>
-      <?php endforeach ?>
+          <?php endforeach ?>
+      <?php endif ?>
 
     </div>
     <div class="text-center">
