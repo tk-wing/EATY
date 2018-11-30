@@ -105,7 +105,7 @@
           </div>
         </div>
 
-        <form method="POST" action="profiles_s.php">
+        <form method="POST" action="top_s.php">
           <div class="form-group title_1">
               <p><?php echo $name; ?>さん(講師)へのメッセージ</p>
               <textarea class="form-control col-md-8" name="attention" style="height: 100px; display: inline-block;"></textarea>
@@ -118,7 +118,7 @@
             </select>
           </div>
 
-          <a href="profiles_s.php?"><input type="submit" class="btn btn-primary mt-5" value="完了"></a>
+          <a href="top_s.php?"><input type="submit" class="btn btn-primary mt-5" value="完了"></a>
         </form>
 
         <div class="mt-5">
