@@ -37,7 +37,7 @@
     }
 
     // お気に入りレッスン情報をを取得
-    $favorite_sql='SELECT `l`.*, `f`.* FROM `lessons_t` AS `l` INNER JOIN `like_lessons` AS `f` ON `l`.`id` = `f`.`lesson_id` WHERE `f`.`user_id`=? ORDER BY `l`.`day` DESC';
+    $favorite_sql='SELECT `l`.*, `f`.`id` AS `favorite_id` FROM `lessons_t` AS `l` INNER JOIN `like_lessons` AS `f` ON `l`.`id` = `f`.`lesson_id` WHERE `f`.`user_id`=? ORDER BY `l`.`day` DESC';
     $favorite_stmt = $dbh->prepare($favorite_sql);
     $favorite_sql_data = [$signin_user['id']];
     $favorite_stmt->execute($favorite_sql_data);
@@ -51,8 +51,6 @@
         }
         $favorites[] = $favorite;
     }
-
-
 
 
 
@@ -92,7 +90,7 @@
 
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/logo.jpg" width="90"></a>
+      <a href='#' data-toggle="modal" data-target="#demoNormalModal"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
 
@@ -121,10 +119,10 @@
                   <form method="POST" action="">
                     <div class="row">
                       <div class="col" style="padding: 0px">
-                        <a href="#"><button type="button" class="btn btn-warning" style="font-size: 13px">お気に入りから削除</button></a>
+                        <a href="delete_favorite.php?favorite_id=<?php echo $favorite['favorite_id'] ?>"><button type="button" class="btn btn-warning" style="font-size: 13px">お気に入りから削除</button></a>
                       </div>
                       <div class="col">
-                        <a href="lesson.php?lesson_id=<?php echo $favorite['lesson_id'] ?>"><button type="button" class="btn btn-primary" style="font-size: 13px">レッスン詳細ページへ</button></a>
+                        <a href="lesson.php?lesson_id=<?php echo $favorite['id'] ?>"><button type="button" class="btn btn-primary" style="font-size: 13px">レッスン詳細ページへ</button></a>
                       </div>
                     </div>
                   </form>
@@ -138,23 +136,24 @@
 
     </div>
 
+  <!-- メニュー -->
+  <div class="modal fade" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-body text-center">
+                  <p>メニュー</p>
+              </div>
+              <div class="modal-footer text-center" style="display: inline-block;">
+                  <a href="top_s.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                  <a href="serch_s.php"><button type="button" class="btn btn-primary">レッスン検索</button></a>
+                  <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
+              </div>
+          </div>
+      </div>
   </div>
 
-  <div id="report_modal">
-    <div class="report_modal">
-      <div class="blog-inner">
-        <div class="close-modal">
-          <i class="fa fa-2x fa-times"></i>
-        </div>
-        <span>2018/12/31</span><br>
-        <img class="img-responsive" src="http://placehold.jp/250x150.png" alt="Blog">
-        <div class="desc">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-        </div>
-      </div>
-    </div>
   </div>
+
 
   <footer>
     <div class="sns text-center">
@@ -164,5 +163,11 @@
       <p>©ex chef</p>
     </div>
   </footer>
+
+  <!-- jQuery、Popper.js、Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <!-- <script src="assets/js/app.js"></script> -->
 
 </body>
