@@ -42,40 +42,52 @@
 
     $validations=[];
 
-    $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
-    $lessons_data =[];
 
     //検索ボタンを押した時
-    if () {
-      # code...
+    if (!empty($_GET['day'])|| !empty($_GET['area_id'])|| !empty($_GET['category_id'])|| !empty($_GET['keyword'])) {
+        $day = $_GET['day'];
+        $area = $_GET['area_id'];
+        $category_id = $_GET['category_id'];
+        $keyword = $_GET['keyword'];
+
+        $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`,`profiles_t`.`area_id`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
+
+        //１つでも値に入ってたら検索する。
+  
+        if (!empty($day)) {
+            $lessons_data[] = $day;
+            $lessons_sql.= 'AND `day`= ?';//AND絶対当てはまるようにしてる
+        }
+        if (!empty($area)) {
+            $lessons_data[] = $area;
+            $lessons_sql.= 'AND `area_id`= ?';
+        }
+        if (!empty($category_id)) {
+            $lessons_data[] = $category_id;
+            $lessons_sql.= 'AND `category_id`= ?';
+        }
+        if (!empty($keyword)) {
+        // $lessons_sql.= 'AND `lesson_name`= ?';
+        $lessons_sql.='AND`lessons_t`.`lesson_name` LIKE ?';//
+        $search_word = "%".$_GET['keyword']."%";
+
+        $lessons_data[] = $search_word;
+
+
+
+        }
+    }else{
+        //検査結果を表示。（同じ値だったものすべて）
+            $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
+            $lessons_data =[];
+
     }
-    // if (!isset($_GET['day']||$_GET['are']||$_GET['category_id']||$_GET['keyword'])) {
-    //     //同じ値の情報をDBから持ってくる。
-    //     //１つでも値に入ってたら検索する。
-    //     $lessons_sql='SELECT * FROM `lessons_t` WHERE `day`=? OR `area`=? OR `category_id`=?';
-    //     $day=$_GET['day'];
+            $lessons_stmt = $dbh->prepare($lessons_sql);
+            $lessons_stmt->execute($lessons_data);
 
-    //     // $category_id=$_GET['category_id'];
-    //     // // $areas=$_GET['area'];//テーブルに都道府県がない為引っ張って来れない
-    //     // $keyword = $_GET['keyword'];
-    //     // $search_word = "%".$_GET['keyword']."%";
-
-    //     $lessons_data = [$day];
-
-
-
-          // }
-        // }else{
-        // //検査結果を表示。（同じ値だったものすべて）
-        //     // $lessons_sql ='SELECT * FROM `lessons_t` WHERE 1';
-        //     $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
-        //     $lessons_data =[];
-        // } 
-
-        $lessons_stmt = $dbh->prepare($lessons_sql);
-        $lessons_stmt->execute($lessons_data);
+        // $lessons_stmt = $dbh->prepare($lessons_sql);
+        // $lessons_stmt->execute($lessons_data);
         $lessons_t = [];
-
         while (1) {
             $lesson_t = $lessons_stmt->fetch(PDO::FETCH_ASSOC);
             if ($lesson_t == FALSE) {
@@ -155,7 +167,7 @@
                     <p>開催場所</p>
                   </li>
                     <li>
-                      <select id="area" name="area" class="form-control">
+                      <select id="area" name="area_id" class="form-control">
                                   <option value="">選択してください。</option>
                                   <?php while(1): ?>
                                     <?php  $areas = $areas_stmt->fetch(PDO::FETCH_ASSOC); ?>
@@ -174,7 +186,7 @@
                       <p>カテゴリー</p>
                     </li>
                     <li class="">
-                      <select id="category" name="category_id[]" class="form-control">
+                      <select id="category" name="category_id" class="form-control">
                         <option value="">選択してください。</option>
                         <?php while(1): ?>
                           <?php  $category_id = $categories_stmt->fetch(PDO::FETCH_ASSOC); ?>
