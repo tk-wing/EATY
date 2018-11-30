@@ -37,9 +37,23 @@
         if ($lesson_t == FALSE) {
             break;
         }
+
+        // 予約数を確認する
+        $number_reservation_sql='SELECT count(*) AS `number_reservation` FROM `reservations` WHERE `lesson_id`=? AND `status`=?';
+        $number_reservation_stmt = $dbh->prepare($number_reservation_sql);
+        $number_reservation_sql_data = [$lesson_t['id'], '1'];
+        $number_reservation_stmt->execute($number_reservation_sql_data);
+        $number_reservation = $number_reservation_stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($number_reservation['number_reservation'] == $lesson_t['capacity']) {
+            $lesson_t['status'] = '満席';
+        }else{
+            $lesson_t['count'] = $lesson_t['capacity'] -$number_reservation['number_reservation'];
+        }
+
+
         $lessons_t[] = $lesson_t;
     }
-
 
 
     // 都道府県情報を取得
@@ -203,7 +217,11 @@
                 <div class="desc">
                   <h3><a href="lesson.php?lesson_id=<?php echo $lesson_t['id']?>"><?php echo $lesson_t['lesson_name'] ?></a></h3>
                   <span>料金:¥<?php echo $lesson_t['fee'] ?>/1人</span>
-                  <span>残り１席</span>
+                  <?php if (isset($lesson_t['count'])): ?>
+                    <span>残り<?php echo $lesson_t['count'] ?>席</span>
+                  <?php else: ?>
+                    <span style="color: red;"><?php echo $lesson_t['status'] ?></span>
+                  <?php endif ?>
                   <p><a href="lesson.php?lesson_id=<?php echo $lesson_t['id']?>" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
                 </div>
               </div>
