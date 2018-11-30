@@ -156,7 +156,7 @@ if (!empty($_POST)) {
          $_SESSION['EATY']['station']  = $station;
          $_SESSION['EATY']['fee']  = $fee;
          $_SESSION['EATY']['requiretime']  = $requiretime;
-         $_SESSION['EATY']['category_id']  = $capacity;
+         $_SESSION['EATY']['category_id']  = $category_id;
          $_SESSION['EATY']['menu']  = $menu;
          $_SESSION['EATY']['capacity']  = $capacity;
          $_SESSION['EATY']['basic']  = $basic;
