@@ -356,7 +356,7 @@ if (!empty($_POST)) {
               <div class="col text-left">
                 <label class="filelabel_create">
                 <img id="img4" src="https://placehold.jp/130x100.png" style="width:130px;height:100px;">
-                <input type="file" class="filesend" id="filesend_4" name="img_4" accept="image/*">
+                <input type="file" class="filesend" id="filesend_4" name="img_4" accept="image/*" value="<?php if( !empty($_FILES['img_4']) ){ echo $_FILES['img_4']; } ?>">
                 </label>
               </div>
             </div>
@@ -375,7 +375,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="day" type="date" placeholder="" class="form-control input-md">
+                  <input id="name" name="day" type="date" placeholder="" class="form-control input-md" value="<?php if( !empty($_POST['day']) ){ echo $_POST['day']; } ?>">
                   <?php if(isset($validations['day'])&& $validations['day']=='blank'): ?>
                   <span class="error_msg">開催日を指定してください</span>
                   <?php endif; ?>
@@ -391,7 +391,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="daytime" type="time" placeholder="" class="form-control input-md">
+                  <input id="name" name="daytime" type="time" placeholder="" class="form-control input-md" value="<?php if( !empty($_POST['daytime']) ){ echo $_POST['daytime']; } ?>">
                   <?php if(isset($validations['daytime'])&& $validations['daytime']=='blank'): ?>
                   <span class="error_msg">開催時間を指定してください</span>
                   <?php endif; ?>
@@ -407,7 +407,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="station" type="text" placeholder="" class="form-control input-md">
+                  <input id="name" name="station" type="text" placeholder="" class="form-control input-md" value="<?php if( !empty($_POST['station']) ){ echo $_POST['station']; } ?>">
                   <?php if(isset($validations['station'])&& $validations['station']=='blank'): ?>
                   <span class="error_msg">最寄駅を指定してください</span>
                   <?php endif; ?>
@@ -418,12 +418,12 @@ if (!empty($_POST)) {
 
             <div class="row">
               <div class="col-md-3">
-                <span style="line-height: 40px;">料金</span>
+                <span style="line-height: 40px;">料金/円</span>
               </div>
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="fee" type="text" placeholder="" class="form-control input-md">
+                  <input id="name" name="fee" type="number" placeholder="" class="form-control input-md" value="<?php if( !empty($_POST['fee']) ){ echo $_POST['fee']; } ?>">
                   <?php if(isset($validations['fee'])&& $validations['fee']=='blank'): ?>
                   <span class="error_msg">料金を指定してください</span>
                   <?php endif; ?>
@@ -439,7 +439,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="requiretime" type="time" placeholder="" class="form-control input-md">
+                  <input id="name" name="requiretime" type="time" placeholder="" class="form-control input-md" value="<?php if( !empty($_POST['requiretime']) ){ echo $_POST['requiretime']; } ?>">
                   <?php if(isset($validations['requiretime'])&& $validations['requiretime']=='blank'): ?>
                   <span class="error_msg">所要時間を指定してください</span>
                   <?php endif; ?>
@@ -487,7 +487,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="menu" type="text" placeholder="" class="form-control input-md">
+                  <input id="name" name="menu" type="number" placeholder="" class="form-control input-md" value="<?php if( !empty($_POST['menu']) ){ echo $_POST['menu']; } ?>">
                   <?php if(isset($validations['menu'])&& $validations['menu']=='blank'): ?>
                   <span class="error_msg">メニュー数を指定してください</span>
                   <?php endif; ?>
@@ -498,12 +498,12 @@ if (!empty($_POST)) {
 
             <div class="row">
               <div class="col-md-3">
-                <span style="line-height: 40px;">定員</span>
+                <span style="line-height: 40px;">定員/人</span>
               </div>
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="capacity" type="text" placeholder="" class="form-control input-md">
+                  <input id="name" name="capacity" type="number" placeholder="" class="form-control input-md" value="<?php if( !empty($_POST['capacity']) ){ echo $_POST['capacity']; } ?>">
                   <?php if(isset($validations['capacity'])&& $validations['capacity']=='blank'): ?>
                   <span class="error_msg">定員を指定してください</span>
                   <?php endif; ?>
@@ -519,7 +519,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="basic" type="text" placeholder="" class="form-control input-md">
+                  <input id="name" name="basic" type="number" placeholder="" class="form-control input-md" value="<?php if( !empty($_POST['basic']) ){ echo $_POST['basic']; } ?>">
                   <?php if(isset($validations['basic'])&& $validations['basic']=='blank'): ?>
                   <span class="error_msg">最小遂行人数を指定してください</span>
                   <?php endif; ?>
@@ -535,7 +535,7 @@ if (!empty($_POST)) {
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="lesson_name" placeholder="レッスン名" style="height: 100px;"></textarea>
+                <textarea class="form-control" name="lesson_name" placeholder="レッスン名" style="height: 100px;"><?php if( !empty($_POST['lesson_name']) ){ echo $_POST['lesson_name']; } ?></textarea>
                 <?php if(isset($validations['lesson_name'])&& $validations['lesson_name']=='blank'): ?>
                   <span class="error_msg">レッスン名を入力してください</span>
                 <?php endif; ?>
@@ -546,7 +546,7 @@ if (!empty($_POST)) {
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="menudetail" placeholder="メニュー概要" style="height: 100px;"></textarea>
+                <textarea class="form-control" name="menudetail" placeholder="メニュー概要" style="height: 100px;"><?php if( !empty($_POST['menudetail']) ){ echo $_POST['menudetail']; } ?></textarea>
                 <?php if(isset($validations['menudetail'])&& $validations['menudetail']=='blank'): ?>
                   <span class="error_msg">メニュー概要を入力してください</span>
                 <?php endif; ?>
@@ -561,7 +561,7 @@ if (!empty($_POST)) {
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="bring" placeholder="持ち物" style="height: 100px;"></textarea>
+                <textarea class="form-control" name="bring" placeholder="持ち物" style="height: 100px;"><?php if( !empty($_POST['bring']) ){ echo $_POST['bring']; } ?></textarea>
                 <?php if(isset($validations['bring'])&& $validations['bring']=='blank'): ?>
                   <span class="error_msg">持ち物を記入してください</span>
                 <?php endif; ?>
@@ -572,7 +572,7 @@ if (!empty($_POST)) {
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="precaution" placeholder="注意事項" style="height: 100px;"></textarea>
+                <textarea class="form-control" name="precaution" placeholder="注意事項" style="height: 100px;"><?php if( !empty($_POST['precaution']) ){ echo $_POST['precaution']; } ?></textarea>
                 <?php if(isset($validations['precaution'])&& $validations['precaution']=='blank'): ?>
                   <span class="error_msg">注意事項を入力してください</span>
                 <?php endif; ?>
