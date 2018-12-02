@@ -9,9 +9,7 @@
     require('dbconnect.php');
     require('functions.php');
 
-    //パーミッション
-    $lesson_id = $_GET['lesson_id'];
-    $user_type = '';
+
     //$_SESSIONの中にeatyが定義されてなければsing
     if (!isset($_SESSION['EATY'])) {
       header('Location: create_lesson.php');
@@ -24,7 +22,8 @@
       $categories_stmt = $dbh->prepare($categories_sql);
       $categories_sql_data = [];
       $categories_stmt->execute($categories_sql_data);
-      
+      $categories = $categories_stmt->fetch(PDO::FETCH_ASSOC);
+
     
 
 
@@ -118,19 +117,19 @@
 
       <div class="row contents">
           <div class="col-md-4">
-            <span><i class="far fa-calendar-alt fa-2x icon"></i>日時:<?= h($day);?></span>
+            <span><i class="far fa-calendar-alt fa-2x icon"></i>日時:<?php echo date('m月d日',  strtotime($day)) ?></span>
           </div>
           <div class="col-md-4">
             <span><i class="fas fa-train fa-2x icon"></i>最寄り駅:<?= h($station);?></span>
           </div>
           <div class="col-md-4">
-            <span><i class="fas fa-yen-sign fa-2x icon"></i>料金:<?= h($fee);?></span>
+            <span><i class="fas fa-yen-sign fa-2x icon"></i>料金:<?= h($fee);?>円/1人</span>
           </div>
       </div>
 
       <div class="row content_border">
         <div class="col-md-6" style="border-right: 1px solid #ccc;">
-          <span>メニュー数:<?= h($menu);?></span>
+          <span>メニュー数:<?= h($menu);?>品</span>
         </div>
         <div class="col-md-6">
           <span>所要時間:<?= h($requiretime);?></span>
@@ -141,7 +140,7 @@
         <ul>
           <li>メニュー内容</li>
           <li><?= h($menudetail);?></li>
-          <li>カテゴリー:<?= h($category_id);?></li>
+          <li>カテゴリー:<?php echo $categories['category_name'] ?></li>
           
         </ul>
       </div>
@@ -165,15 +164,15 @@
               <p><?= h($precaution);?></p>
             </div>
           </li>
-          <input type="hidden" name="str_1" value="str2"/>
+
           <!-- １回目来た時にPOSTに値が入っていない為 -->
           <input type="hidden" name="user_id" value="user_id">
 
 
             <input type="submit" class="btn btn-primary" value="完了">
-            <a href="javascript:history.back(create_lesson.php)"><button type="button" class="btn btn-secondary" >編集</button></a>
+            <!-- <button type="button" class="btn btn-secondary" >編集</button> -->
 
-
+            <input type=button class="btn btn-secondary" value="編集" onclick="history.back();">
 
     </div>
   </div>
