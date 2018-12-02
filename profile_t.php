@@ -5,6 +5,13 @@
     require('functions.php');
 
     $teacher_id = $_GET['teacher_id'];
+    $user_type = '';
+
+    if (isset($_SESSION['EATY'])) {
+        $user_id = $_SESSION['EATY']['id'];
+        $user_type = $_SESSION['EATY']['user_type'];
+    }
+
 
     // プロフィール情報をを取得
     $profile_t_sql='SELECT `profiles_t`.*, `users`.`first_name`, `users`.`last_name` FROM `profiles_t` INNER JOIN `users` ON `profiles_t`.`user_id` = `users`.`id` WHERE `profiles_t`.`user_id`=?';
@@ -13,6 +20,13 @@
     $profile_t_stmt->execute($profile_t_sql_data);
     $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
 
+    // いいねカウント
+    $like_sql = "SELECT COUNT(*) AS `like_count` FROM likes WHERE `instructor_id`=?";
+    $like_data = [$teacher_id];
+    $like_stmt = $dbh->prepare($like_sql);
+    $like_stmt->execute($like_data);
+    $like_count_data = $like_stmt->fetch(PDO::FETCH_ASSOC);
+    $profile_t['like_count'] = $like_count_data['like_count'];
 
     $lessons_t = [];
 
@@ -105,6 +119,15 @@
     $img_name = $profile_t['img_name'];
     $profile = $profile_t['profile'];
 
+      if($user_type == '2'){
+      // 生徒がいいね済みかを確認
+      $like_flag_sql = "SELECT * FROM `likes` WHERE `instructor_id` = ? AND `student_id` = ?";
+      $like_flag_data = [$teacher_id, $user_id];
+      $like_flag_stmt = $dbh->prepare($like_flag_sql);
+      $like_flag_stmt->execute($like_flag_data);
+      $is_liked = $like_flag_stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -156,8 +179,16 @@
               <p><?=$name ?></p>
               <p><?php echo $area.$city ?><br>
               <?php echo $station ?></p>
-              <button type="button" class="btn btn-secondary"><i class="far fa-envelope"></i></button>
-              <button type="button" class="btn btn-secondary"><i class="far fa-heart"></i></button>
+              <?php if ($user_type == '2'): ?>
+                <span hidden id="user_id"><?php echo $user_id ?></span>
+                <span hidden id="teacher_id"><?php echo $profile_t['user_id'] ?></span>
+                <button type="button" class="btn btn-secondary"><i class="far fa-envelope"></i></button>
+                <?php if ($is_liked == FALSE): ?>
+                  <button id="like" type="button" class="btn btn-secondary"><i class="far fa-heart"></i>&nbsp;<span id='like_count'><?php echo $profile_t['like_count'] ?></span></button>
+                <?php else: ?>
+                  <button id='unlike' type="button" class="btn btn-danger"><i class="far fa-heart"></i>&nbsp;<span id="like_count"><?php echo $profile_t['like_count'] ?></span></button>
+                <?php endif ?>
+              <?php endif ?>
             </div>
             <div class="col-md-9">
               <div>
@@ -187,7 +218,7 @@
     <div class="row middle-content">
 
       <?php if (empty($lessons_t)): ?>
-        <div class="col-md-12 mb-5 text-center">レッスンの登録がありません。</div>
+        <div class="col-md-12 mb-5 text-center">直近のレッスンはありません。</div>
         <?php else: ?>
           <?php foreach ($lessons_t as $lesson_t): ?>
             <div class="col-md-4 text-center">
@@ -325,5 +356,5 @@
       <p>©ex chef</p>
     </div>
   </footer>
-
+  <script src="js/app.js"></script>
 </body>
