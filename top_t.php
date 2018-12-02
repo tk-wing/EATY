@@ -24,6 +24,24 @@
         exit();
     }
 
+    // いいねされているか確認
+    $like_flag_sql = "SELECT * FROM `likes` WHERE `instructor_id` = ?";
+    $like_flag_data = [$signin_user['id']];
+    $like_flag_stmt = $dbh->prepare($like_flag_sql);
+    $like_flag_stmt->execute($like_flag_data);
+    $profile_t['is_liked'] = $like_flag_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // いいねカウント
+    $like_sql = "SELECT COUNT(*) AS `like_count` FROM likes WHERE `instructor_id`=?";
+    $like_data = [$signin_user['id']];
+    $like_stmt = $dbh->prepare($like_sql);
+    $like_stmt->execute($like_data);
+    $like_count_data = $like_stmt->fetch(PDO::FETCH_ASSOC);
+    $profile_t['like_count'] = $like_count_data['like_count'];
+
+
+
+
     $lessons_t = [];
 
     // レッスン情報をを取得
@@ -50,7 +68,6 @@
         }else{
             $lesson_t['count'] = $lesson_t['capacity'] -$number_reservation['number_reservation'];
         }
-
 
         $lessons_t[] = $lesson_t;
     }
@@ -166,8 +183,11 @@
               <p><?=$name ?></p>
               <p><?php echo $area.$city ?><br>
               <?php echo $station ?></p>
-              <button type="button" class="btn btn-secondary"><i class="far fa-envelope"></i></button>
-              <button type="button" class="btn btn-secondary"><i class="far fa-heart"></i></button>
+              <?php if ($profile_t['is_liked'] == FALSE): ?>
+                <i class="far fa-heart"></i>&nbsp;<span><?php echo $profile_t['like_count'] ?></span>
+              <?php else: ?>
+                <i class="fas fa-heart" style="color: red;"></i>&nbsp;<span><?php echo $profile_t['like_count'] ?></span>
+              <?php endif ?>
             </div>
             <div class="col-md-9">
               <div>

@@ -209,12 +209,12 @@
                   <p style="color: red">予約済みのレッスンです！</p>
                 <?php endif ?>
                 <!-- <button type="button" class="btn btn-secondary"><i class="fas fa-heart" style="color: #F76AC0"></i></button> -->
-                <span hidden id="user_id"><?php echo $_SESSION['EATY']['id'] ?></span>
+                <span hidden id="user_id"><?php echo $user_id ?></span>
                 <span hidden id="lesson_id"><?php echo $lesson_id  ?></span>
                 <?php if ($is_favorite == FALSE): ?>
-                  <button type="button" id="like" class="btn btn-secondary"><i class="fas fa-star"></i></button>
+                  <button type="button" id="favorite" class="btn btn-secondary"><i class="fas fa-star"></i></button>
                 <?php else: ?>
-                  <button type="button" id="unlike" class="btn btn-warning"><i class="fas fa-star"></i></button>
+                  <button type="button" id="unfavorite" class="btn btn-warning"><i class="fas fa-star"></i></button>
                 <?php endif ?>
               <?php endif ?>
             </div>
