@@ -27,10 +27,10 @@ $(function(){
   });
 
   // お気入りレッスン登録
-  $(document).on('click', '#like', function() {
+  $(document).on('click', '#favorite', function() {
       var user_id = $('#user_id').text();
       var lesson_id = $('#lesson_id').text();
-      var like_btn = $(this);
+      var favorite_btn = $(this);
 
       $.ajax({
           url:'favorite_register.php',
@@ -39,14 +39,77 @@ $(function(){
           data:{
             'user_id':user_id,
             'lesson_id':lesson_id,
+            'is_favorited':true
+          }
+      })
+      .done(function(data){
+          if (data == 'true') {
+              favorite_btn.attr('id', 'unfavorite');
+              favorite_btn.removeClass('btn-secondary');
+              favorite_btn.addClass('btn-warning');
+          }
+        console.log(data);
+      })
+      .fail(function(err){
+        // 目的の処理が失敗したときの処理
+        console.log('error');
+      })
+
+  });
+
+  $(document).on('click', '#unfavorite', function() {
+      var user_id = $('#user_id').text();
+      var lesson_id = $('#lesson_id').text();
+      var favorite_btn = $(this);
+
+      $.ajax({
+          url:'favorite_register.php',
+          type:'POST',
+          datatype: 'json',
+          data:{
+            'user_id':user_id,
+            'lesson_id':lesson_id,
+          }
+      })
+      .done(function(data){
+          if (data == 'true') {
+              favorite_btn.attr('id', 'favorite');
+              favorite_btn.removeClass('btn-warning');
+              favorite_btn.addClass('btn-secondary');
+          }
+        console.log(data);
+      })
+      .fail(function(err){
+        // 目的の処理が失敗したときの処理
+        console.log('error');
+      })
+
+  });
+
+  // 講師いいね機能
+  $(document).on('click', '#like', function() {
+      var user_id = $('#user_id').text();
+      var teacher_id = $('#teacher_id').text();
+      var like_btn = $(this);
+      var like_count = $('#like_count').text();
+
+      $.ajax({
+          url:'like_register.php',
+          type:'POST',
+          datatype: 'json',
+          data:{
+            'user_id':user_id,
+            'teacher_id':teacher_id,
             'is_liked':true
           }
       })
       .done(function(data){
           if (data == 'true') {
+              like_count ++;
+              $('#like_count').text(like_count);
               like_btn.attr('id', 'unlike');
               like_btn.removeClass('btn-secondary');
-              like_btn.addClass('btn-warning');
+              like_btn.addClass('btn-danger');
           }
         console.log(data);
       })
@@ -59,22 +122,25 @@ $(function(){
 
   $(document).on('click', '#unlike', function() {
       var user_id = $('#user_id').text();
-      var lesson_id = $('#lesson_id').text();
+      var teacher_id = $('#teacher_id').text();
       var like_btn = $(this);
+      var like_count = $('#like_count').text();
 
       $.ajax({
-          url:'favorite_register.php',
+          url:'like_register.php',
           type:'POST',
           datatype: 'json',
           data:{
             'user_id':user_id,
-            'lesson_id':lesson_id,
+            'teacher_id':teacher_id,
           }
       })
       .done(function(data){
           if (data == 'true') {
+              like_count --;
+              $('#like_count').text(like_count);
               like_btn.attr('id', 'like');
-              like_btn.removeClass('btn-warning');
+              like_btn.removeClass('btn-danger');
               like_btn.addClass('btn-secondary');
           }
         console.log(data);
