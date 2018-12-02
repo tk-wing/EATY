@@ -2,10 +2,10 @@
     session_start();
     require('dbconnect.php');
     require('functions.php');
-    // $lesson_id = $_GET['lesson_id'];
-    // $user_type = '';
+     $lesson_id = $_GET['lesson_id'];
+     $user_type = '';
     //最終的に↑2行コメントｱｳﾄ解除
-
+     v($lesson_id,'lesson_id');
 
     $sql = 'SELECT * FROM `users` WHERE `id`=?';
     $data = array($_SESSION['EATY']['id']);
@@ -17,14 +17,14 @@
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     $sql = 'SELECT * FROM `lessons_t` WHERE `id`=?';
-    $data = array('10');
-    //最終的に↑を$data = array(['lesson_id'])にする
+     //$data = array('10');
+    $data = array(['lesson_id']);
 
 
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
     $lesson = $stmt->fetch(PDO::FETCH_ASSOC);
-    v($lesson,'lesson');
+     v($lesson,'lesson');
 
 
         // 講師のユーザー・プロフィール情報を取得
@@ -41,6 +41,18 @@
     }
     v($name,'name');
     v($teacher,'teacher');
+
+    // v($_POST['attention'],'$_POST[attention]');
+    if(!empty($_POST)){
+      $attention = $_POST['attention'];
+        $sql = 'INSERT INTO `reservations` SET `user_id`=?,`status`="1",`message`=?,`updated`=NOW()';
+        $data = array($signin_user['id'],$attention);
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute($data);
+
+      header("Location: top_s.php");
+      exit();
+    }
 
  ?>
 
@@ -105,7 +117,7 @@
           </div>
         </div>
 
-        <form method="POST" action="top_s.php">
+        <form method="POST" action="">
           <div class="form-group title_1">
               <p><?php echo $name; ?>さん(講師)へのメッセージ</p>
               <textarea class="form-control col-md-8" name="attention" style="height: 100px; display: inline-block;"></textarea>
@@ -118,7 +130,7 @@
             </select>
           </div>
 
-          <a href="top_s.php?"><input type="submit" class="btn btn-primary mt-5" value="完了"></a>
+          <input type="submit" class="btn btn-primary mt-5" value="完了">
         </form>
 
         <div class="mt-5">
