@@ -59,7 +59,7 @@
   <!-- TOP上部・３つのボタン・コンセプト -->
   <div class="top wrapper">
     <!-- TOP上部 -->
-    <div class="container-flued" style="background-image: url(img/top2.jpg); height: 800px; background-size:cover;">
+    <div class="container-flued" style="background-image: url(img/top4.jpg); height: 800px; background-size:cover;">
       <img class="mx-auto d-block"src="img/logo2.png" width="300">
 
       <a href="signup.php"><button type="button" class="mx-auto d-block btn btn-default my-btn-signup">新規登録</button></a>
@@ -86,7 +86,7 @@
           <a class="circle">教えたいexchef</a>
           <a class="maltiply">×</a>
           <a class="circle">習いたいYOU</a>
-          <div class="text-center description">Our web service is “ex chef” for connecting those who would like to work with professional skill of cooking and baking with those who would like to learn how to cook and bake.“ex chef”とは、料理とベーキングの専門的なスキルを身につけたい人と、料理とベーキングの方法を学びたい人とをつなぐためのサービスです。</div>
+          <div class="text-center description">Our web service is “ex chef” for connecting those who would like to work with professional skill of cooking and baking with those who would like to learn how to cook and bake.<br>“ex chef”とは、料理とベーキングの専門的なスキルを身につけた人と、料理とベーキングの方法を学びたい人とをつなぐためのサービスです。</div>
         </div>
       </div>
     </div>
