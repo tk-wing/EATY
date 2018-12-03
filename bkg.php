@@ -17,10 +17,8 @@
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     $sql = 'SELECT * FROM `lessons_t` WHERE `id`=?';
-     //$data = array('10');
-    $data = array(['lesson_id']);
-
-
+    $data = array('10');
+    // $data = array(['lesson_id']);
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
     $lesson = $stmt->fetch(PDO::FETCH_ASSOC);
