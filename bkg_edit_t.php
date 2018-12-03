@@ -5,7 +5,7 @@
     //データベースとの接続
     require('dbconnect.php');
     require('functions.php');
-    //パーミッション
+    //パラメーター
     $lesson_id = $_GET['lesson_id'];
     $user_type = '';
 
@@ -13,22 +13,31 @@
     
     v($_FILES,'$_FILES');
 
-    v($_POST,'$_POST');
 
-    // ユーザー情報を取得
-    $sql='SELECT * FROM `users` WHERE `id`=?';
-    $stmt = $dbh->prepare($sql);
-    $data = array($_SESSION['EATY']['id']);
-    $stmt->execute($data);
 
-    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+    // // ユーザー情報を取得
+    // $sql='SELECT * FROM `users` WHERE `id`=?';
+    // $stmt = $dbh->prepare($sql);
+    // $data = array($_GET['EATY']['id']);
+    // $stmt->execute($data);
 
-    // pロフィール情報をを取得
-    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
-    $profile_t_stmt = $dbh->prepare($profile_t_sql);
-    $profile_t_sql_data = [$signin_user['id']];
-    $profile_t_stmt->execute($profile_t_sql_data);
-    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+    // $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // // pロフィール情報をを取得
+    // $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
+    // $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    // $profile_t_sql_data = [$signin_user['id']];
+    // $profile_t_stmt->execute($profile_t_sql_data);
+    // $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+
+    $lessons_sql ='SELECT * FROM `lessons_t` WHERE `id`=?';
+    // $lessons_sql ='SELECT * FROM `lessons_t` WHERE `day`=?,`daytime`=?,`lesson_name`=?,`station`=?,`basic`=?,`capacity`=?';
+    $lessons_data =[$lesson_id];
+    $lessons_stmt = $dbh->prepare($lessons_sql);
+    $lessons_stmt->execute($lessons_data);
+    $lesson = $lessons_stmt->fetch(PDO::FETCH_ASSOC);
+
+    v($lesson,'$lesson');
 
     // カテゴリー情報を取得
     $categories_sql='SELECT * FROM `categories`';
@@ -36,6 +45,20 @@
     $categories_sql_data = [];
     $categories_stmt->execute($categories_sql_data);
 
+
+    $day = $lesson['day'];
+    $daytime = $lesson['daytime'];
+    $station = $lesson['station'];
+    $fee = $lesson['fee'];
+    $requiretime = $lesson['requiretime'];
+    $category_id = $lesson['category_id'];
+    $menu = $lesson['menu'];
+    $capacity = $lesson['capacity'];
+    $basic = $lesson['basic'];
+    $lesson_name = $lesson['lesson_name'];
+    $menudetail = $lesson['menudetail'];
+    $bring = $lesson['bring'];
+    $precaution = $lesson['precaution'];
   //バリデーションの設定と変数定義
 if (!empty($_POST)) {
     $day = $_POST['day'];
@@ -43,7 +66,7 @@ if (!empty($_POST)) {
     $station = $_POST['station'];
     $fee = $_POST['fee'];
     $requiretime = $_POST['requiretime'];
-    $category_id = $_POST['category_id[]'];
+    $category_id = $_POST['category_id'];
     $menu = $_POST['menu'];
     $capacity = $_POST['capacity'];
     $basic = $_POST['basic'];
@@ -134,36 +157,23 @@ if (!empty($_POST)) {
             $destination = 'users_lesson_img/'.$file_name4;
             move_uploaded_file($tmp_file, $destination);
         }
+    }
         
-        if (empty($validations)) {
-         //格項目
-         $_SESSION['EATY']['user_id']  =  $signin_user;
+        // if (empty($validations)) {
 
+          // もし、作成したレッスンに変更があったら
+        //   if(){
+        //       $lesson_sql='UPDATE `lessons_t` SET `user_id`=?,`img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`station`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`updated`=NOW() WHERE `id`=?';
+        //       $lesson_stmt = $dbh->prepare($lesson_sql);
+        //       $lesson_data = [$signin_user['id']];
+        //       $lesson_stmt->execute($user_data);
+        //   }
 
-         $_SESSION['EATY']['day']  = $day;
-         $_SESSION['EATY']['daytime']  = $daytime;
-         $_SESSION['EATY']['station']  = $station;
-         $_SESSION['EATY']['fee']  = $fee;
-         $_SESSION['EATY']['requiretime']  = $requiretime;
-         $_SESSION['EATY']['category_id']  = $capacity;
-         $_SESSION['EATY']['menu']  = $menu;
-         $_SESSION['EATY']['capacity']  = $capacity;
-         $_SESSION['EATY']['basic']  = $basic;
-         $_SESSION['EATY']['lesson_name']  = $lesson_name;
-         $_SESSION['EATY']['menudetail']  = $menudetail;
-         $_SESSION['EATY']['bring']  = $bring;
-         $_SESSION['EATY']['precaution']  = $precaution;
-         //画像
-         $_SESSION['EATY']['img_1']  = $file_name1;
-         $_SESSION['EATY']['img_2']  = $file_name2;
-         $_SESSION['EATY']['img_3']  = $file_name3;
-         $_SESSION['EATY']['img_4']  = $file_name4;
-
-         header('Location: create_check_t.php');
-         exit();
-        }
+        //  header('Location: create_check_t.php');
+        //  exit();
+        // }
         
-}
+        // }
     
     
 
@@ -321,14 +331,14 @@ if (!empty($_POST)) {
             <div class="row">
               <div class="col text-right">
                 <label class="filelabel_create">
-                <img id="img1" src="https://placehold.jp/130x100.png" style="width:130px;height:100px;">
+                <img id="img1" src="users_lesson_img/<?= h($img_1);?>" style="width:130px;height:100px;">
                 <input type="file" class="filesend" id="filesend_1" name="img_1" accept="image/*">
                 </label>
               </div>
 
               <div class="col text-left">
                 <label class="filelabel_create">
-                <img id="img2" src="https://placehold.jp/130x100.png" style="width:130px;height:100px;">
+                <img id="img2" src="users_lesson_img/<?= h($img_2);?>" style="width:130px;height:100px;">
                 <input type="file" class="filesend" id="filesend_2" name="img_2" accept="image/*">
                 </label>
               </div>
@@ -337,14 +347,14 @@ if (!empty($_POST)) {
             <div class="row">
               <div class="col text-right">
                 <label class="filelabel_create">
-                <img id="img3" src="https://placehold.jp/130x100.png" style="width:130px;height:100px;">
+                <img id="img3" src="users_lesson_img/<?= h($img_3);?>" style="width:130px;height:100px;">
                 <input type="file" class="filesend" id="filesend_3" name="img_3" accept="image/*">
                 </label>
               </div>
 
               <div class="col text-left">
                 <label class="filelabel_create">
-                <img id="img4" src="https://placehold.jp/130x100.png" style="width:130px;height:100px;">
+                <img id="img4" src="users_lesson_img/<?= h($img_4);?>" style="width:130px;height:100px;">
                 <input type="file" class="filesend" id="filesend_4" name="img_4" accept="image/*">
                 </label>
               </div>
@@ -364,7 +374,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="day" type="date" placeholder="" class="form-control input-md">
+                  <input id="name" name="day" type="date" placeholder="" class="form-control input-md" value="<?= h($day);?>">
                   <?php if(isset($validations['day'])&& $validations['day']=='blank'): ?>
                   <span class="error_msg">開催日を指定してください</span>
                   <?php endif; ?>
@@ -380,7 +390,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="daytime" type="time" placeholder="" class="form-control input-md">
+                  <input id="name" name="daytime" type="time" placeholder="" class="form-control input-md" value="<?= h($daytime);?>">
                   <?php if(isset($validations['daytime'])&& $validations['daytime']=='blank'): ?>
                   <span class="error_msg">開催時間を指定してください</span>
                   <?php endif; ?>
@@ -396,7 +406,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="station" type="text" placeholder="" class="form-control input-md">
+                  <input id="name" name="station" type="text" placeholder="" class="form-control input-md" value="<?= h($station);?>">
                   <?php if(isset($validations['station'])&& $validations['station']=='blank'): ?>
                   <span class="error_msg">最寄駅を指定してください</span>
                   <?php endif; ?>
@@ -412,7 +422,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="fee" type="text" placeholder="" class="form-control input-md">
+                  <input id="name" name="fee" type="number" placeholder="" class="form-control input-md" value="<?= h($fee);?>">
                   <?php if(isset($validations['fee'])&& $validations['fee']=='blank'): ?>
                   <span class="error_msg">料金を指定してください</span>
                   <?php endif; ?>
@@ -428,7 +438,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="requiretime" type="time" placeholder="" class="form-control input-md">
+                  <input id="name" name="requiretime" type="time" placeholder="" class="form-control input-md" value="<?= h($requiretime);?>">
                   <?php if(isset($validations['requiretime'])&& $validations['requiretime']=='blank'): ?>
                   <span class="error_msg">所要時間を指定してください</span>
                   <?php endif; ?>
@@ -450,7 +460,7 @@ if (!empty($_POST)) {
                   <div class="col-md-9">
                   <!-- <input id="name" name="category_id" type="text" placeholder="" class="form-control input-md"> -->
                        <select id="category" name="category_id['id']" class="form-control">
-                         <option value="">選択してください。</option>
+                         <option value="category_id">選択してください。</option>
                          <?php while(1): ?>
                            <?php  $category_id = $categories_stmt->fetch(PDO::FETCH_ASSOC); ?>
                            <?php if ($category_id == false): ?>
@@ -477,7 +487,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="menu" type="text" placeholder="" class="form-control input-md">
+                  <input id="name" name="menu" type="number" placeholder="" class="form-control input-md" value="<?= h($menu);?>">
                   <?php if(isset($validations['menu'])&& $validations['menu']=='blank'): ?>
                   <span class="error_msg">メニュー数を指定してください</span>
                   <?php endif; ?>
@@ -493,7 +503,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="capacity" type="text" placeholder="" class="form-control input-md">
+                  <input id="name" name="capacity" type="number" placeholder="" class="form-control input-md" value="<?= h($capacity);?>">
                   <?php if(isset($validations['capacity'])&& $validations['capacity']=='blank'): ?>
                   <span class="error_msg">定員を指定してください</span>
                   <?php endif; ?>
@@ -509,7 +519,7 @@ if (!empty($_POST)) {
               <div class=col-md-9>
                 <div class="form-group">
                   <div class="col-md-9">
-                  <input id="name" name="basic" type="text" placeholder="" class="form-control input-md">
+                  <input id="name" name="basic" type="number" placeholder="" class="form-control input-md" value="<?= h($basic);?>">
                   <?php if(isset($validations['basic'])&& $validations['basic']=='blank'): ?>
                   <span class="error_msg">最小遂行人数を指定してください</span>
                   <?php endif; ?>
@@ -525,7 +535,7 @@ if (!empty($_POST)) {
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="lesson_name" placeholder="レッスン名" style="height: 100px;"></textarea>
+                <textarea class="form-control" name="lesson_name" placeholder="レッスン名を入力してください" style="height: 100px;" ><?= h($lesson_name);?></textarea>
                 <?php if(isset($validations['lesson_name'])&& $validations['lesson_name']=='blank'): ?>
                   <span class="error_msg">レッスン名を入力してください</span>
                 <?php endif; ?>
@@ -536,7 +546,7 @@ if (!empty($_POST)) {
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="menudetail" placeholder="メニュー概要" style="height: 100px;"></textarea>
+                <textarea class="form-control" name="menudetail" placeholder="メニュー概要" style="height: 100px;"><?= h($menudetail);?></textarea>
                 <?php if(isset($validations['menudetail'])&& $validations['menudetail']=='blank'): ?>
                   <span class="error_msg">メニュー概要を入力してください</span>
                 <?php endif; ?>
@@ -551,7 +561,7 @@ if (!empty($_POST)) {
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="bring" placeholder="持ち物" style="height: 100px;"></textarea>
+                <textarea class="form-control" name="bring" placeholder="持ち物" style="height: 100px;"><?= h($bring);?></textarea>
                 <?php if(isset($validations['bring'])&& $validations['bring']=='blank'): ?>
                   <span class="error_msg">持ち物を記入してください</span>
                 <?php endif; ?>
@@ -562,7 +572,7 @@ if (!empty($_POST)) {
             <div class="form-group">
               <label class="col-md-4 control-label" for="career"></label>
               <div class="col-md-14">
-                <textarea class="form-control" name="precaution" placeholder="注意事項" style="height: 100px;"></textarea>
+                <textarea class="form-control" name="precaution" placeholder="注意事項" style="height: 100px;"><?= h($precaution);?></textarea>
                 <?php if(isset($validations['precaution'])&& $validations['precaution']=='blank'): ?>
                   <span class="error_msg">注意事項を入力してください</span>
                 <?php endif; ?>
