@@ -51,10 +51,57 @@ footer{
   color: white;
 }
 
+.btn-box {
+  display: inline-block;
+  width: 150px;
+  text-align: center
+  font-size: 16px;
+  color: #212529;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 2px 2px;
+  position: relative;
+  border: 2px solid #d39e0000;
+  transition: .4s;
+  background: hsla(0, 0%, 0%, 0.0) !important; 
+}
 
+.btn-box:hover {
+  border: 2px solid transparent;
+  color: #212529;
+}
+
+.btn-box:before, .btn-box:after {
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  transform: scale(0);
+  transition: .2s;
+}
+
+.btn-box:before {
+  border-bottom: 2px solid black;
+  border-left: 2px solid black;
+  transform-origin: 100% 0%;
+}
+
+.btn-box:after {
+  border-top: 2px solid black;
+  border-right: 2px solid black;
+  transform-origin: 0% 100%;
+}
+
+.btn-box:hover:after,
+.btn-box:hover:before {
+  transform: scale(1);
+}
 .area{
-  margin: 0 15px;
-  padding: 10px 0;
+  padding: 5px 0;
 }
 
 .title{
