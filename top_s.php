@@ -9,6 +9,8 @@
         exit();
     }
 
+    $user_type = $_SESSION['EATY']['user_type'];
+
 
     // ユーザー情報を取得
     $sql='SELECT * FROM `users` WHERE `id`=?';
@@ -44,6 +46,8 @@
     $lessons_s_stmt = $dbh->prepare($lessons_s_sql);
     $lessons_s_sql_data = [$signin_user['id']];
     $lessons_s_stmt->execute($lessons_s_sql_data);
+
+    $lessons_s = [];
 
     while (1) {
         $lesson_s = $lessons_s_stmt->fetch(PDO::FETCH_ASSOC);
@@ -122,7 +126,7 @@
 <body>
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/eatylogo.png" width="100"></a>
+      <a href='#' data-toggle="modal" data-target="#demoNormalModal"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
 
@@ -139,7 +143,7 @@
                   <img class="img-responsive" src="user_profile_img/<?php echo $img_name ?>" alt="Blog" style="width:140px;height:140px;border-radius: 50%;"><br>
                 <?php endif ?>
                 <p><?php echo $name ?></p>
-                <button type="button" class="btn btn-secondary"><i class="far fa-envelope"></i></button>
+                <button type="button" class="btn btn-info"><i class="far fa-envelope"></i></button>
               </div>
               <div class="col-md-7">
                 <div>
@@ -157,12 +161,12 @@
             </div>
             <div class="row">
               <div class="col text-right">
-                <a href="report.php"><button type="button" class="btn btn-secondary">つくれぽ一覧を見る</button></a><br>
-                <a href="favorites.php"><button type="button" class="btn btn-secondary">お気に入りレッスン</button></a>
+                <a href="report.php"><button type="button" class="btn btn-success">つくれぽ一覧を見る</button></a><br>
+                <a href="favorites.php"><button type="button" class="btn btn-warning">お気に入りレッスン</button></a>
               </div>
               <div class="col text-left">
-                <a href="report_send.php"><button type="button" class="btn btn-secondary">つくれぽを投稿する</button></a><br>
-                <a href="edit_prof_s.php"><button type="button" class="btn btn-secondary" style="width: 170px;">プロフィール編集</button></a>
+                <a href="report_send.php"><button type="button" class="btn btn-success">つくれぽを投稿する</button></a><br>
+                <a href="edit_prof_s.php"><button type="button" class="btn btn-success" style="width: 170px;">プロフィール編集</button></a>
               </div>
             </div>
         </div>
@@ -194,40 +198,61 @@
 
       <div class="blog-inner-prof">
           <div class="row">
-            <?php foreach ($lessons_s as $lesson): ?>
-            <div class="col-md-2 text-center">
-              <p><?php echo date('m月d日',  strtotime($lesson['day'])) ?></p>
-              <p><?php echo date('H時i分', strtotime($lesson['daytime'])) ?>~</p>
-            </div>
+            <?php if (empty($lessons_s)): ?>
+              <div class="col-md-12 text-center">レッスンの予約はございません。</div>
+            <?php else: ?>
+              <?php foreach ($lessons_s as $lesson): ?>
+              <div class="col-md-2 text-center">
+                <p><?php echo date('m月d日',  strtotime($lesson['day'])) ?></p>
+                <p><?php echo date('H時i分', strtotime($lesson['daytime'])) ?>~</p>
+              </div>
 
-            <div class="col-md-2 text-center">
-              <p><?php echo $lesson['lesson_name'] ?></p>
-            </div>
+              <div class="col-md-2 text-center">
+                <p><?php echo $lesson['lesson_name'] ?></p>
+              </div>
 
-            <div class="col-md-2 text-center">
-              <span>最寄り駅</span><br>
-              <span><?php echo $lesson['station'] ?></span>
-            </div>
+              <div class="col-md-2 text-center">
+                <span>最寄り駅</span><br>
+                <span><?php echo $lesson['station'] ?></span>
+              </div>
 
-            <div class="col-md-2 text-center">
-              <?php if ($lesson['status']=='1'): ?>
-                <p style="color: blue">予約済み</p>
-              <?php elseif($lesson['status']=='2'): ?>
-                <p style="color: red;">キャンセル</p>
-              <?php endif ?>
-            </div>
+              <div class="col-md-2 text-center">
+                <?php if ($lesson['status']=='1'): ?>
+                  <p style="color: blue">予約済み</p>
+                <?php elseif($lesson['status']=='2'): ?>
+                  <p style="color: red;">キャンセル</p>
+                <?php endif ?>
+              </div>
 
-            <div class="col-md-4 text-center">
-              <a href="lesson.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-primary">レッスン詳細</button></a>
-              <?php if ($lesson['status']=='1'): ?>
-                <a onclick="return confirm('本当にキャンセルしますか？')" href="cancel_lesson_s.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-danger" style="width: 125px">キャンセル</button></a>
-              <?php endif ?>
-            </div>
-            <?php endforeach ?>
+              <div class="col-md-4 text-center">
+                <a href="lesson.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-primary">レッスン詳細</button></a>
+                <?php if ($lesson['status']=='1'): ?>
+                  <a onclick="return confirm('本当にキャンセルしますか？')" href="cancel_lesson_s.php?lesson_id=<?php echo $lesson['lesson_id']?>"><button type="button" class="btn btn-danger" style="width: 125px">キャンセル</button></a>
+                <?php endif ?>
+              </div>
+              <?php endforeach ?>
+            <?php endif ?>
           </div>
       </div>
 
     </div>
+
+    <!-- メニュー -->
+    <div class="modal fade" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <p>メニュー</p>
+                </div>
+                <div class="modal-footer text-center" style="display: inline-block;">
+                    <a href="top_s.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                    <a href="serch_s.php"><button type="button" class="btn btn-primary">レッスン検索</button></a>
+                    <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
   </div>
 
 
@@ -242,5 +267,11 @@
       <p>©ex chef</p>
     </div>
   </footer>
+
+  <!-- jQuery、Popper.js、Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <!-- <script src="assets/js/app.js"></script> -->
 
 </body>

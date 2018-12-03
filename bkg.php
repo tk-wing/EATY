@@ -1,3 +1,63 @@
+<?php
+    session_start();
+    require('dbconnect.php');
+    require('functions.php');
+     $lesson_id = $_GET['lesson_id'];
+     $user_type = '';
+    //最終的に↑2行コメントｱｳﾄ解除
+     v($lesson_id,'lesson_id');
+
+    $sql = 'SELECT * FROM `users` WHERE `id`=?';
+    $data = array($_SESSION['EATY']['id']);
+
+    var_dump($_SESSION['EATY']['id']);
+
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $sql = 'SELECT * FROM `lessons_t` WHERE `id`=?';
+     //$data = array('10');
+    $data = array(['lesson_id']);
+
+
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+    $lesson = $stmt->fetch(PDO::FETCH_ASSOC);
+     v($lesson,'lesson');
+
+
+        // 講師のユーザー・プロフィール情報を取得
+    $sql='SELECT `u`.`first_name`, `u`.`last_name`, `p`.* FROM `users` AS `u` INNER JOIN `profiles_t` AS `p` ON `u`.`id` = `p`.`user_id` WHERE `u`.`id`=?';
+    $stmt = $dbh->prepare($sql);
+    $data = [$lesson['user_id']];
+    $stmt->execute($data);
+    $teacher = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($teacher['nickname'] == '') {
+        $name = $teacher['last_name'] . '　' . $teacher['first_name'];
+    }else{
+        $name = $teacher['nickname'];
+    }
+    v($name,'name');
+    v($teacher,'teacher');
+
+    // v($_POST['attention'],'$_POST[attention]');
+    if(!empty($_POST)){
+      $attention = $_POST['attention'];
+        $sql = 'INSERT INTO `reservations` SET `user_id`=?,`status`="1",`message`=?,`updated`=NOW()';
+        $data = array($signin_user['id'],$attention);
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute($data);
+
+      header("Location: top_s.php");
+      exit();
+    }
+
+ ?>
+
+
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -29,7 +89,7 @@
 <body>
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/eatylogo.png" width="100"></a>
+      <a href="#"><img src="img/logo.jpg" width="90"></a>
     </div>
   </header>
 
@@ -37,29 +97,29 @@
 
     <div class="blog-inner-prof text-center">
         <div>
-          <h4 class="title_1">レッスン名</h4>
-          <p class="title_1">日時: 2018/11/30 14：00～</p>
-          <p class="title_1">料金: ¥5000/一人</p>
-          <p class="title_1">注意事項: レッスンは男性限定です！</p>
+          <h4 class="title_1"><?php echo $lesson['lesson_name']; ?></h4>
+          <p class="title_1">日時: <?php echo date('Y/m/d', strtotime($lesson['day'])); ?><br><?php echo date('G:i',strtotime($lesson['daytime'])); ?>～</p>
+          <p class="title_1">料金: ¥<?php echo $lesson['fee']; ?>/一人</p>
+          <p class="title_1">注意事項: <?php echo $lesson['precaution']; ?></p>
         </div>
 
         <div class="title_2">
           <div class="row">
             <div class="col-5 text-right">
               <span>お名前</span><br>
-              <span>○○○○</span>
+              <span><?php echo $signin_user['first_name']; ?><?php echo $signin_user['last_name']; ?></span>
             </div>
             <div class="col-2"></div>
             <div class="col-5 text-left">
               <span>メールアドレス</span>
-              <p>●●●●＠gmail.com</p>
+              <p><?php echo $signin_user['email']; ?></p>
             </div>
           </div>
         </div>
 
         <form method="POST" action="">
           <div class="form-group title_1">
-              <p>○○○○さん(講師)へのメッセージ</p>
+              <p><?php echo $name; ?>さん(講師)へのメッセージ</p>
               <textarea class="form-control col-md-8" name="attention" style="height: 100px; display: inline-block;"></textarea>
           </div>
 

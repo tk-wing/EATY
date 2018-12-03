@@ -4,9 +4,6 @@
     require('dbconnect.php');
     require('functions.php');
 
-    v($_SESSION,'$_SESSION');
-
-    v($_POST,'$_POST');
     // ユーザー情報を取得
     $sql='SELECT * FROM `users` WHERE `id`=?';
     $stmt = $dbh->prepare($sql);
@@ -16,18 +13,18 @@
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // pロフィール情報をを取得
-    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
-    $profile_t_stmt = $dbh->prepare($profile_t_sql);
-    $profile_t_sql_data = [$signin_user['id']];
-    $profile_t_stmt->execute($profile_t_sql_data);
-    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+    // $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
+    // $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    // $profile_t_sql_data = [$signin_user['id']];
+    // $profile_t_stmt->execute($profile_t_sql_data);
+    // $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
 
-    if($signin_user == FALSE){
-        header('Location: signup.php');
-        exit();
-    }
+    
+    // if($signin_user == FALSE){
+    //     header('Location: signup.php');
+    //     exit();
+    // }
     if (empty($_SESSION['id'])) {
-
 
         $lessons_sql ='SELECT * FROM `lessons_t` WHERE `user_id`=?';
         // $lessons_sql ='SELECT * FROM `lessons_t` WHERE `day`=?,`daytime`=?,`lesson_name`=?,`station`=?,`basic`=?,`capacity`=?';
@@ -35,37 +32,37 @@
         $lessons_stmt = $dbh->prepare($lessons_sql);
         $lessons_stmt->execute($lessons_data);
 
-    }
+        }
 
 
+        //自分のレッスンを繰り返し表示
         $lessons = []; 
-        while (true) {
+        while (1) {//一回の繰り返し
           $lesson = $lessons_stmt->fetch(PDO::FETCH_ASSOC);//データ一個分
 
           if ($lesson == false) {
             //所得データは全て所得できているので、繰り返しを中断する
             break;
           }
-         $lessons[]= $lesson;
+          //１つのテーブルに対してカウントし、予約状況を表示させる為、繰り返しの中に書く
+            //レッスン受付状態のの確認
+            $number_reservation_sql='SELECT count(*) AS `number_reservation` FROM `reservations` WHERE `lesson_id`=? AND `status`=?';
+            $number_reservation_stmt = $dbh->prepare($number_reservation_sql);
+            $number_reservation_sql_data = [$lesson['id'],'1'];//$lessonはreservationsテーブルのlesson_idと同じ値
+            $number_reservation_stmt->execute($number_reservation_sql_data);
+            $number_reservation = $number_reservation_stmt->fetch(PDO::FETCH_ASSOC);
+            //reservationsテーブルのlesson_idとstatusを数える
+            if ($number_reservation['number_reservation'] == $lesson['capacity']) {
+                $lesson['status'] = '満席';//数えた数がcapacityと一緒だったら満席をステータスに入れる
+            }else{
+                //capacity-数えた数をカウント関数にしてる。
+                $lesson['count'] = $lesson['capacity'] - $number_reservation['number_reservation'];
+                $lesson['status'] = 'NULL';
+            }
 
+            $lessons[]= $lesson;
         }
-
-
-      // $sql = 'SELECT * FROM `reservtions` WHERE `status` = ?';
-      // $data = array($status);
-      // $stmt = $dbh->prepare($sql);
-      // $stmt->execute($data);
-      // $status = $stmt->fetch(PDO::FETCH_ASSOC);
-      // if ($status == '1') {
-      //     $status_msg = '受付中';
-      // }else{
-      //     $status_msg = '満席';
-      // }
-  
-
-
-
-
+          v($lessons,'$lessons');
 
 ?>
 
@@ -105,7 +102,7 @@
 
   <div class="wrapper">
     <div class="top-content text-center">
-      <img src="https://placehold.jp/120x120.png" style="width:120px;height:120px;border-radius: 50%;">
+      <img src="user_profile_img/<?php echo $img_name ?>" style="width:120px;height:120px;border-radius: 50%;">
     </div>
 
     <div class="blog-inner-prof">
@@ -132,37 +129,7 @@
 
         </div>
     </div>
-<!--     
-    <div class="blog-inner-prof">
-        <div class="row">
-          <div class="col-md-2 text-center">
-            <p><?php echo $lesson_data['day']; ?></p>
-            <p>13:00~</p>
-          </div>
 
-          <div class="col-md-2 text-center">
-            <p>クリスマスケーキ</p>
-          </div>
-
-          <div class="col-md-2 text-center">
-            <p>東京都 渋谷区</p>
-          </div>
-
-          <div class="col-md-2 text-center">
-            <p>6/15</p>
-          </div>
-
-          <div class="col-md-2 text-center">
-            <p>受付</p>
-          </div>
-
-          <div class="col-md-2 text-center">
-            <a href="#"><button type="button" class="btn btn-primary">レッスン詳細</button></a>
-            <a href="#"><button type="button" class="btn btn-primary">レッスン編集</button></a>
-          </div>
-
-        </div>
-    </div> -->
     <?php foreach ($lessons as $lessons_each) {
       include("bkg_t_row.php");
 
@@ -180,4 +147,5 @@
     </div>
   </footer>
 
+  <script src="js/app.js"></script>
   </body>

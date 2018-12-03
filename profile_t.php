@@ -4,50 +4,47 @@
     require('dbconnect.php');
     require('functions.php');
 
-    // ユーザー情報を取得
-    $sql='SELECT * FROM `users` WHERE `id`=?';
-    $stmt = $dbh->prepare($sql);
-    $data = array($_SESSION['EATY']['id']);
-    $stmt->execute($data);
+    $teacher_id = $_GET['teacher_id'];
+    $user_type = '';
 
-    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (isset($_SESSION['EATY'])) {
+        $user_id = $_SESSION['EATY']['id'];
+        $user_type = $_SESSION['EATY']['user_type'];
 
-    // pロフィール情報をを取得
-    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
+        if ($user_type == '2') {
+            // ユーザー情報を取得
+            $sql='SELECT * FROM `users` WHERE `id`=?';
+            $stmt = $dbh->prepare($sql);
+            $data = array($_SESSION['EATY']['id']);
+            $stmt->execute($data);
+            $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $signin_name = $signin_user['last_name'] . '　' . $signin_user['first_name'];
+        }
+    }
+
+
+    // プロフィール情報をを取得
+    $profile_t_sql='SELECT `profiles_t`.*, `users`.`first_name`, `users`.`last_name` FROM `profiles_t` INNER JOIN `users` ON `profiles_t`.`user_id` = `users`.`id` WHERE `profiles_t`.`user_id`=?';
     $profile_t_stmt = $dbh->prepare($profile_t_sql);
-    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_sql_data = [$teacher_id];
     $profile_t_stmt->execute($profile_t_sql_data);
     $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
 
-    if($profile_t == FALSE){
-        header('Location: edit_prof_t.php');
-        exit();
-    }
-
-    // いいねされているか確認
-    $like_flag_sql = "SELECT * FROM `likes` WHERE `instructor_id` = ?";
-    $like_flag_data = [$signin_user['id']];
-    $like_flag_stmt = $dbh->prepare($like_flag_sql);
-    $like_flag_stmt->execute($like_flag_data);
-    $profile_t['is_liked'] = $like_flag_stmt->fetch(PDO::FETCH_ASSOC);
-
     // いいねカウント
     $like_sql = "SELECT COUNT(*) AS `like_count` FROM likes WHERE `instructor_id`=?";
-    $like_data = [$signin_user['id']];
+    $like_data = [$teacher_id];
     $like_stmt = $dbh->prepare($like_sql);
     $like_stmt->execute($like_data);
     $like_count_data = $like_stmt->fetch(PDO::FETCH_ASSOC);
     $profile_t['like_count'] = $like_count_data['like_count'];
-
-
-
 
     $lessons_t = [];
 
     // レッスン情報をを取得
     $lessons_t_sql='SELECT * FROM `lessons_t` WHERE `user_id`=? LIMIT 0,3';
     $lessons_t_stmt = $dbh->prepare($lessons_t_sql);
-    $lessons_t_sql_data = [$signin_user['id']];
+    $lessons_t_sql_data = [$teacher_id];
     $lessons_t_stmt->execute($lessons_t_sql_data);
 
     while (1) {
@@ -73,6 +70,7 @@
     }
 
 
+
     // 都道府県情報を取得
     $area_sql = 'SELECT * FROM `areas` WHERE `id` = ?';
     $area_data = array($profile_t['area_id']);
@@ -89,7 +87,7 @@
     // ユーザーカテゴリー情報を取得
     $user_categories_sql='SELECT * FROM `user_categories` WHERE `user_id`=?';
     $user_categories_stmt = $dbh->prepare($user_categories_sql);
-    $user_categories_sql_data = [$signin_user['id']];
+    $user_categories_sql_data = [$teacher_id];
     $user_categories_stmt->execute($user_categories_sql_data);
 
     while (1) {
@@ -123,7 +121,7 @@
 
     //ニックネームが登録されていない場合
     if (empty($profile_t['nickname'])) {
-        $name = $signin_user['last_name'] . '　' . $signin_user['first_name'];
+        $name = $profile_t['last_name'] . '　' . $profile_t['first_name'];
     } else {
         $name = $profile_t['nickname'];
     }
@@ -131,6 +129,49 @@
     // 以下登録任意項目
     $img_name = $profile_t['img_name'];
     $profile = $profile_t['profile'];
+
+      if($user_type == '2'){
+      // 生徒がいいね済みかを確認
+      $like_flag_sql = "SELECT * FROM `likes` WHERE `instructor_id` = ? AND `student_id` = ?";
+      $like_flag_data = [$teacher_id, $user_id];
+      $like_flag_stmt = $dbh->prepare($like_flag_sql);
+      $like_flag_stmt->execute($like_flag_data);
+      $is_liked = $like_flag_stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    if (!empty($_POST)) {
+        
+        $signin_name = $_POST['name'];
+        $email = $_POST['email'];
+        $title = $_POST['title'];
+        $content = $_POST['content'];
+
+        if ($signin_name == '') {
+            $validations['name'] = 'blank';
+        }
+
+        if ($signin_name == '') {
+            $validations['title'] = 'blank';
+        }
+
+        if ($signin_name == '') {
+            $validations['name'] = 'blank';
+        }
+
+        if ($signin_name == '') {
+            $validations['name'] = 'blank';
+        }
+
+        mb_language("Japanese");
+        mb_internal_encoding("UTF-8");
+
+        if(mb_send_mail($email, $title, $content)){
+          echo "メールを送信しました";
+        } else {
+          echo "メールの送信に失敗しました";
+        }
+
+    }
 
 ?>
 
@@ -164,7 +205,7 @@
 <body>
   <header>
     <div class="text-center">
-      <a data-toggle="modal" data-target="#demoNormalModal"><img src="img/eatylogo.png" width="100"></a>
+      <a data-toggle="modal" data-target="#menuModal"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
 
@@ -183,10 +224,15 @@
               <p><?=$name ?></p>
               <p><?php echo $area.$city ?><br>
               <?php echo $station ?></p>
-              <?php if ($profile_t['is_liked'] == FALSE): ?>
-                <i class="far fa-heart"></i>&nbsp;<span><?php echo $profile_t['like_count'] ?></span>
-              <?php else: ?>
-                <i class="fas fa-heart" style="color: red;"></i>&nbsp;<span><?php echo $profile_t['like_count'] ?></span>
+              <?php if ($user_type == '2'): ?>
+                <span hidden id="user_id"><?php echo $user_id ?></span>
+                <span hidden id="teacher_id"><?php echo $profile_t['user_id'] ?></span>
+                <a data-toggle="modal" data-target="#mailModal"><button type="button" class="btn btn-secondary"><i class="far fa-envelope"></i></button></a>
+                <?php if ($is_liked == FALSE): ?>
+                  <button id="like" type="button" class="btn btn-secondary"><i class="far fa-heart"></i>&nbsp;<span id='like_count'><?php echo $profile_t['like_count'] ?></span></button>
+                <?php else: ?>
+                  <button id='unlike' type="button" class="btn btn-danger"><i class="far fa-heart"></i>&nbsp;<span id="like_count"><?php echo $profile_t['like_count'] ?></span></button>
+                <?php endif ?>
               <?php endif ?>
             </div>
             <div class="col-md-9">
@@ -208,9 +254,6 @@
             </div>
           </div>
       </div>
-      <div class="text-center">
-      <a href="edit_prof_t.php"><button type="button" class="btn btn-secondary">プロフィール編集</button></a>
-      </div>
     </div>
   </div>
 
@@ -220,7 +263,7 @@
     <div class="row middle-content">
 
       <?php if (empty($lessons_t)): ?>
-        <div class="col-md-12 mb-5 text-center">レッスンの登録がありません。</div>
+        <div class="col-md-12 mb-5 text-center">直近のレッスンはありません。</div>
         <?php else: ?>
           <?php foreach ($lessons_t as $lesson_t): ?>
             <div class="col-md-4 text-center">
@@ -250,10 +293,7 @@
       <?php endif ?>
 
     </div>
-    <div class="text-center">
-      <a href="create_lesson.php"><button type="button" class="btn btn-secondary">レッスン追加</button></a>
-      <a href="bkg_t.php"><button type="button" class="btn btn-secondary">レッスン管理一覧</button></a>
-    </div>
+
 
   </div>
 
@@ -332,16 +372,66 @@
     </div>
 
     <!-- メニュー -->
-    <div class="modal fade" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal fade" id="menuModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body text-center">
                     <p>メニュー</p>
                 </div>
                 <div class="modal-footer text-center" style="display: inline-block;">
-                    <a href="top_t.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
-                    <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
+                  <a href="top_s.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                  <a href="serch_s.php"><button type="button" class="btn btn-primary">レッスン検索</button></a>
+                  <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- メールモーダル -->
+    <div class="modal fade" id="mailModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form method="POST" method="">
+              <div class="modal-content">
+                  <div class="modal-body text-center">
+                      <p>メール送信</p>
+
+                          <!-- Text input-->
+                          <div class="form-group">
+                            <label class="col-md-4 control-label" for="name">お名前</label><br>
+                            <div class="col-md-8" style="display: inline-block;">
+                            <input id="name" name="name" type="text" placeholder="" value="<?php echo $signin_name ?>" class="form-control input-md">
+                            </div>
+                          </div>
+
+                          <!-- Text input-->
+                          <div class="form-group">
+                            <label class="col-md-4 control-label" for="email">メールアドレス</label><br>
+                            <div class="col-md-8" style="display: inline-block;">
+                            <input id="email" name="email" type="text" placeholder="" value="<?php echo $signin_user['email'] ?>" class="form-control input-md">
+                            </div>
+                          </div>
+
+                          <!-- Text input-->
+                          <div class="form-group">
+                            <label class="col-md-4 control-label" for="title">タイトル</label><br>
+                            <div class="col-md-8" style="display: inline-block;">
+                            <input id="title" name="title" type="text" placeholder="メールタイトル" class="form-control input-md">
+                            </div>
+                          </div>
+
+                          <!-- Textarea -->
+                          <div class="form-group">
+                            <label class="col-md-5 control-label" for="content">お問い合わせ内容</label>
+                            <div class="col-md-12">
+                              <textarea class="form-control" id="content" name="content" style="height: 200px">お問い合わせ内容</textarea>
+                            </div>
+                          </div>
+
+                  </div>
+                  <div class="modal-footer text-center" style="display: inline-block;">
+                    <input type="submit" class="btn btn-primary" value="送信">
+                  </div>
+                </form>
             </div>
         </div>
     </div>
@@ -360,5 +450,5 @@
       <p>©ex chef</p>
     </div>
   </footer>
-
+  <script src="js/app.js"></script>
 </body>

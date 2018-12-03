@@ -32,7 +32,7 @@
     $user_categories_stmt->execute($user_categories_data);
 
 
-
+    // プロフィール登録がされていた場合の処理
     if($profile_t != FALSE){
         $area_id = h($profile_t['area_id']);
         $city = h($profile_t['city']);
@@ -76,7 +76,7 @@
     $categories_sql_data = [];
     $categories_stmt->execute($categories_sql_data);
 
-
+    // プロフィールの登録がなかった場合の処理
     if($profile_t == FALSE){
         if(!empty($_POST)){
             //必須項目

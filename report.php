@@ -16,7 +16,9 @@
     v($signin_user,'signin_user');
 
     $sql = 'SELECT * FROM `reports` WHERE `user_id`=? ORDER BY `created` DESC LIMIT 5 OFFSET 0';
-    $data = array($signin_user['id']);
+
+    $data = array($signin_user['user_id']);
+
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
 
@@ -197,6 +199,7 @@
 
   </div>
 
+
   <div id="report_modal">
     <div class="report_modal">
       <div class="blog-inner">
@@ -212,6 +215,7 @@
       </div>
     </div>
   </div>
+
 
   <footer>
     <div class="sns text-center">

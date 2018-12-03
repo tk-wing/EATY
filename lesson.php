@@ -26,11 +26,28 @@
     $stmt->execute($data);
     $teacher = $stmt->fetch(PDO::FETCH_ASSOC);
 
+
     if ($teacher['nickname'] == '') {
-        $name = $teacher['last_name'] + '　' + $teacher['first_name'];
+        $name = $teacher['last_name'].'　'.$teacher['first_name'];
     }else{
         $name = $teacher['nickname'];
     }
+
+    // 予約数を確認する
+    $number_reservation_sql='SELECT count(*) AS `number_reservation` FROM `reservations` WHERE `lesson_id`=? AND `status`=?';
+    $number_reservation_stmt = $dbh->prepare($number_reservation_sql);
+    $number_reservation_sql_data = [$lesson_id, '1'];
+    $number_reservation_stmt->execute($number_reservation_sql_data);
+
+    $number_reservation = $number_reservation_stmt->fetch(PDO::FETCH_ASSOC);
+
+
+    if ($number_reservation['number_reservation'] == $lesson['capacity']) {
+        $lesson['status'] = '満席';
+    }else{
+        $lesson['count'] = $lesson['capacity'] - $number_reservation['number_reservation'];
+    }
+
 
     if($user_type == '2'){
     // 生徒がレッスンを予約済みかを確認する。
@@ -46,8 +63,6 @@
     $favorite_flag_stmt = $dbh->prepare($favorite_flag_sql);
     $favorite_flag_stmt->execute($favorite_flag_data);
     $is_favorite = $favorite_flag_stmt->fetch(PDO::FETCH_ASSOC);
-
-
   }
 
 
@@ -84,7 +99,7 @@
 
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/eatylogo.png" width="100"></a>
+      <a href='#' data-toggle="modal" data-target="#demoNormalModal"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
 
@@ -93,6 +108,12 @@
       <div class="lesson_content text-center">
         <div class="blog-inner-prof text-center">
           <h3><?php echo $lesson['lesson_name'] ?></h3>
+          <?php if (isset($lesson['count'])): ?>
+            <p style="color: blue;">予約可(残り<?php echo $lesson['count'] ?>席)</p>
+          <?php else: ?>
+            <p style="color: red;">予約不可(このレッスンは満席です。)</p>
+          <?php endif ?>
+
           <?php if ($lesson['img_1']): ?>
             <img class="lesson_img" src="users_lesson_img/<?php echo $lesson['img_1'] ?>" style="width:300px;height:200px;">
           <?php endif ?>
@@ -178,20 +199,22 @@
               <?php endif ?>
               <?php if ($user_type == '2'): ?>
                 <?php if ($reservation == FALSE): ?>
-                  <a href="#"><button type="button" class="btn btn-primary">予約する</button></a><br>
+                  <a href="bkg.php?lesson_id=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">予約する</button></a><br>
                   <?php elseif ($reservation['status'] == '2'): ?>
                     <p style="color: red">キャンセル済みのレッスンです！</p>
-                    <a href="#"><button type="button" class="btn btn-primary">再予約する</button></a><br>
+                      <?php if (isset($lesson['count'])): ?>
+                        <a href="bkg.php?lesson_id=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">再予約する</button></a><br>
+                      <?php endif ?>
                 <?php else: ?>
                   <p style="color: red">予約済みのレッスンです！</p>
                 <?php endif ?>
                 <!-- <button type="button" class="btn btn-secondary"><i class="fas fa-heart" style="color: #F76AC0"></i></button> -->
-                <span hidden id="user_id"><?php echo $_SESSION['EATY']['id'] ?></span>
+                <span hidden id="user_id"><?php echo $user_id ?></span>
                 <span hidden id="lesson_id"><?php echo $lesson_id  ?></span>
                 <?php if ($is_favorite == FALSE): ?>
-                  <button type="button" id="like" class="btn btn-secondary"><i class="fas fa-star"></i></button>
+                  <button type="button" id="favorite" class="btn btn-secondary"><i class="fas fa-star"></i></button>
                 <?php else: ?>
-                  <button type="button" id="unlike" class="btn btn-warning"><i class="fas fa-star"></i></button>
+                  <button type="button" id="unfavorite" class="btn btn-warning"><i class="fas fa-star"></i></button>
                 <?php endif ?>
               <?php endif ?>
             </div>
@@ -208,8 +231,28 @@
         <img class="img-responsive rounded-circle" src="user_profile_img/<?php echo $teacher['img_name'] ?>" alt="Blog" style="width:140px;height:140px;">
       <?php endif ?>
       <p>講師名：<?php echo $name ?></p>
-      <a href="#"><button type="button" class="btn btn-primary">この講師のページへ行く</button></a><br>
+      <a href="profile_t.php?teacher_id=<?php echo $teacher['user_id'] ?>"><button type="button" class="btn btn-primary">この講師のページへ行く</button></a><br>
     </div>
+  </div>
+
+  <!-- メニュー -->
+  <div class="modal fade" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-body text-center">
+                  <p>メニュー</p>
+              </div>
+              <div class="modal-footer text-center" style="display: inline-block;">
+                  <?php if ($user_type == '1'): ?>
+                    <a href="top_t.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                  <?php elseif ($user_type == '2'): ?>
+                    <a href="top_s.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                    <a href="serch_s.php"><button type="button" class="btn btn-primary">レッスン検索</button></a>
+                  <?php endif ?>
+                  <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
+              </div>
+          </div>
+      </div>
   </div>
 
   </div>

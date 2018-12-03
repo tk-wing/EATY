@@ -3,7 +3,7 @@
   require('functions.php');
 //v($_GET['feed_id'],"feed_id");
   $report_each = $_GET["report_each"];
-  $sql = "SELECT `reports`.*,`profiles_s`.`nickname`,`profiles_s`.`img_name` FROM `reports` LEFT JOIN `profiles_s` ON `reports`.`user_id`=`profiles_s`.`id` WHERE `reports`.`id`=$report_each";
+  $sql = "SELECT `reports`.*,`profiles_s`.`nickname`,`profiles_s`.`img_name` AS `profile_img` FROM `reports` LEFT JOIN `profiles_s` ON `reports`.`user_id`=`profiles_s`.`id` WHERE `reports`.`id`=$report_each";
 
   $data = array($report_each);
   $stmt = $dbh->prepare($sql);
@@ -12,6 +12,19 @@
   $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     v($signin_user,'signin_user');
+
+          //更新処理（更新ボタンが押されたときの処理）
+  if (!empty($_POST)) {
+      $update_sql = "UPDATE `reports` SET `feed` = ? WHERE `reports`.`id`=?";
+      $data = array($_POST["feed"],$_POST["report_id"]);
+      //sql文の実行
+      $stmt = $dbh->prepare($update_sql);
+      $stmt->execute($data);
+      
+      //つくれぽ一覧へ遷移
+      header("Location: report.php");
+      exit();
+  }
 ?>
 
 
@@ -83,13 +96,13 @@
         <form method="POST" action="">
           <div class="row">
             <div class="col-md-12">
-              <img src="user_profile_img/<?php echo $signin_user['img_name']; ?>" style="width:100px;height:100px;border-radius: 50%;">
+              <img src="user_profile_img/<?php echo $signin_user['profile_img']; ?>" style="width:100px;height:100px;border-radius: 50%;">
               <p><?php echo $signin_user['nickname']; ?></p>
               <!-- <div class="form-group">
                 
               </div> -->
                <label class="filelabel_create">
-                <img id="img2" src="<?php echo $reports["img_name"]; ?>" style="width:130px;height:100px;">
+                <img id="img2" src="user_report_img/<?php echo $signin_user["img_name"]; ?>" style="width:130px;height:100px;">
                 <input type="file" class="filesend" id="filesend_1" name="report_img_name" accept="image/*">
               </label>
               <div class="text-center">
@@ -100,7 +113,7 @@
                   コメントを入力してください
                 <?php endif; ?>
               </div>
-                <div class="text-center"><input type="submit" value="更新する" class="btn btn-warning mt-3" style="width:200px;"></div>
+                <div class="text-center"><input type="hidden" name="report_id" value="<?php echo $signin_user["id"]; ?>"><input type="submit" value="更新する" class="btn btn-warning mt-3" style="width:200px;"></div>
             </div>
           </div>
         </form>
