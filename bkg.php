@@ -17,8 +17,8 @@
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     $sql = 'SELECT * FROM `lessons_t` WHERE `id`=?';
-    $data = array('10');
-    // $data = array(['lesson_id']);
+    // $data = array('10');
+    $data = array($lesson_id);
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
     $lesson = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -43,8 +43,8 @@
     // v($_POST['attention'],'$_POST[attention]');
     if(!empty($_POST)){
       $attention = $_POST['attention'];
-        $sql = 'INSERT INTO `reservations` SET `user_id`=?,`status`="1",`message`=?,`updated`=NOW()';
-        $data = array($signin_user['id'],$attention);
+        $sql = 'INSERT INTO `reservations` SET `user_id`=?,`lesson_id`=?,`status`="1",`message`=?,`updated`=NOW()';
+        $data = array($signin_user['id'],$lesson_id,$attention);
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
 
