@@ -202,7 +202,7 @@
                   <a href="bkg.php?lesson_id=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">予約する</button></a><br>
                   <?php elseif ($reservation['status'] == '2'): ?>
                     <p style="color: red">キャンセル済みのレッスンです！</p>
-                      <?php if ($bkg == 'possible'): ?>
+                      <?php if (isset($lesson['count'])): ?>
                         <a href="bkg.php?lesson_id=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">再予約する</button></a><br>
                       <?php endif ?>
                 <?php else: ?>

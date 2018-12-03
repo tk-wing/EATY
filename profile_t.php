@@ -10,6 +10,17 @@
     if (isset($_SESSION['EATY'])) {
         $user_id = $_SESSION['EATY']['id'];
         $user_type = $_SESSION['EATY']['user_type'];
+
+        if ($user_type == '2') {
+            // ユーザー情報を取得
+            $sql='SELECT * FROM `users` WHERE `id`=?';
+            $stmt = $dbh->prepare($sql);
+            $data = array($_SESSION['EATY']['id']);
+            $stmt->execute($data);
+            $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $signin_name = $signin_user['last_name'] . '　' . $signin_user['first_name'];
+        }
     }
 
 
@@ -128,6 +139,40 @@
       $is_liked = $like_flag_stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    if (!empty($_POST)) {
+        
+        $signin_name = $_POST['name'];
+        $email = $_POST['email'];
+        $title = $_POST['title'];
+        $content = $_POST['content'];
+
+        if ($signin_name == '') {
+            $validations['name'] = 'blank';
+        }
+
+        if ($signin_name == '') {
+            $validations['title'] = 'blank';
+        }
+
+        if ($signin_name == '') {
+            $validations['name'] = 'blank';
+        }
+
+        if ($signin_name == '') {
+            $validations['name'] = 'blank';
+        }
+
+        mb_language("Japanese");
+        mb_internal_encoding("UTF-8");
+
+        if(mb_send_mail($email, $title, $content)){
+          echo "メールを送信しました";
+        } else {
+          echo "メールの送信に失敗しました";
+        }
+
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -160,7 +205,7 @@
 <body>
   <header>
     <div class="text-center">
-      <a data-toggle="modal" data-target="#demoNormalModal"><img src="img/eatylogo.png" width="100"></a>
+      <a data-toggle="modal" data-target="#menuModal"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
 
@@ -182,7 +227,7 @@
               <?php if ($user_type == '2'): ?>
                 <span hidden id="user_id"><?php echo $user_id ?></span>
                 <span hidden id="teacher_id"><?php echo $profile_t['user_id'] ?></span>
-                <button type="button" class="btn btn-secondary"><i class="far fa-envelope"></i></button>
+                <a data-toggle="modal" data-target="#mailModal"><button type="button" class="btn btn-secondary"><i class="far fa-envelope"></i></button></a>
                 <?php if ($is_liked == FALSE): ?>
                   <button id="like" type="button" class="btn btn-secondary"><i class="far fa-heart"></i>&nbsp;<span id='like_count'><?php echo $profile_t['like_count'] ?></span></button>
                 <?php else: ?>
@@ -327,17 +372,66 @@
     </div>
 
     <!-- メニュー -->
-    <div class="modal fade" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal fade" id="menuModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body text-center">
                     <p>メニュー</p>
                 </div>
                 <div class="modal-footer text-center" style="display: inline-block;">
-                    <a href="top_s.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
-                    <a href="serch_s.php"><button type="button" class="btn btn-primary">レッスン検索</button></a>
-                    <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
+                  <a href="top_s.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                  <a href="serch_s.php"><button type="button" class="btn btn-primary">レッスン検索</button></a>
+                  <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- メールモーダル -->
+    <div class="modal fade" id="mailModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form method="POST" method="">
+              <div class="modal-content">
+                  <div class="modal-body text-center">
+                      <p>メール送信</p>
+
+                          <!-- Text input-->
+                          <div class="form-group">
+                            <label class="col-md-4 control-label" for="name">お名前</label><br>
+                            <div class="col-md-8" style="display: inline-block;">
+                            <input id="name" name="name" type="text" placeholder="" value="<?php echo $signin_name ?>" class="form-control input-md">
+                            </div>
+                          </div>
+
+                          <!-- Text input-->
+                          <div class="form-group">
+                            <label class="col-md-4 control-label" for="email">メールアドレス</label><br>
+                            <div class="col-md-8" style="display: inline-block;">
+                            <input id="email" name="email" type="text" placeholder="" value="<?php echo $signin_user['email'] ?>" class="form-control input-md">
+                            </div>
+                          </div>
+
+                          <!-- Text input-->
+                          <div class="form-group">
+                            <label class="col-md-4 control-label" for="title">タイトル</label><br>
+                            <div class="col-md-8" style="display: inline-block;">
+                            <input id="title" name="title" type="text" placeholder="メールタイトル" class="form-control input-md">
+                            </div>
+                          </div>
+
+                          <!-- Textarea -->
+                          <div class="form-group">
+                            <label class="col-md-5 control-label" for="content">お問い合わせ内容</label>
+                            <div class="col-md-12">
+                              <textarea class="form-control" id="content" name="content" style="height: 200px">お問い合わせ内容</textarea>
+                            </div>
+                          </div>
+
+                  </div>
+                  <div class="modal-footer text-center" style="display: inline-block;">
+                    <input type="submit" class="btn btn-primary" value="送信">
+                  </div>
+                </form>
             </div>
         </div>
     </div>
