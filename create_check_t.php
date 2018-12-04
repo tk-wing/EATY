@@ -1,7 +1,5 @@
 <?php 
       //作成時のチェックPHP
-
-
        //SESSIONの有効化
     session_start();
 
@@ -14,9 +12,6 @@
     if (!isset($_SESSION['EATY'])) {
       header('Location: create_lesson.php');
       }
-
-   
-
       // カテゴリー情報を取得
       $categories_sql='SELECT * FROM `categories`';
       $categories_stmt = $dbh->prepare($categories_sql);
@@ -24,11 +19,8 @@
       $categories_stmt->execute($categories_sql_data);
       $categories = $categories_stmt->fetch(PDO::FETCH_ASSOC);
 
-    
-
-
-    v($_POST,'$_POST');
-    v($_SESSION,'$SESSION');
+    // v($_POST,'$_POST');
+    // v($_SESSION,'$SESSION');
 
     //$SESSIONで持ってきた値を変数に変える
     if (!empty($_SESSION)) {
@@ -110,10 +102,12 @@
   <div class="create_check_content text-center">
     <div class="blog-inner-prof text-center">
       <h3>レッスン名:<?= h($lesson_name);?></h3>
-      <img class="lesson_img" src="users_lesson_img/<?= h($img_1);?>" style="width:300px;height:200px;">
-      <img class="lesson_img" src="users_lesson_img/<?= h($img_2);?>" style="width:300px;height:200px;"><br>
-      <img class="lesson_img" src="users_lesson_img/<?= h($img_3);?>" style="width:300px;height:200px;">
-      <img class="lesson_img" src="users_lesson_img/<?= h($img_4);?>" style="width:300px;height:200px;">
+      <!-- 画像表示 (もしあったら表示)-->
+      <?php for($i=1; $i<=4; $i++): ?>
+            <?php if ($_SESSION['EATY']['img_'.$i]): ?>
+              <img class="lesson_img" src="users_lesson_img/<?php echo $_SESSION['EATY']['img_'.$i] ?>" style="width:300px;height:200px;">
+            <?php endif ?>
+          <?php endfor ?>
 
       <div class="row contents">
           <div class="col-md-4">
