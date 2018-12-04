@@ -63,7 +63,7 @@
     $favorite_flag_stmt = $dbh->prepare($favorite_flag_sql);
     $favorite_flag_stmt->execute($favorite_flag_data);
     $is_favorite = $favorite_flag_stmt->fetch(PDO::FETCH_ASSOC);
-  }
+    }
 
 
 
@@ -114,22 +114,11 @@
             <p style="color: red;">予約不可(このレッスンは満席です。)</p>
           <?php endif ?>
 
-          <?php if ($lesson['img_1']): ?>
-            <img class="lesson_img" src="users_lesson_img/<?php echo $lesson['img_1'] ?>" style="width:300px;height:200px;">
-          <?php endif ?>
-
-          <?php if ($lesson['img_2']): ?>
-            <img class="lesson_img" src="users_lesson_img/<?php echo $lesson['img_2'] ?>" style="width:300px;height:200px;"><br>
-          <?php endif ?>
-
-          <?php if ($lesson['img_3']): ?>
-            <img class="lesson_img" src="users_lesson_img/<?php echo $lesson['img_3'] ?>" style="width:300px;height:200px;">
-          <?php endif ?>
-
-          <?php if ($lesson['img_4']): ?>
-            <img class="lesson_img" src="users_lesson_img/<?php echo $lesson['img_4'] ?>" style="width:300px;height:200px;">
-          <?php endif ?>
-
+          <?php for($i=1; $i<=4; $i++): ?>
+            <?php if ($lesson['img_'.$i]): ?>
+              <img class="lesson_img" src="users_lesson_img/<?php echo $lesson['img_'.$i] ?>" style="width:300px;height:200px;">
+            <?php endif ?>
+          <?php endfor ?>
 
           <div class="row contents">
               <div class="col-md-4">
