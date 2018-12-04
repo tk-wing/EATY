@@ -60,7 +60,7 @@
   <div class="top wrapper">
     <!-- TOP上部 -->
     <div class="container-flued" style="background-image: url(img/top2.jpg); height: 800px; background-size:cover;">
-      <img class="mx-auto d-block"src="img/logo2.png" width="300">
+      <img class="mx-auto d-block" src="img/logo2.png" width="300" style="padding: 15px;">
       <div class="col text-center area signup">
       <a href="signup.php"><button type="button" class="btn-box">新規登録</button></a>
       </div>
@@ -74,7 +74,7 @@
         <a href="signin.php"><button type="button" class="btn-box">ログイン</button></a>
       </div>
       <div class="col text-center area serch">
-      <button class="btn-box">レッスン検索</button>
+      <a href="#serch"><button type="button" class="btn-box">レッスン検索</button></a>
       </div>
     <!-- </div> -->
     </div>
