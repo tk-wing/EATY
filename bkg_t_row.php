@@ -18,9 +18,9 @@
         <!-- ここはデータベース上変わってく、何人の生徒が予約したか -->
 
           <?php if (isset($lessons_each['count'])): ?>
-            <p>現在<?php echo $lessons_each['count'] ?>人</p>
+            <p style="color: green;"><?php echo $lessons_each['count'] ?>人</p>
           <?php else: ?>
-            <p style="color: red;">0(定員に満たしました。)</p>
+             <p style="color: red;"><?php echo $lessons_each["capacity"]; ?></p>
           <?php endif ?>
         <p>/<?php echo $lessons_each["capacity"]; ?>人</p>
       </div>

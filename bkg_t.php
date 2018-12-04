@@ -12,14 +12,15 @@
 
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // pロフィール情報をを取得
-    // $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
-    // $profile_t_stmt = $dbh->prepare($profile_t_sql);
-    // $profile_t_sql_data = [$signin_user['id']];
-    // $profile_t_stmt->execute($profile_t_sql_data);
-    // $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+    //pロフィール情報をを取得
+    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=? ';
+    $profile_t_stmt = $dbh->prepare($profile_t_sql);
+    $profile_t_sql_data = [$signin_user['id']];
+    $profile_t_stmt->execute($profile_t_sql_data);
+    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
 
-    
+
+    $img_name =$profile_t['img_name'];
     // if($signin_user == FALSE){
     //     header('Location: signup.php');
     //     exit();
@@ -56,13 +57,16 @@
                 $lesson['status'] = '満席';//数えた数がcapacityと一緒だったら満席をステータスに入れる
             }else{
                 //capacity-数えた数をカウント関数にしてる。
-                $lesson['count'] = $lesson['capacity'] - $number_reservation['number_reservation'];
+
+                $lesson['count'] = 0 + $number_reservation['number_reservation'];
                 $lesson['status'] = 'NULL';
             }
 
             $lessons[]= $lesson;
         }
-          v($lessons,'$lessons');
+
+
+          // v($lessons,'$lessons');
 
 ?>
 
