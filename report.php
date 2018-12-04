@@ -1,24 +1,25 @@
-<?php 
-
+<?php
     session_start();
     require('dbconnect.php');
     require('functions.php');
-    $sql = 'SELECT * FROM `profiles_s` WHERE `user_id`=?';
-    $data = array($_SESSION['EATY']['id']);
 
-    var_dump($_SESSION['EATY']['id']);
-
+    // ユーザー情報を取得
+    $sql='SELECT `users`.*, `profiles_s`.`nickname`, `profiles_s`.`img_name` FROM `users` LEFT JOIN `profiles_s` ON `users`.`id` = `profiles_s`.`user_id` WHERE `users`.`id`=?';
     $stmt = $dbh->prepare($sql);
+    $data = array($_SESSION['EATY']['id']);
     $stmt->execute($data);
-
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    v($signin_user,'signin_user');
+    //ニックネームが登録されていない場合
+    if (empty($signin_user['nickname'])) {
+        $name = $signin_user['last_name'] . '　' . $signin_user['first_name'];
+    } else {
+        $name = $signin_user['nickname'];
+    }
+
 
     $sql = 'SELECT * FROM `reports` WHERE `user_id`=? ORDER BY `created` DESC LIMIT 5 OFFSET 0';
-
-    $data = array($signin_user['user_id']);
-
+    $data = array($signin_user['id']);
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
 
@@ -31,7 +32,6 @@
       }
       $reports[]=$report;
     }
-    v($reports,'reports');
 
 
 
@@ -69,14 +69,18 @@
 <body>
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/logo.jpg" width="90"></a>
+      <a href='#' data-toggle="modal" data-target="#demoNormalModal"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
 
   <div class="wrapper">
     <div class="top-content text-center">
-       <img src="user_profile_img/<?php echo $signin_user['img_name']; ?>" style="width:120px;height:120px;border-radius: 50%;">
-       <p><?php echo $signin_user['nickname']; ?>さんのつくれぽ</p>
+      <?php if ($signin_user['img_name'] == ""): ?>
+        <img id="img1" src="img/profile_img_defult.png" style="width:160px;height:160px;border-radius: 50%;">
+      <?php else: ?>
+        <img src="user_profile_img/<?php echo $signin_user['img_name']; ?>" style="width:120px;height:120px;border-radius: 50%;">
+      <?php endif ?>
+       <p><?php echo $name; ?>さんのつくれぽ</p>
     </div>
 
     <div class="row text-center" style="border: 4px solid #2C373B;border-radius: 240px 15px 185px 15px / 15px 200px 15px 185px;margin: 2em 0;padding: 2em;">
@@ -89,8 +93,8 @@
       <div class="col-md-3 text-center">
         <span><?php echo date('Y/m/d', strtotime($report_each['created'])); ?></span>
         <div class="blog-inner" style="border:solid 1px; ">
-          <img class="img-responsive" src="user_report_img/<?php echo $report_each['img_name']; ?>" alt="Blog" style="margin: 5px">
-          <p style="text-align: left; padding: 3px 3px"><?php echo $report_each['feed']; ?></p>
+          <img class="img-responsive" src="user_report_img/<?php echo $report_each['img_name']; ?>" alt="Blog" style="margin: 5px; height: 150px;">
+          <p style="text-align: center; padding: 3px 3px"><?php echo $report_each['feed']; ?></p>
           <div class="desc">
 
             <form method="POST" action="">
@@ -200,20 +204,20 @@
   </div>
 
 
-  <div id="report_modal">
-    <div class="report_modal">
-      <div class="blog-inner">
-        <div class="close-modal">
-          <i class="fa fa-2x fa-times"></i>
-        </div>
-        <span>2018/12/31</span><br>
-        <img class="img-responsive" src="http://placehold.jp/250x150.png" alt="Blog">
-        <div class="desc">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-        </div>
+  <!-- メニュー -->
+  <div class="modal fade" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-body text-center">
+                  <p>メニュー</p>
+              </div>
+              <div class="modal-footer text-center" style="display: inline-block;">
+                  <a href="top_s.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                  <a href="serch_s.php"><button type="button" class="btn btn-primary">レッスン検索</button></a>
+                  <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
+              </div>
+          </div>
       </div>
-    </div>
   </div>
 
 
@@ -225,5 +229,11 @@
       <p>©ex chef</p>
     </div>
   </footer>
+
+  <!-- jQuery、Popper.js、Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <!-- <script src="assets/js/app.js"></script> -->
 
 </body>
