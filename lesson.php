@@ -231,7 +231,9 @@
         <img class="img-responsive rounded-circle" src="user_profile_img/<?php echo $teacher['img_name'] ?>" alt="Blog" style="width:140px;height:140px;">
       <?php endif ?>
       <p>講師名：<?php echo $name ?></p>
-      <a href="profile_t.php?teacher_id=<?php echo $teacher['user_id'] ?>"><button type="button" class="btn btn-primary">この講師のページへ行く</button></a><br>
+      <?php if ($user_type == '2'): ?>
+        <a href="profile_t.php?teacher_id=<?php echo $teacher['user_id'] ?>"><button type="button" class="btn btn-primary">この講師のページへ行く</button></a><br>
+      <?php endif ?>
     </div>
   </div>
 

@@ -1,30 +1,28 @@
 <?php
-  require('dbconnect.php');
-  require('functions.php');
-//v($_GET['feed_id'],"feed_id");
-  $report_each = $_GET["report_each"];
-  $sql = "SELECT `reports`.*,`profiles_s`.`nickname`,`profiles_s`.`img_name` AS `profile_img` FROM `reports` LEFT JOIN `profiles_s` ON `reports`.`user_id`=`profiles_s`.`id` WHERE `reports`.`id`=$report_each";
+    require('dbconnect.php');
+    require('functions.php');
 
-  $data = array($report_each);
-  $stmt = $dbh->prepare($sql);
-  $stmt->execute($data);
+    $report_each = $_GET["report_each"];
 
-  $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $sql = "SELECT `reports`.*,`profiles_s`.`nickname`,`profiles_s`.`img_name` AS `profile_img` FROM `reports` LEFT JOIN `profiles_s` ON `reports`.`user_id`=`profiles_s`.`id` WHERE `reports`.`id`=$report_each";
+    $data = array($report_each);
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    v($signin_user,'signin_user');
 
-          //更新処理（更新ボタンが押されたときの処理）
-  if (!empty($_POST)) {
-      $update_sql = "UPDATE `reports` SET `feed` = ? WHERE `reports`.`id`=?";
-      $data = array($_POST["feed"],$_POST["report_id"]);
-      //sql文の実行
-      $stmt = $dbh->prepare($update_sql);
-      $stmt->execute($data);
-      
-      //つくれぽ一覧へ遷移
-      header("Location: report.php");
-      exit();
-  }
+    //更新処理（更新ボタンが押されたときの処理）
+    if (!empty($_POST)) {
+        $update_sql = "UPDATE `reports` SET `feed` = ? WHERE `reports`.`id`=?";
+        $data = array($_POST["feed"],$_POST["report_id"]);
+        //sql文の実行
+        $stmt = $dbh->prepare($update_sql);
+        $stmt->execute($data);
+
+        //つくれぽ一覧へ遷移
+        header("Location: report.php");
+        exit();
+    }
 ?>
 
 
@@ -39,7 +37,7 @@
   <!--stylesheetのCSS読み込み -->
   <link rel="stylesheet" href="css/stylesheet.css">
   <link rel="stylesheet" href="css/stylesheet_t.css">
-  
+
   <!-- BootstrapのCSS読み込み -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <!-- jQuery読み込み -->
@@ -87,7 +85,7 @@
 <body>
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/logo.jpg" width="90"></a>
+      <a href='#' data-toggle="modal" data-target="#demoNormalModal"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
 
@@ -96,10 +94,13 @@
         <form method="POST" action="">
           <div class="row">
             <div class="col-md-12">
-              <img src="user_profile_img/<?php echo $signin_user['profile_img']; ?>" style="width:100px;height:100px;border-radius: 50%;">
+              <?php if ($signin_user['profile_img'] == ''): ?>
+                <img id="img1" src="img/profile_img_defult.png" style="width:160px;height:160px;border-radius: 50%;">
+              <?php else: ?>
+                <img src="user_profile_img/<?php echo $signin_user['profile_img']; ?>" style="width:100px;height:100px;border-radius: 50%;">
+              <?php endif ?>
               <p><?php echo $signin_user['nickname']; ?></p>
               <!-- <div class="form-group">
-                
               </div> -->
                <label class="filelabel_create">
                 <img id="img2" src="user_report_img/<?php echo $signin_user["img_name"]; ?>" style="width:130px;height:100px;">
@@ -120,6 +121,23 @@
     
       </div>
     </div>
+
+  <!-- メニュー -->
+  <div class="modal fade" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-body text-center">
+                  <p>メニュー</p>
+              </div>
+              <div class="modal-footer text-center" style="display: inline-block;">
+                  <a href="top_s.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                  <a href="serch_s.php"><button type="button" class="btn btn-primary">レッスン検索</button></a>
+                  <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
+              </div>
+          </div>
+      </div>
+  </div>
+
   <footer>
     <div class="sns text-center">
       <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>
@@ -128,6 +146,12 @@
       <p>©ex chef</p>
     </div>
   </footer>
+
+  <!-- jQuery、Popper.js、Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <!-- <script src="assets/js/app.js"></script> -->
 
 </body>
 </html>
