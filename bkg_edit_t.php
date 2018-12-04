@@ -7,11 +7,11 @@
     require('functions.php');
     //パラメーター
     $lesson_id = $_GET['lesson_id'];
-    $user_type = '';
+    
 
     $validations = [];
     
-    v($_FILES,'$_FILES');
+    // v($_FILES,'$_FILES');
 
 
 
@@ -44,6 +44,11 @@
     $categories_stmt = $dbh->prepare($categories_sql);
     $categories_sql_data = [];
     $categories_stmt->execute($categories_sql_data);
+
+    $img_1 = $lesson['img_1'];
+    $img_2 = $lesson['img_2'];
+    $img_3 = $lesson['img_3'];
+    $img_4 = $lesson['img_4'];
 
 
     $day = $lesson['day'];
@@ -157,26 +162,19 @@ if (!empty($_POST)) {
             $destination = 'users_lesson_img/'.$file_name4;
             move_uploaded_file($tmp_file, $destination);
         }
-    }
-        
-        // if (empty($validations)) {
+        if (empty($validations)) {
+          //もし、作成したレッスンに変更があったら
+      
+              $lesson_sql='UPDATE `lessons_t` SET `img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`station`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`updated`=NOW() WHERE `id`=?';
+              $lesson_stmt = $dbh->prepare($lesson_sql);
+              $lesson_data = [$img_1,$img_2,$img_3,$img_4,$day,$daytime,$station,$fee,$requiretime,$category_id,$menu,$capacity,$basic,$lesson_name,$menudetail,$bring,$precaution,$lesson['id']];
+              $lesson_stmt->execute($lesson_data);
+          
 
-          // もし、作成したレッスンに変更があったら
-        //   if(){
-        //       $lesson_sql='UPDATE `lessons_t` SET `user_id`=?,`img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`station`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`updated`=NOW() WHERE `id`=?';
-        //       $lesson_stmt = $dbh->prepare($lesson_sql);
-        //       $lesson_data = [$signin_user['id']];
-        //       $lesson_stmt->execute($user_data);
-        //   }
-
-        //  header('Location: create_check_t.php');
-        //  exit();
-        // }
-        
-        // }
-    
-    
-
+              header('Location: bkg_t.php');
+              exit();
+        }
+    }//POSTの
 ?>
 
 <!DOCTYPE html>
@@ -331,14 +329,22 @@ if (!empty($_POST)) {
             <div class="row">
               <div class="col text-right">
                 <label class="filelabel_create">
-                <img id="img1" src="users_lesson_img/<?= h($img_1);?>" style="width:130px;height:100px;">
+                <?php if ($img_1 == ''): ?>
+                <img id="img1" src="https://placehold.jp/130x100.png"style="width:130px;height:100px;">
+                <?php else: ?>
+                <img id="img1" src="users_lesson_img/<?= $img_1;?>" style="width:130px;height:100px;">
+                <?php endif ?>
                 <input type="file" class="filesend" id="filesend_1" name="img_1" accept="image/*">
                 </label>
               </div>
 
               <div class="col text-left">
                 <label class="filelabel_create">
-                <img id="img2" src="users_lesson_img/<?= h($img_2);?>" style="width:130px;height:100px;">
+                  <?php if ($img_2 == ''): ?>
+                <img id="img2" src="https://placehold.jp/130x100.png"style="width:130px;height:100px;">
+                <?php else: ?>
+                <img id="img2" src="users_lesson_img/<?= $img_2;?>" style="width:130px;height:100px;">
+                <?php endif ?>
                 <input type="file" class="filesend" id="filesend_2" name="img_2" accept="image/*">
                 </label>
               </div>
@@ -347,14 +353,22 @@ if (!empty($_POST)) {
             <div class="row">
               <div class="col text-right">
                 <label class="filelabel_create">
-                <img id="img3" src="users_lesson_img/<?= h($img_3);?>" style="width:130px;height:100px;">
+                  <?php if ($img_3 == ''): ?>
+                  <img id="img3" src="https://placehold.jp/130x100.png"style="width:130px;height:100px;">
+                  <?php else: ?>
+                  <img id="img3" src="users_lesson_img/<?= $img_3;?>" style="width:130px;height:100px;">
+                  <?php endif ?>
                 <input type="file" class="filesend" id="filesend_3" name="img_3" accept="image/*">
                 </label>
               </div>
 
               <div class="col text-left">
                 <label class="filelabel_create">
-                <img id="img4" src="users_lesson_img/<?= h($img_4);?>" style="width:130px;height:100px;">
+                  <?php if ($img_4 == ''): ?>
+                  <img id="img4" src="https://placehold.jp/130x100.png"style="width:130px;height:100px;">
+                  <?php else: ?>
+                  <img id="img4" src="users_lesson_img/<?= $img_4;?>" style="width:130px;height:100px;">
+                  <?php endif ?>
                 <input type="file" class="filesend" id="filesend_4" name="img_4" accept="image/*">
                 </label>
               </div>
