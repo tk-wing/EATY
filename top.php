@@ -62,21 +62,23 @@
     <div class="container-flued" style="background-image: url(img/top2.jpg); height: 800px; background-size:cover;">
       <img class="mx-auto d-block"src="img/logo2.png" width="300">
 
-      <a href="signup.php"><button type="button" class="mx-auto d-block btn btn-default my-btn-signup">新規登録</button></a>
+      <a href="signup.php"><button type="button" class="mx-auto d-block btn-box my-btn-signup">新規登録</button></a>
     
 
     <!-- 3つのボタン -->
-    <div class="row top-content">
+    <!-- <div class="row top-content"> <div class="container">
+<a href="#" class="btn-box">PUSH ME</a>
+</div>-->
       <div class="col text-center area aboutus">
-        <a href="#aboutus"><button type="button" class="btn btn-default">about us</button></a>
+        <a href="#aboutus"><button type="button" class="btn-box">about us</button></a>
       </div>
       <div class="col text-center area signin">
-        <a href="signin.php"><button type="button" class="btn  btn-default">ログイン</button></a>
+        <a href="signin.php"><button type="button" class="btn-box">ログイン</button></a>
       </div>
       <div class="col text-center area serch">
-      <button type="button" class="btn btn-default">レッスン検索</button>
+      <button class="btn-box">レッスン検索</button>
       </div>
-    </div>
+    <!-- </div> -->
     </div>
     <!-- コンセプト -->
     <div class="concept" id="aboutus">
@@ -86,7 +88,7 @@
           <a class="circle">教えたいexchef</a>
           <a class="maltiply">×</a>
           <a class="circle">習いたいYOU</a>
-          <div class="text-center description">Our web service is “ex chef” for connecting those who would like to work with professional skill of cooking and baking with those who would like to learn how to cook and bake.“ex chef”とは、料理とベーキングの専門的なスキルを身につけたい人と、料理とベーキングの方法を学びたい人とをつなぐためのサービスです。</div>
+          <div class="text-center description">Our web service is “ex chef” for connecting those who would like to work with professional skill of cooking and baking with those who would like to learn how to cook and bake.<br>“ex chef”とは、料理とベーキングの専門的なスキルを身につけた人と、料理とベーキングの方法を学びたい人とをつなぐためのサービスです。</div>
         </div>
       </div>
     </div>
@@ -114,14 +116,14 @@
           <div class="desc">
             <h3><a href="lesson.php?lesson_id=<?php echo $lesson['id']?>"><?php echo $lesson['lesson_name'] ?></a></h3>
             <p>¥<?php echo $lesson['fee'] ?>/1人</p>
-            <p><a href="lesson.php?lesson_id=<?php echo $lesson['id']?>" class="btn btn-primary btn-outline with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
+            <p><a href="lesson.php?lesson_id=<?php echo $lesson['id']?>" class="btn btn-default with-arrow">レッスン詳細を見る<i class="icon-arrow-right"></i></a></p>
           </div>
         </div>
       </div>
       <?php endforeach ?>
 
     </div>
-    <div class="text-center"><button type="button" class="btn btn-secondary">more</button></div>
+    <div class="text-center"><button type="button" class="btn btn-default">more</button></div>
   </div>
 
 
@@ -143,7 +145,7 @@
                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
               </div>
             </div>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">このレッスンの講師プロフィールへ<i class="icon-arrow-right"></i></a></p>
+            <p><a href="#" class="btn btn-default with-arrow">このレッスンの講師プロフィールへ<i class="icon-arrow-right"></i></a></p>
           </div>
         </div>
       </div>
@@ -161,7 +163,7 @@
                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
               </div>
             </div>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow">このレッスンの講師プロフィールへ<i class="icon-arrow-right"></i></a></p>
+            <p><a href="#" class="btn btn-default with-arrow">このレッスンの講師プロフィールへ<i class="icon-arrow-right"></i></a></p>
           </div>
         </div>
       </div>
@@ -179,7 +181,7 @@
                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
               </div>
             </div>
-            <p><a href="#" class="btn btn-sm btn-primary btn-outline with-arrow">このレッスンの講師プロフィールへ<i class="icon-arrow-right"></i></a></p>
+            <p><a href="#" class="btn btn-default with-arrow">このレッスンの講師プロフィールへ<i class="icon-arrow-right"></i></a></p>
           </div>
         </div>
       </div>
@@ -197,12 +199,12 @@
                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
               </div>
             </div>
-            <p><a href="#" class="btn btn-primary btn-outline with-arrow" >このレッスンの講師プロフィールへ<i class="icon-arrow-right"></i></a></p>
+            <p><a href="#" class="btn btn-default with-arrow" >このレッスンの講師プロフィールへ<i class="icon-arrow-right"></i></a></p>
           </div>
         </div>
       </div>
     </div>
-    <div class="text-center"><a href="signup.php"><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#demoNormalModal1">会員登録してみる<br>(無料)</button></a></div>
+    <div class="text-center"><a href="signup.php"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#demoNormalModal1">会員登録してみる<br>(無料)</button></a></div>
   </div>
 
   <footer>
