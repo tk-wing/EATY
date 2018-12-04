@@ -41,12 +41,23 @@
 
     $number_reservation = $number_reservation_stmt->fetch(PDO::FETCH_ASSOC);
 
+    $today = date("Y-m-d");
+    $targetTime = $lesson['day'];
+
+    v($today ,'$today');
+    v($targetTime,'$targetTime');
+    v(date('Y-m-d', strtotime($targetTime,'-1 day')),'date');
 
     if ($number_reservation['number_reservation'] == $lesson['capacity']) {
         $lesson['status'] = '満席';
     }else{
-        $lesson['count'] = $lesson['capacity'] - $number_reservation['number_reservation'];
+        $lesson['status'] = $lesson['capacity'] - $number_reservation['number_reservation'];
     }
+
+    // if ($today == date('Y-m-d', strtotime('-1 day', $targetTime))) {
+    //     echo 'hogehoge';
+    // }
+
 
 
     if($user_type == '2'){
@@ -108,8 +119,8 @@
       <div class="lesson_content text-center">
         <div class="blog-inner-prof text-center">
           <h3><?php echo $lesson['lesson_name'] ?></h3>
-          <?php if (isset($lesson['count'])): ?>
-            <p style="color: blue;">予約可(残り<?php echo $lesson['count'] ?>席)</p>
+          <?php if ($lesson['status'] !='満席'): ?>
+            <p style="color: blue;">予約可(残り<?php echo $lesson['status'] ?>席)</p>
           <?php else: ?>
             <p style="color: red;">予約不可(このレッスンは満席です。)</p>
           <?php endif ?>
@@ -146,7 +157,7 @@
             <div class="col-md-6">
               <span>所要時間</span>
               <span>&emsp;</span>
-              <span><?php echo $lesson['requiretime'] ?></span>
+              <span><?php echo date('H時間i分', strtotime($lesson['requiretime']))?></span>
             </div>
           </div>
 

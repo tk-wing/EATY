@@ -18,7 +18,7 @@
     $first_name = $signin_user['first_name'];
 
 
-    // pロフィール情報をを取得
+    // プロフィール情報をを取得
     $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
     $profile_t_stmt = $dbh->prepare($profile_t_sql);
     $profile_t_sql_data = [$signin_user['id']];

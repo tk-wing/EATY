@@ -10,6 +10,25 @@
     $stmt->execute($data);
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // 受講歴を取得
+    $tag_sql = 'SELECT * FROM `reservations` WHERE `student_id`=?'
+    $tag_stmt $dbh->prepare($tag_sql);
+    $tag_data = [$signin_user['id']];
+    $tag_stmt->execute($tag_data);
+
+    while (1) {
+        $tag = $tag_stmt->fetch(PDO::FETCH_ASSOC);
+        if ($tag == FALSE) {
+            break;
+        }
+        $sql='SELECT `users`.*, `profiles_s`.`nickname`, `profiles_s`.`img_name` FROM `users` LEFT JOIN `profiles_s` ON `users`.`id` = `profiles_s`.`user_id` WHERE `users`.`id`=?';
+          $stmt = $dbh->prepare($sql);
+          $data = array($_SESSION['EATY']['id']);
+          $stmt->execute($data);
+          $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    }
+
     //ニックネームが登録されていない場合
     if (empty($signin_user['nickname'])) {
         $name = $signin_user['last_name'] . '　' . $signin_user['first_name'];
@@ -148,12 +167,13 @@
                 <?php endif; ?>
               </div>
 
-
-                <label class="col-md-4 control-label" for="tag">講師をタグ付けする</label>
-                  <select id="tag" name="tag" class="form-control col-md-3">
+                <div class="text-center">
+                <label class="col-md-4 control-label" for="tag">講師をタグ付けする<br>(受講歴のある講師を選択できます)</label><br>
+                  <select id="tag" name="tag" class="form-control col-md-3" style="display: inline-block;">
                     <option value="1">Option one</option>
                     <option value="2">Option two</option>
                   </select>
+                </div>
 
               <div class="text-center"><input type="submit" value="この内容で投稿" class="btn btn-primary mt-3" style="width:200px;"></div>
 
