@@ -233,7 +233,12 @@
                   </div>
                 </div>
               <div class="blog-inner">
-                <img class="img-responsive" src="users_lesson_img/<?php echo $lesson_t['img_1'] ?>" alt="Blog" width="100%" style="height: 250px;">
+                <?php for($i=1; $i<=4; $i++): ?>
+                  <?php if ($lesson_t['img_'.$i]): ?>
+                    <img class="img-responsive" src="users_lesson_img/<?php echo $lesson_t['img_'.$i] ?>" alt="Blog" width="100%" style="height: 250px;">
+                    <?php break; ?>
+                  <?php endif ?>
+                <?php endfor ?>
                 <div class="desc">
                   <h3><a href="lesson.php?lesson_id=<?php echo $lesson_t['id']?>"><?php echo $lesson_t['lesson_name'] ?></a></h3>
                   <span>料金:¥<?php echo $lesson_t['fee'] ?>/1人</span>
