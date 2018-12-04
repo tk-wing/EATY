@@ -61,14 +61,12 @@
     <!-- TOP上部 -->
     <div class="container-flued" style="background-image: url(img/top2.jpg); height: 800px; background-size:cover;">
       <img class="mx-auto d-block"src="img/logo2.png" width="300">
-
-      <a href="signup.php"><button type="button" class="mx-auto d-block btn-box my-btn-signup">新規登録</button></a>
+      <div class="col text-center area signup">
+      <a href="signup.php"><button type="button" class="btn-box">新規登録</button></a>
+      </div>
     
 
     <!-- 3つのボタン -->
-    <!-- <div class="row top-content"> <div class="container">
-<a href="#" class="btn-box">PUSH ME</a>
-</div>-->
       <div class="col text-center area aboutus">
         <a href="#aboutus"><button type="button" class="btn-box">about us</button></a>
       </div>
