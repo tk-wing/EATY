@@ -4,27 +4,18 @@
     require('functions.php');
      $lesson_id = $_GET['lesson_id'];
      $user_type = '';
-    //最終的に↑2行コメントｱｳﾄ解除
-     v($lesson_id,'lesson_id');
 
     $sql = 'SELECT * FROM `users` WHERE `id`=?';
     $data = array($_SESSION['EATY']['id']);
-
-    var_dump($_SESSION['EATY']['id']);
-
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     $sql = 'SELECT * FROM `lessons_t` WHERE `id`=?';
-     //$data = array('10');
-    $data = array(['lesson_id']);
-
-
+    $data = array($lesson_id);
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
     $lesson = $stmt->fetch(PDO::FETCH_ASSOC);
-     v($lesson,'lesson');
 
 
         // 講師のユーザー・プロフィール情報を取得
@@ -39,14 +30,11 @@
     }else{
         $name = $teacher['nickname'];
     }
-    v($name,'name');
-    v($teacher,'teacher');
 
-    // v($_POST['attention'],'$_POST[attention]');
     if(!empty($_POST)){
       $attention = $_POST['attention'];
-        $sql = 'INSERT INTO `reservations` SET `user_id`=?,`status`="1",`message`=?,`updated`=NOW()';
-        $data = array($signin_user['id'],$attention);
+        $sql = 'INSERT INTO `reservations` SET `user_id`=?, `lesson_id`=?, `status`="1",`message`=?,`updated`=NOW()';
+        $data = array($signin_user['id'],$lesson_id,$attention);
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
 

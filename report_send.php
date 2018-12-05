@@ -11,23 +11,36 @@
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // 受講歴を取得
-    $tag_sql = 'SELECT * FROM `reservations` WHERE `student_id`=?'
-    $tag_stmt $dbh->prepare($tag_sql);
+    $tag_sql = 'SELECT DISTINCT `reservations`.user_id, `lessons_t`.`user_id` AS `teacher_id` FROM `reservations` LEFT JOIN `lessons_t` ON `reservations`.`lesson_id` = `lessons_t`.`id` WHERE `reservations`.`user_id`=?';
+    $tag_stmt = $dbh->prepare($tag_sql);
     $tag_data = [$signin_user['id']];
     $tag_stmt->execute($tag_data);
+
+    $tags = [];
 
     while (1) {
         $tag = $tag_stmt->fetch(PDO::FETCH_ASSOC);
         if ($tag == FALSE) {
             break;
         }
-        $sql='SELECT `users`.*, `profiles_s`.`nickname`, `profiles_s`.`img_name` FROM `users` LEFT JOIN `profiles_s` ON `users`.`id` = `profiles_s`.`user_id` WHERE `users`.`id`=?';
-          $stmt = $dbh->prepare($sql);
-          $data = array($_SESSION['EATY']['id']);
-          $stmt->execute($data);
-          $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+        // セレクトタグで名前ORニックネームを表示するためデータを取得
+        $sql='SELECT `users`.`first_name`, `users`.`last_name`, `profiles_t`.`nickname` FROM `users` LEFT JOIN `profiles_t` ON `users`.`id` = `profiles_t`.`user_id` WHERE `profiles_t`.`user_id`=?';
+        $stmt = $dbh->prepare($sql);
+        $data = [$tag['teacher_id']];
+        $stmt->execute($data);
+        $teacher = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($teacher['nickname'] == '') {
+            $tag['name'] = $teacher['last_name'] . '　' . $teacher['first_name'];
+        }else{
+            $tag['name'] = $teacher['nickname'];
+        }
+
+        $tags[] = $tag;
 
     }
+
+    v($tags, 'tags');
 
     //ニックネームが登録されていない場合
     if (empty($signin_user['nickname'])) {
@@ -44,6 +57,7 @@
     if (!empty($_POST)) {
         $report_img_name = $_FILES['report_img_name']['name'];
         $feed = $_POST['feed'];
+        $tag_teacher = $_POST['tag'];
 
         if($feed == ''){
           $validations['feed'] = 'blank';
@@ -59,8 +73,8 @@
             $destination = 'user_report_img/'.$report_img_name;
             move_uploaded_file($tmp_file, $destination);
 
-            $sql = 'INSERT INTO `reports` SET `user_id`=?, `img_name`=?, `feed`=?,`created`=NOW()';
-            $data = array($signin_user['id'],$report_img_name,$feed,);
+            $sql = 'INSERT INTO `reports` SET `user_id`=?, `img_name`=?, `feed`=?, `tag_teacher`=?, `created`=NOW()';
+            $data = array($signin_user['id'],$report_img_name,$feed,$tag_teacher);
             $stmt = $dbh->prepare($sql);
             $stmt->execute($data);
 
@@ -170,8 +184,10 @@
                 <div class="text-center">
                 <label class="col-md-4 control-label" for="tag">講師をタグ付けする<br>(受講歴のある講師を選択できます)</label><br>
                   <select id="tag" name="tag" class="form-control col-md-3" style="display: inline-block;">
-                    <option value="1">Option one</option>
-                    <option value="2">Option two</option>
+                    <option value="">選択してください。</option>
+                    <?php foreach ($tags as $tag): ?>
+                      <option value="<?php echo $tag['teacher_id'] ?>"><?php echo $tag['name'] ?></option>
+                    <?php endforeach ?>
                   </select>
                 </div>
 
