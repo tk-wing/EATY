@@ -42,21 +42,21 @@
     $number_reservation = $number_reservation_stmt->fetch(PDO::FETCH_ASSOC);
 
     $today = date("Y-m-d");
-    $targetTime = $lesson['day'];
+    $targetTime = strtotime($lesson['day']);
 
-    v($today ,'$today');
-    v($targetTime,'$targetTime');
-    v(date('Y-m-d', strtotime($targetTime,'-1 day')),'date');
 
-    if ($number_reservation['number_reservation'] == $lesson['capacity']) {
-        $lesson['status'] = '満席';
+    if ($today == date('Y-m-d', strtotime('-1 day', $targetTime))) {
+        $lesson['status'] = '受付終了しました。';
+    }elseif (strtotime($today) > $targetTime) {
+        $lesson['status'] = '開催済みのレッスンです。';
+    }elseif ($number_reservation['number_reservation'] == $lesson['capacity']) {
+        $lesson['status'] = '予約不可(このレッスンは満席です。)';
     }else{
-        $lesson['status'] = $lesson['capacity'] - $number_reservation['number_reservation'];
+        $lesson['count'] = $lesson['capacity'] - $number_reservation['number_reservation'];
     }
 
-    // if ($today == date('Y-m-d', strtotime('-1 day', $targetTime))) {
-    //     echo 'hogehoge';
-    // }
+
+
 
 
 
@@ -119,10 +119,10 @@
       <div class="lesson_content text-center">
         <div class="blog-inner-prof text-center">
           <h3><?php echo $lesson['lesson_name'] ?></h3>
-          <?php if ($lesson['status'] !='満席'): ?>
-            <p style="color: blue;">予約可(残り<?php echo $lesson['status'] ?>席)</p>
+          <?php if (isset($lesson['count'])): ?>
+            <p style="color: blue;">予約可(残り<?php echo $lesson['count'] ?>席)</p>
           <?php else: ?>
-            <p style="color: red;">予約不可(このレッスンは満席です。)</p>
+            <p style="color: red;"><?php echo $lesson['status'] ?></p>
           <?php endif ?>
 
           <?php for($i=1; $i<=4; $i++): ?>
@@ -198,15 +198,17 @@
                 <a href="bkg_edit_t.php?lesson_id=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">編集する</button></a><br>
               <?php endif ?>
               <?php if ($user_type == '2'): ?>
-                <?php if ($reservation == FALSE): ?>
-                  <a href="bkg.php?lesson_id=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">予約する</button></a><br>
-                  <?php elseif ($reservation['status'] == '2'): ?>
-                    <p style="color: red">キャンセル済みのレッスンです！</p>
-                      <?php if (isset($lesson['count'])): ?>
-                        <a href="bkg.php?lesson_id=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">再予約する</button></a><br>
-                      <?php endif ?>
-                <?php else: ?>
-                  <p style="color: red">予約済みのレッスンです！</p>
+                <?php if ($lesson['status'] == NULL): ?>
+                  <?php if ($reservation == FALSE): ?>
+                    <a href="bkg.php?lesson_id=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">予約する</button></a><br>
+                    <?php elseif ($reservation['status'] == '2'): ?>
+                      <p style="color: red">キャンセル済みのレッスンです！</p>
+                        <?php if (isset($lesson['count'])): ?>
+                          <a href="bkg.php?lesson_id=<?php echo $lesson_id ?>"><button type="button" class="btn btn-primary">再予約する</button></a><br>
+                        <?php endif ?>
+                  <?php else: ?>
+                    <p style="color: red">予約済みのレッスンです！</p>
+                  <?php endif ?>
                 <?php endif ?>
                 <!-- <button type="button" class="btn btn-secondary"><i class="fas fa-heart" style="color: #F76AC0"></i></button> -->
                 <span hidden id="user_id"><?php echo $user_id ?></span>
