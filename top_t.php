@@ -310,7 +310,7 @@
                   <?php endif ?>
                   <p style="font-size: 15px;"><?php echo $report['name'] ?></p>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-8 text-left">
                   <?php echo $report['feed'] ?>
                 </div>
               </div>
