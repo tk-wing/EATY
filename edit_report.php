@@ -1,23 +1,18 @@
 <?php
   require('dbconnect.php');
   require('functions.php');
-//v($_GET['feed_id'],"feed_id");
   $report_each = $_GET["report_each"];
   $sql = "SELECT `reports`.*,`profiles_s`.`nickname`,`profiles_s`.`img_name` AS `profile_img` FROM `reports` LEFT JOIN `profiles_s` ON `reports`.`user_id`=`profiles_s`.`id` WHERE `reports`.`id`=$report_each";
-
   $data = array($report_each);
   $stmt = $dbh->prepare($sql);
   $stmt->execute($data);
-
   $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    v($signin_user,'signin_user');
 
-          //更新処理（更新ボタンが押されたときの処理）
+  //更新処理（更新ボタンが押されたときの処理）
   if (!empty($_POST)) {
       $update_sql = "UPDATE `reports` SET `feed` = ? WHERE `reports`.`id`=?";
       $data = array($_POST["feed"],$_POST["report_id"]);
-      //sql文の実行
       $stmt = $dbh->prepare($update_sql);
       $stmt->execute($data);
       
@@ -67,7 +62,6 @@
         alert("画像ファイルを指定してください。");
         return false;
       }
-   
       //アップロードした画像を設定する
       reader.onload = (function(file){
         return function(e){
@@ -107,7 +101,6 @@
               </label>
               <div class="text-center">
                 <textarea class="form-control col-md-3" id="textarea" name="feed" placeholder="一言コメント" style="height: 90px; display: inline-block;"><?php echo $signin_user["feed"]; ?></textarea>
-                <!--箱があるかないか確認するisset先生-->
                 <?php if(isset($validations['feed']) && $validations['feed'] == 'etsuko'): ?>
                   <br>
                   コメントを入力してください
