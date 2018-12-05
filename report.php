@@ -5,15 +5,10 @@
     require('functions.php');
     $sql = 'SELECT * FROM `profiles_s` WHERE `user_id`=?';
     $data = array($_SESSION['EATY']['id']);
-
-    var_dump($_SESSION['EATY']['id']);
-
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
-
     $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    v($signin_user,'signin_user');
 
     $sql = 'SELECT * FROM `reports` WHERE `user_id`=? ORDER BY `created` DESC LIMIT 5 OFFSET 0';
     $data = array($signin_user['user_id']);
@@ -29,9 +24,6 @@
       }
       $reports[]=$report;
     }
-    v($reports,'reports');
-
-
 
 ?>
 
