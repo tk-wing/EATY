@@ -18,11 +18,11 @@
         <!-- ここはデータベース上変わってく、何人の生徒が予約したか -->
 
           <?php if (isset($lessons_each['count'])): ?>
-            <p style="color: green;"><?php echo $lessons_each['count'] ?>人</p>
+            <span style="color: green;"><?php echo $lessons_each['count'] ?>人</span>
           <?php else: ?>
-             <p style="color: red;"><?php echo $lessons_each["capacity"]; ?></p>
+             <span style="color: red;"><?php echo $lessons_each["capacity"]; ?></span>
           <?php endif ?>
-        <p>/<?php echo $lessons_each["capacity"]; ?>人</p>
+        <span>/<?php echo $lessons_each["capacity"]; ?>人</span>
       </div>
 
       <!-- もしカウントに値があったら受付中、そうじゃなかったらステータスの満席を入れる -->

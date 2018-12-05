@@ -139,6 +139,35 @@
       $is_liked = $like_flag_stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // つくれぽを取得
+    $report_sql='SELECT * FROM `reports` WHERE `tag_teacher`=? ORDER BY `created` DESC LIMIT 0,4';
+    $report_stmt = $dbh->prepare($report_sql);
+    $report_sql_data = [$teacher_id];
+    $report_stmt->execute($report_sql_data);
+
+    while(1){
+        $report = $report_stmt->fetch(PDO::FETCH_ASSOC);
+        if ($report == FALSE) {
+            break;
+        }
+
+        $student_sql='SELECT `u`.`first_name`, `u`.`last_name`, `p`.`nickname`, `p`.`img_name` FROM `users` AS `u` LEFT JOIN `profiles_s` AS `p` ON `u`.`id` = `p`.`user_id` WHERE `u`.`id`=?';
+        $student_stmt = $dbh->prepare($student_sql);
+        $student_sql_data = [$report['user_id']];
+        $student_stmt->execute($student_sql_data);
+        $student = $student_stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($student['nickname'] == '') {
+            $report['name'] = $student['last_name'] . '　' . $student['first_name'];
+        }else{
+            $report['name'] = $student['nickname'];
+        }
+
+        $report['profile_img'] = $student['img_name'];
+
+        $reports[] = $report;
+    }
+
     if (!empty($_POST)) {
         
         $signin_name = $_POST['name'];
@@ -205,7 +234,11 @@
 <body>
   <header>
     <div class="text-center">
-      <a data-toggle="modal" data-target="#menuModal"><img src="img/eatylogo.png" width="100"></a>
+      <?php if ($user_type == ''): ?>
+        <a href="top.php"><img src="img/eatylogo.png" width="100"></a>
+      <?php else: ?>
+        <a data-toggle="modal" data-target="#menuModal"><img src="img/eatylogo.png" width="100"></a>
+      <?php endif ?>
     </div>
   </header>
 
@@ -301,74 +334,29 @@
   <div class="low wrapper">
     <div class="text-center title">つくれぽ</div>
     <div class="row low-content">
-      <div class="col-md-3 text-center">
-        <span>2018/12/31</span>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/250x150.png" alt="Blog">
-          <div class="desc">
-            <div class="row">
-              <div class="col-md-3">
-                <img src="https://placehold.jp/80x80.png" style="width:80px;height:80px;border-radius: 50%;">
-              </div>
-              <div class="col-md-9">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 text-center">
-        <span>2018/12/31</span>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/250x150.png" alt="Blog">
-          <div class="desc">
-            <div class="row">
-              <div class="col-md-3">
-                <img src="https://placehold.jp/80x80.png" style="width:80px;height:80px;border-radius: 50%;">
-              </div>
-              <div class="col-md-9">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+      <?php foreach ($reports as $report): ?>
+        <div class="col-md-3 text-center">
+          <span><?php echo date('Y年m月d日',  strtotime($report['created'])) ?></span>
+          <div class="blog-inner">
+            <img class="img-responsive" src="user_report_img/<?php echo $report['img_name'] ?>" alt="Blog" style="height: 150px;">
+            <div class="desc">
+              <div class="row">
+                <div class="col-md-4 text-center">
+                  <?php if ($report['profile_img'] == ''): ?>
+                    <img src="img/profile_img_defult.png" style="width:80px;height:80px;border-radius: 50%;">
+                  <?php else: ?>
+                    <img src="user_profile_img/<?php echo $report['profile_img'] ?>" style="width:80px;height:80px;border-radius: 50%;">
+                  <?php endif ?>
+                  <p style="font-size: 15px;"><?php echo $report['name'] ?></p>
+                </div>
+                <div class="col-md-8 text-left">
+                  <?php echo $report['feed'] ?>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-3 text-center">
-        <span>2018/12/31</span>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/250x150.png" alt="Blog">
-          <div class="desc">
-            <div class="row">
-              <div class="col-md-3">
-                <img src="https://placehold.jp/80x80.png" style="width:80px;height:80px;border-radius: 50%;">
-              </div>
-              <div class="col-md-9">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 text-center">
-        <span>2018/12/31</span>
-        <div class="blog-inner">
-          <img class="img-responsive" src="http://placehold.jp/250x150.png" alt="Blog">
-          <div class="desc">
-            <div class="row">
-              <div class="col-md-3">
-                <img src="https://placehold.jp/80x80.png" style="width:80px;height:80px;border-radius: 50%;">
-              </div>
-              <div class="col-md-9">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <?php endforeach ?>
     </div>
 
     <!-- メニュー -->

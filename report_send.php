@@ -40,7 +40,6 @@
 
     }
 
-    v($tags, 'tags');
 
     //ニックネームが登録されていない場合
     if (empty($signin_user['nickname'])) {

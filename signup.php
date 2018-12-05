@@ -129,7 +129,7 @@
 
   <header>
     <div class="text-center" >
-      <a href="#"><img src="img/eatylogo.png" width="100"></a>
+      <a href="top.php"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
 

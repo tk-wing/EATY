@@ -52,8 +52,17 @@
             $number_reservation_sql_data = [$lesson['id'],'1'];//$lessonはreservationsテーブルのlesson_idと同じ値
             $number_reservation_stmt->execute($number_reservation_sql_data);
             $number_reservation = $number_reservation_stmt->fetch(PDO::FETCH_ASSOC);
+
+            $today = date("Y-m-d");
+            $targetTime = strtotime($lesson['day']);
+
+            if ($today == date('Y-m-d', strtotime('-1 day', $targetTime))) {
+                $lesson['status'] = '受付終了';
+            }elseif (strtotime($today) > $targetTime) {
+                $lesson['status'] = '開催済み';
+            }
             //reservationsテーブルのlesson_idとstatusを数える
-            if ($number_reservation['number_reservation'] == $lesson['capacity']) {
+            elseif ($number_reservation['number_reservation'] == $lesson['capacity']) {
                 $lesson['status'] = '満席';//数えた数がcapacityと一緒だったら満席をステータスに入れる
             }else{
                 //capacity-数えた数をカウント関数にしてる。
@@ -64,7 +73,6 @@
 
             $lessons[]= $lesson;
         }
-
 
           // v($lessons,'$lessons');
 
@@ -100,13 +108,17 @@
 <body>
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/eatylogo.png" width="100"></a>
+      <a data-toggle="modal" data-target="#demoNormalModal"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
 
   <div class="wrapper">
     <div class="top-content text-center">
-      <img src="user_profile_img/<?php echo $img_name ?>" style="width:120px;height:120px;border-radius: 50%;">
+      <?php if ($img_name == ''): ?>
+        <img class="img-responsive" src="img/profile_img_defult.png" alt="Blog" style="width:140px;height:140px;border-radius: 50%;">
+      <?php else: ?>
+        <img src="user_profile_img/<?php echo $img_name ?>" style="width:120px;height:120px;border-radius: 50%;">
+      <?php endif ?>
     </div>
 
     <div class="blog-inner-prof">
@@ -139,6 +151,21 @@
 
     } ?>
 
+  </div>
+
+  <!-- メニュー -->
+  <div class="modal fade" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-body text-center">
+                  <p>メニュー</p>
+              </div>
+              <div class="modal-footer text-center" style="display: inline-block;">
+                  <a href="top_t.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                  <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
+              </div>
+          </div>
+      </div>
   </div>
 
 
