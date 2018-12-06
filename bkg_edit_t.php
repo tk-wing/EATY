@@ -7,13 +7,10 @@
     require('functions.php');
     //パラメーター
     $lesson_id = $_GET['lesson_id'];
-    
 
     $validations = [];
-    
+
     // v($_FILES,'$_FILES');
-
-
 
     // // ユーザー情報を取得
     // $sql='SELECT * FROM `users` WHERE `id`=?';
@@ -37,7 +34,6 @@
     $lessons_stmt->execute($lessons_data);
     $lesson = $lessons_stmt->fetch(PDO::FETCH_ASSOC);
 
-    v($lesson,'$lesson');
 
     // カテゴリー情報を取得
     $categories_sql='SELECT * FROM `categories`';
@@ -164,12 +160,10 @@ if (!empty($_POST)) {
         }
         if (empty($validations)) {
           //もし、作成したレッスンに変更があったら
-      
               $lesson_sql='UPDATE `lessons_t` SET `img_1`=?,`img_2`=?,`img_3`=?,`img_4`=?,`day`=?,`daytime`=?,`station`=?,`fee`=?,`requiretime`=?,`category_id`=?,`menu`=?,`capacity`=?,`basic`=?,`lesson_name`=?,`menudetail`=?,`bring`=?,`precaution`=?,`updated`=NOW() WHERE `id`=?';
               $lesson_stmt = $dbh->prepare($lesson_sql);
               $lesson_data = [$img_1,$img_2,$img_3,$img_4,$day,$daytime,$station,$fee,$requiretime,$category_id,$menu,$capacity,$basic,$lesson_name,$menudetail,$bring,$precaution,$lesson['id']];
               $lesson_stmt->execute($lesson_data);
-          
 
               header('Location: bkg_t.php');
               exit();
@@ -314,7 +308,7 @@ if (!empty($_POST)) {
 <body>
   <header>
     <div class="text-center">
-      <a href="#"><img src="img/eatylogo.png" width="100"></a>
+      <a data-toggle="modal" data-target="#demoNormalModal"><img src="img/eatylogo.png" width="100"></a>
     </div>
   </header>
 
@@ -601,6 +595,22 @@ if (!empty($_POST)) {
 
    </div>
 </form>
+
+<!-- メニュー -->
+<div class="modal fade" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <p>メニュー</p>
+            </div>
+            <div class="modal-footer text-center" style="display: inline-block;">
+                <a href="top_t.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+
  <footer>
     <div class="sns text-center">
       <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>

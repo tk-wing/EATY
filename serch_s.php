@@ -4,8 +4,6 @@
     require('dbconnect.php');
     require('functions.php');
 
-    v($_SESSION,'$_SESSION');
-    v($_GET,'$_GET');
        // ユーザー情報を取得
     $sql='SELECT * FROM `users` WHERE `id`=?';
     $stmt = $dbh->prepare($sql);
@@ -33,7 +31,7 @@
     $categories_stmt = $dbh->prepare($categories_sql);
     $categories_sql_data = [];
     $categories_stmt->execute($categories_sql_data);
-    
+
     // 都道府県情報の取得
     $areas_sql='SELECT * FROM `areas`';
     $areas_stmt = $dbh->prepare($areas_sql);
@@ -53,7 +51,7 @@
         $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`,`profiles_t`.`area_id`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
 
         //１つでも値に入ってたら検索する。
-  
+
         if (!empty($day)) {
             $lessons_data[] = $day;
             $lessons_sql.= 'AND `day`= ?';//AND絶対当てはまるようにしてる
