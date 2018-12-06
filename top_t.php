@@ -294,30 +294,33 @@
   <div class="low wrapper">
     <div class="text-center title">つくれぽ</div>
     <div class="row low-content">
-
-      <?php foreach ($reports as $report): ?>
-        <div class="col-md-3 text-center">
-          <span><?php echo date('Y年m月d日',  strtotime($report['created'])) ?></span>
-          <div class="blog-inner">
-            <img class="img-responsive" src="user_report_img/<?php echo $report['img_name'] ?>" alt="Blog" style="height: 150px;">
-            <div class="desc">
-              <div class="row">
-                <div class="col-md-4 text-center">
-                  <?php if ($report['profile_img'] == ''): ?>
-                    <img src="img/profile_img_defult.png" style="width:80px;height:80px;border-radius: 50%;">
-                  <?php else: ?>
-                    <img src="user_profile_img/<?php echo $report['profile_img'] ?>" style="width:80px;height:80px;border-radius: 50%;">
-                  <?php endif ?>
-                  <p style="font-size: 15px;"><?php echo $report['name'] ?></p>
-                </div>
-                <div class="col-md-8 text-left">
-                  <?php echo $report['feed'] ?>
+      <?php if (empty($reports)): ?>
+        <div class="col-md-12 mb-5 text-center">タグ付けされたつくれぽはありません。</div>
+      <?php else: ?>
+        <?php foreach ($reports as $report): ?>
+          <div class="col-md-3 text-center">
+            <span><?php echo date('Y年m月d日',  strtotime($report['created'])) ?></span>
+            <div class="blog-inner">
+              <img class="img-responsive" src="user_report_img/<?php echo $report['img_name'] ?>" alt="Blog" style="height: 150px;">
+              <div class="desc">
+                <div class="row">
+                  <div class="col-md-4 text-center">
+                    <?php if ($report['profile_img'] == ''): ?>
+                      <img src="img/profile_img_defult.png" style="width:80px;height:80px;border-radius: 50%;">
+                    <?php else: ?>
+                      <img src="user_profile_img/<?php echo $report['profile_img'] ?>" style="width:80px;height:80px;border-radius: 50%;">
+                    <?php endif ?>
+                    <p style="font-size: 15px;"><?php echo $report['name'] ?></p>
+                  </div>
+                  <div class="col-md-8 text-left">
+                    <?php echo $report['feed'] ?>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      <?php endforeach ?>
+        <?php endforeach ?>
+      <?php endif ?>
 
     </div>
 
