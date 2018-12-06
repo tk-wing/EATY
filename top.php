@@ -141,7 +141,7 @@
           </div>
         </div>
         <div class="blog-inner">
-          <img class="img-responsive" src="users_lesson_img/<?php echo $lesson['img_1'] ?>" alt="Blog" width="100%" style="height: 250px;">
+          <img class="img-responsive" src="users_lesson_img/<?php echo $lesson['img_1'] ?>" alt="Blog" style="height: 250px;">
           <div class="desc">
             <h3><a href="lesson.php?lesson_id=<?php echo $lesson['id']?>"><?php echo $lesson['lesson_name'] ?></a></h3>
             <p>¥<?php echo $lesson['fee'] ?>/1人</p>

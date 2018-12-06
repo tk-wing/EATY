@@ -110,7 +110,11 @@
 
   <header>
     <div class="text-center">
-      <a href='#' data-toggle="modal" data-target="#demoNormalModal"><img src="img/eatylogo.png" width="100"></a>
+      <?php if ($user_type == ''): ?>
+        <a href='top.php'><img src="img/eatylogo.png" width="100"></a>
+      <?php else: ?>
+        <a href='#' data-toggle="modal" data-target="#demoNormalModal"><img src="img/eatylogo.png" width="100"></a>
+      <?php endif ?>
     </div>
   </header>
 
@@ -164,11 +168,7 @@
           <div>
             <ul>
               <li>メニュー内容</li>
-              <li>メニュー内容</li>
-              <li>メニュー内容</li>
-              <li>メニュー内容</li>
-              <li>メニュー内容</li>
-              <li>メニュー内容</li>
+              <li><li><?php echo $lesson['menudetail'] ?></li></li>
             </ul>
           </div>
 

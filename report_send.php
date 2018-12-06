@@ -56,7 +56,7 @@
 
     if (!empty($_POST)) {
         $report_img_name = $_FILES['report_img_name']['name'];
-        $feed = $_POST['feed'];
+        $feed = h($_POST['feed']);
         $tag_teacher = $_POST['tag'];
 
         if($feed == ''){

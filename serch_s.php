@@ -4,27 +4,12 @@
     require('dbconnect.php');
     require('functions.php');
 
-       // ユーザー情報を取得
-    $sql='SELECT * FROM `users` WHERE `id`=?';
-    $stmt = $dbh->prepare($sql);
-    $data = array($_SESSION['EATY']['id']);
-    $stmt->execute($data);
+    $user_type = '';
 
-    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // pロフィール情報をを取得
-    $profile_t_sql='SELECT * FROM `profiles_t` WHERE `user_id`=?';
-    $profile_t_stmt = $dbh->prepare($profile_t_sql);
-    $profile_t_sql_data = [$signin_user['id']];
-    $profile_t_stmt->execute($profile_t_sql_data);
-    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
-
-    // pロフィール情報をを取得(生徒)
-    $profile_t_sql='SELECT * FROM `profiles_s` WHERE `user_id`=?';
-    $profile_t_stmt = $dbh->prepare($profile_t_sql);
-    $profile_t_sql_data = [$signin_user['id']];
-    $profile_t_stmt->execute($profile_t_sql_data);
-    $profile_t = $profile_t_stmt->fetch(PDO::FETCH_ASSOC);
+    if (isset($_SESSION['EATY'])) {
+        $user_id = $_SESSION['EATY']['id'];
+        $user_type = $_SESSION['EATY']['user_type'];
+    }
 
     // カテゴリー情報を取得
     $categories_sql='SELECT * FROM `categories`';
@@ -41,60 +26,114 @@
     $validations=[];
 
 
-    //検索ボタンを押した時
-    if (!empty($_GET['day'])|| !empty($_GET['area_id'])|| !empty($_GET['category_id'])|| !empty($_GET['keyword'])) {
-        $day = $_GET['day'];
-        $area = $_GET['area_id'];
-        $category_id = $_GET['category_id'];
-        $keyword = $_GET['keyword'];
+    // //検索ボタンを押した時
+    // if (!empty($_GET['day'])|| !empty($_GET['area_id'])|| !empty($_GET['category_id'])|| !empty($_GET['keyword'])) {
+    //     $day = $_GET['day'];
+    //     $area = $_GET['area_id'];
+    //     $category_id = $_GET['category_id'];
+    //     $keyword = $_GET['keyword'];
 
-        $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`,`profiles_t`.`area_id`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
+    //     $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`,`profiles_t`.`area_id`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
 
-        //１つでも値に入ってたら検索する。
+    //     //１つでも値に入ってたら検索する。
 
-        if (!empty($day)) {
-            $lessons_data[] = $day;
-            $lessons_sql.= 'AND `day`= ?';//AND絶対当てはまるようにしてる
-        }
-        if (!empty($area)) {
-            $lessons_data[] = $area;
-            $lessons_sql.= 'AND `area_id`= ?';
-        }
-        if (!empty($category_id)) {
-            $lessons_data[] = $category_id;
-            $lessons_sql.= 'AND `category_id`= ?';
-        }
-        if (!empty($keyword)) {
-        // $lessons_sql.= 'AND `lesson_name`= ?';
-        $lessons_sql.='AND`lessons_t`.`lesson_name` LIKE ?';//
-        $search_word = "%".$_GET['keyword']."%";
+    //     if (!empty($day)) {
+    //         $lessons_data[] = $day;
+    //         $lessons_sql.= 'AND `day`= ?';//AND絶対当てはまるようにしてる
+    //     }
+    //     if (!empty($area)) {
+    //         $lessons_data[] = $area;
+    //         $lessons_sql.= 'AND `area_id`= ?';
+    //     }
+    //     if (!empty($category_id)) {
+    //         $lessons_data[] = $category_id;
+    //         $lessons_sql.= 'AND `category_id`= ?';
+    //     }
+    //     if (!empty($keyword)) {
+    //     // $lessons_sql.= 'AND `lesson_name`= ?';
+    //     $lessons_sql.='AND`lessons_t`.`lesson_name` LIKE ?';//
+    //     $search_word = "%".$_GET['keyword']."%";
 
-        $lessons_data[] = $search_word;
+    //     $lessons_data[] = $search_word;
 
 
 
-        }
+    //     }
+    // }else{
+    //     //検査結果を表示。（同じ値だったものすべて）
+    //         $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
+    //         $lessons_data =[];
+
+    // }
+    //         $lessons_stmt = $dbh->prepare($lessons_sql);
+    //         $lessons_stmt->execute($lessons_data);
+
+    //     // $lessons_stmt = $dbh->prepare($lessons_sql);
+    //     // $lessons_stmt->execute($lessons_data);
+    //     $lessons_t = [];
+    //     while (1) {
+    //         $lesson_t = $lessons_stmt->fetch(PDO::FETCH_ASSOC);
+    //         if ($lesson_t == FALSE) {
+    //             break;
+    //         }
+    //         $lessons_t[] = $lesson_t;
+    //     }
+
+    // 検索ボタンが押されたら
+    if (!empty($_GET)){
+
+      $lessons_sql = "SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name` AS `profile_img` FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id` WHERE 1=1";
+
+      $day = $_GET['day'];
+      $area = $_GET['area_id'];
+      $category_id = $_GET['category_id'];
+      $keyword = $_GET['keyword'];
+
+      $lessons_data = [];
+
+
+      if(!empty($day)){
+              $lessons_sql .= ' AND `lessons_t`.`day`=?';
+              $lessons_data[] = $day;
+          }
+
+      if(!empty($area)){
+              $lessons_sql .= ' AND `profiles_t`.`area_id`=?';
+              $lessons_data[] = $area;
+          }
+
+      if(!empty($category_id)){
+              $lessons_sql .= ' AND `lessons_t`.`category_id`=?';
+              $lessons_data[] = $category_id;
+          }
+
+      if(!empty($keyword)){
+              $lessons_sql .= ' AND CONCAT(`lessons_t`.`station`, `lessons_t`.`fee`, `lessons_t`.`lesson_name`, `lessons_t`.`menudetail`) LIKE ?';
+              $lessons_data[] = '%'.$keyword.'%';
+          }
+
+      $lessons_sql .= ' ORDER BY `lessons_t`.`day`';
+
+
     }else{
-        //検査結果を表示。（同じ値だったものすべて）
-            $lessons_sql ='SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name`FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id`';
-            $lessons_data =[];
-
+        $lessons_sql = 'SELECT `lessons_t`.*,`profiles_t`.`nickname`,`profiles_t`.`img_name` AS `profile_img` FROM `lessons_t` INNER JOIN `profiles_t` ON `lessons_t`.`user_id`=`profiles_t`.`user_id` ORDER BY `lessons_t`.`day`';
+        $lessons_data = [];
     }
-            $lessons_stmt = $dbh->prepare($lessons_sql);
-            $lessons_stmt->execute($lessons_data);
 
-        // $lessons_stmt = $dbh->prepare($lessons_sql);
-        // $lessons_stmt->execute($lessons_data);
-        $lessons_t = [];
-        while (1) {
-            $lesson_t = $lessons_stmt->fetch(PDO::FETCH_ASSOC);
-            if ($lesson_t == FALSE) {
-                break;
-            }
-            $lessons_t[] = $lesson_t;
+
+    $lessons_stmt = $dbh->prepare($lessons_sql);
+    $lessons_stmt->execute($lessons_data);
+
+    $lessons_t = [];
+
+
+    while (1) {
+        $lesson_t = $lessons_stmt->fetch(PDO::FETCH_ASSOC);
+        if ($lesson_t == FALSE) {
+            break;
         }
-
-
+        $lessons_t[] = $lesson_t;
+    }
 
 
 
@@ -133,13 +172,17 @@
   <script src="js/modernizr-2.6.2.min.js"></script>
   <!-- viewport meta -->
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  
+
 </head>
 
 <body>
   <header>
     <div class="text-center" >
-      <a href="#"><img src="img/eatylogo.png" width="100"></a>
+      <?php if ($user_type == ''): ?>
+        <a href='top.php'><img src="img/eatylogo.png" width="100"></a>
+      <?php else: ?>
+        <a href='#' data-toggle="modal" data-target="#demoNormalModal"><img src="img/eatylogo.png" width="100"></a>
+      <?php endif ?>
     </div>
   </header>
 
@@ -234,6 +277,27 @@
       <?php endforeach ?>
 
     </div>
+
+    <!-- メニュー -->
+    <div class="modal fade" id="demoNormalModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <p>メニュー</p>
+                </div>
+                <div class="modal-footer text-center" style="display: inline-block;">
+                    <?php if ($user_type == '1'): ?>
+                      <a href="top_t.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                    <?php elseif ($user_type == '2'): ?>
+                      <a href="top_s.php"><button type="button" class="btn btn-primary">マイページへ</button></a>
+                      <a href="serch_s.php"><button type="button" class="btn btn-primary">レッスン検索</button></a>
+                    <?php endif ?>
+                    <a href="signout.php"><button type="button" class="btn btn-danger">ログアウト</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
   <footer>
     <div class="sns text-center">
       <a href="" class="btn-facebook sns-btn"><i class="fab fa-facebook fa-2x"></i></a>
