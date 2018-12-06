@@ -21,6 +21,7 @@
     while (1) {
         $tag = $tag_stmt->fetch(PDO::FETCH_ASSOC);
         if ($tag == FALSE) {
+          
             break;
         }
         // セレクトタグで名前ORニックネームを表示するためデータを取得

@@ -6,7 +6,7 @@
     $lessons = [];
 
     // レッスン情報を取得
-    $lesson_sql='SELECT * FROM `lessons_t` ORDER BY `created` DESC LIMIT 0,3';
+    $lesson_sql='SELECT * FROM `lessons_t` LIMIT 0,3';
     $lesson_stmt = $dbh->prepare($lesson_sql);
     $lesson_data = [];
     $lesson_stmt->execute($lesson_data);
@@ -20,6 +20,7 @@
       $lessons[] = $lesson;
     }
 
+    $reports = [];
     // つくれぽを取得
     $report_sql='SELECT * FROM `reports` ORDER BY `created` DESC LIMIT 0,4';
     $report_stmt = $dbh->prepare($report_sql);
